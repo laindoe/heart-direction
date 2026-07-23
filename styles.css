@@ -1,0 +1,136 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: #000;
+}
+
+#scrolly {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- Section 1 (Figma node 1003:3, "iPhone 17 - 1") ---------- */
+
+.frame-section {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.frame-visuals {
+  position: absolute;
+  inset: 0;
+}
+
+/* Background sky/stars image (node 1003:4) */
+.bg-sky {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 407px;
+  height: 880px;
+}
+
+.bg-sky img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Cloud tile: shared crop math from the Figma image fill (206.1% / 155.11%) */
+.cloud-layer {
+  position: absolute;
+  width: 405px;
+  height: 457px;
+  overflow: hidden;
+}
+
+.cloud-crop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cloud-crop img {
+  position: absolute;
+  left: 0;
+  top: -0.1%;
+  width: 155.11%;
+  height: 206.1%;
+  max-width: none;
+  pointer-events: none;
+}
+
+/* Instance placements, matching Figma node coordinates */
+.cloud-1 {
+  left: -166px;
+  top: 161px;
+}
+
+.cloud-3 {
+  left: -128px;
+  top: 423px;
+}
+
+/* Mirrored instances (nodes 1003:8 / 1003:10): Figma applies -scale-y-100 + rotate-180
+   to these, which composites to a pure horizontal flip (scaleX(-1)). */
+.cloud-mirror-wrap {
+  position: absolute;
+  width: 405px;
+  height: 457px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cloud-mirror-inner {
+  flex: none;
+  transform: scaleX(-1);
+}
+
+.cloud-mirror-inner .cloud-layer {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
+.cloud-2-wrap {
+  left: 105px;
+  top: 195px;
+}
+
+.cloud-4-wrap {
+  left: 250px;
+  top: 424px;
+}
+
+/* Animated cloud layer (node 1003:8) — keyframes/easing from Figma's motion data */
+@media (prefers-reduced-motion: no-preference) {
+  .cloud-anim {
+    animation: cloud-slide-in 2s linear infinite;
+  }
+}
+
+@keyframes cloud-slide-in {
+  0% {
+    animation-timing-function: ease-out;
+    translate: -200px 0px;
+  }
+  25% {
+    translate: 0px 0px;
+  }
+  100% {
+    translate: 0px 0px;
+  }
+}
