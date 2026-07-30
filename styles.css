@@ -27,12 +27,24 @@ html, body {
 /* ---------- Section 1 (Figma node 1084:2, "heart-director") ---------- */
 /* Figma frame is 1125x2436; all child positions below are scaled by 402/1125. */
 
+/* .hero-section is a fixed 402x870 design canvas; .section-frame scales it
+   up/down so it always spans the full viewport width, no letterboxing. */
+.section-frame {
+  --hero-scale: calc(100vw / 402px);
+  position: relative;
+  width: 100%;
+  height: calc(870px * var(--hero-scale));
+  overflow: hidden;
+}
+
 .hero-section {
   position: relative;
   width: 402px;
   height: 870px;
   overflow: hidden;
   background: #000;
+  transform-origin: top left;
+  transform: scale(var(--hero-scale));
 }
 
 .hero-section img {
