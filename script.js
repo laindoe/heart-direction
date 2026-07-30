@@ -12,3 +12,9 @@ const observer = new IntersectionObserver(
 );
 
 sections.forEach((section) => observer.observe(section));
+
+// "Enter the tunnel" scrolls to whatever section comes next, once one exists.
+document.querySelector('.hd-tunnel-btn')?.addEventListener('click', (event) => {
+  const nextSection = event.currentTarget.closest('section')?.nextElementSibling;
+  nextSection?.scrollIntoView({ behavior: 'smooth' });
+});
