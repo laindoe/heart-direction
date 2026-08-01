@@ -133,6 +133,28 @@ html, body {
   transform: scaleX(-1);
 }
 
+/* Hovering motion for both cherubs; translate is independent of the
+   right cherub's scaleX(-1) transform, so they compose cleanly. */
+@media (prefers-reduced-motion: no-preference) {
+  .hd2-cherub-left,
+  .hd2-cherub-right {
+    animation: cherub-hover 3.4s ease-in-out infinite;
+  }
+
+  .hd2-cherub-right {
+    animation-delay: -1.7s;
+  }
+}
+
+@keyframes cherub-hover {
+  0%, 100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
 .hd2-sacred-heart {
   left: 172px;
   top: 23px;
