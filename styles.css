@@ -6,12 +6,18 @@
 
 html, body {
   background: #000;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
+/* Remove once section-2+ exist and the page is meant to scroll between them. */
 #scrolly {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  overflow: hidden;
 }
 
 .visually-hidden {
