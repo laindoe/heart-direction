@@ -33,27 +33,18 @@ html, body {
 /* .hero-section is a fixed 402x871 design canvas; .section-frame locks it to
    exactly one viewport (100dvh accounts for mobile browser chrome, so there's
    no gap or scroll). It's scaled like background-size: contain so the whole
-   card — including its own border — is always fully visible, never cropped;
-   .hd2-bg-fullscreen fills any leftover space around it with more background
-   instead of a bare edge. */
+   card — including its own border — is always fully visible, never cropped.
+   A flat background-color (sampled from bg-blue.webp) fills any leftover
+   space around it — using the actual image there instead would stretch its
+   small painted texture edge-to-edge, making its own ragged brush-stroke
+   edges show up as a visible cutoff rather than a seamless background. */
 .section-frame {
   --hero-scale: min(calc(100vw / 402px), calc(100dvh / 871px));
   position: relative;
   width: 100vw;
   height: 100dvh;
   overflow: hidden;
-}
-
-.hd2-bg-fullscreen {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  /* bg-blue.webp has soft, semi-transparent painted edges; back it with a
-     matching solid blue so those edges never reveal black behind them. */
   background-color: #1cbbec;
-  object-fit: cover;
-  pointer-events: none;
 }
 
 .hero-section {
