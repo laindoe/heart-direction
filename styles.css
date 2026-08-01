@@ -4,11 +4,20 @@
   padding: 0;
 }
 
-html, body {
-  background: #000;
+html {
   height: 100%;
   overflow: hidden;
+}
+
+/* iOS Safari still allows touch-drag scrolling of the body even with
+   overflow: hidden — position: fixed is what actually pins it in place. */
+body {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
   overscroll-behavior: none;
+  touch-action: none;
 }
 
 /* Remove once section-2+ exist and the page is meant to scroll between them. */
