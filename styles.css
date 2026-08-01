@@ -32,14 +32,15 @@ html, body {
 
 /* .hero-section is a fixed 402x871 design canvas; .section-frame locks it to
    exactly one viewport (100dvh accounts for mobile browser chrome, so there's
-   no gap or scroll). It's scaled like background-size: cover so the card
-   always fills the full screen with no visible background around it — the
-   design's own 402:871 ratio is nearly identical to a typical phone screen,
-   so this crops little to nothing there; wider/shorter viewports (e.g.
-   desktop) will crop the card's outer edges to keep it filling the page.
-   The background-color below is just a fallback sliver for extreme cases. */
+   no gap or scroll). It's scaled like background-size: contain so the card's
+   own gold border is always fully visible as a complete frame, never cropped.
+   The design's own 402:871 ratio is nearly identical to a typical phone
+   screen, so on real devices this still ends up essentially full-width, with
+   at most a hairline sliver of background top/bottom — the background-color
+   below covers that sliver (and any bigger gap on very different aspect
+   ratios, e.g. desktop) so it blends in instead of showing a bare edge. */
 .section-frame {
-  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 871px));
+  --hero-scale: min(calc(100vw / 402px), calc(100dvh / 871px));
   position: relative;
   width: 100vw;
   height: 100dvh;
