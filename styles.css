@@ -4,29 +4,17 @@
   padding: 0;
 }
 
-html {
-  height: 100%;
-  overflow: hidden;
+/* Background matches the hero's blue so Safari's natural overscroll/bounce
+   reveals more blue instead of a black flash — no need to fight the bounce
+   itself, which also lets Safari auto-hide its toolbar on scroll as usual. */
+html, body {
+  background: #1cbbec;
 }
 
-/* iOS Safari still allows touch-drag scrolling of the body even with
-   overflow: hidden — position: fixed is what actually pins it in place. */
-body {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  overflow: hidden;
-  overscroll-behavior: none;
-  touch-action: none;
-}
-
-/* Remove once section-2+ exist and the page is meant to scroll between them. */
 #scrolly {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  overflow: hidden;
 }
 
 .visually-hidden {
