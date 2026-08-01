@@ -92,15 +92,6 @@ html, body {
   object-fit: contain;
 }
 
-.hd2-face {
-  left: 195px;
-  top: 574px;
-  width: 56px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-}
-
 .hd2-title {
   left: -10px;
   top: 76px;
@@ -190,5 +181,24 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  pointer-events: none;
+}
+
+.hd2-marquee-label {
+  position: absolute;
+  left: 31px;
+  top: 62px;
+  width: 285px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: 0.03em;
+  color: #7a1414;
+  text-align: center;
   pointer-events: none;
 }
