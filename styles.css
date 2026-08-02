@@ -313,3 +313,81 @@ html, body {
   height: 772px;
   object-fit: cover;
 }
+
+/* ---------- Section 3 (Figma node 1103:2179, "heart-director-page3") ---------- */
+/* Figma frame is 1125x2248 (same ratio as page2); positions scaled by 402/1125. */
+
+.section-frame-3 {
+  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
+  background-color: #242121;
+}
+
+.hero-section-3 {
+  width: 402px;
+  height: 803px;
+  background: #242121;
+}
+
+.hd4-arrow {
+  left: -113px;
+  top: -17px;
+  width: 628px;
+  height: 838px;
+  object-fit: cover;
+}
+
+.hd4-clouds {
+  left: -105px;
+  top: 0;
+  width: 611px;
+  height: 815px;
+  object-fit: cover;
+}
+
+/* Same sprite sheet (3 medallions stacked) reused for all three targets;
+   only the vertical crop offset differs per instance, matching Figma. */
+.hd4-target {
+  position: absolute;
+  left: 123px;
+  overflow: hidden;
+}
+
+.hd4-target-sprite {
+  position: absolute;
+  left: -134.85%;
+  width: 369.02%;
+  max-width: none;
+}
+
+.hd4-target-1 {
+  top: 157px;
+  width: 157px;
+  height: 149px;
+}
+
+.hd4-target-1 .hd4-target-sprite {
+  top: -98.09%;
+  height: 516.75%;
+}
+
+.hd4-target-2 {
+  top: 325px;
+  width: 157px;
+  height: 140px;
+}
+
+.hd4-target-2 .hd4-target-sprite {
+  top: -210.46%;
+  height: 551.02%;
+}
+
+.hd4-target-3 {
+  top: 484px;
+  width: 157px;
+  height: 149px;
+}
+
+.hd4-target-3 .hd4-target-sprite {
+  top: -297.85%;
+  height: 516.75%;
+}
