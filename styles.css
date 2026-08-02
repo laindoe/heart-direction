@@ -481,10 +481,13 @@ html, body {
 }
 
 /* ---------- Section 5 (Figma node 1106:3607, "heart-director-page5") ---------- */
-/* Figma frame is 1125x2248 (same ratio as page2/3/4); positions scaled by 402/1125. */
-
+/* Figma frame is 1125x2248 (same ratio as page2/3/4); positions scaled by 402/1125.
+   Uses contain (not cover) — the cherubs sit close to the top edge and the
+   scroll runs close to the bottom, so cover-fit cropping pushed them off
+   screen. The flat blue background matches the design, so any letterboxed
+   space from contain just reads as more sky instead of a bare edge. */
 .section-frame-5 {
-  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
+  --hero-scale: min(calc(100vw / 402px), calc(100dvh / 803px));
   background-color: #3ddaf6;
 }
 
