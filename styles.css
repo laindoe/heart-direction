@@ -479,3 +479,61 @@ html, body {
   max-width: none;
   pointer-events: none;
 }
+
+/* ---------- Section 5 (Figma node 1106:3607, "heart-director-page5") ---------- */
+/* Figma frame is 1125x2248 (same ratio as page2/3/4); positions scaled by 402/1125. */
+
+.section-frame-5 {
+  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
+  background-color: #3ddaf6;
+}
+
+.hero-section-5 {
+  width: 402px;
+  height: 803px;
+  background: #3ddaf6;
+}
+
+.hd6-clouds {
+  left: -113px;
+  top: -12px;
+  width: 611px;
+  height: 815px;
+  object-fit: cover;
+}
+
+.hd6-cherub {
+  top: 13px;
+  width: 171px;
+  height: 172px;
+  object-fit: contain;
+}
+
+.hd6-cherub-left {
+  left: 13px;
+  transform: scaleX(-1);
+}
+
+.hd6-cherub-right {
+  left: 231px;
+}
+
+/* Same hovering motion as section-1's cherubs. */
+@media (prefers-reduced-motion: no-preference) {
+  .hd6-cherub-left,
+  .hd6-cherub-right {
+    animation: cherub-hover 3.4s ease-in-out infinite;
+  }
+
+  .hd6-cherub-right {
+    animation-delay: -1.7s;
+  }
+}
+
+.hd6-scroll {
+  left: 84px;
+  top: 135px;
+  width: 235px;
+  height: 626px;
+  object-fit: contain;
+}
