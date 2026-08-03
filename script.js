@@ -13,19 +13,22 @@ const observer = new IntersectionObserver(
 
 sections.forEach((section) => observer.observe(section));
 
-// Section-1 -> section-2 "camera through a doorway": section-1 (the
-// foreground, see .tunnel-layer-front in styles.css) scales up from 1x,
-// pivoting on the tunnel's real transparent opening, so it carries its own
-// artwork out past the viewport edges while section-2 (the plain, static
-// back layer) sits fully still underneath, gradually exposed through that
-// one real opening as the foreground grows past it.
+// Section-1 -> 2 -> 3, one pinned sequence: section-1 (the foreground, see
+// .tunnel-layer-front in styles.css) scales up from 1x, pivoting on the
+// tunnel's real transparent opening, so it carries its own artwork out past
+// the viewport edges while section-2 (the plain, static back layer) sits
+// fully still underneath, gradually exposed through that one real opening
+// as the foreground grows past it. Later, section-2 itself plays out its
+// own scene (bow + arrow descend, arrow grows) and fades to reveal
+// section-3 sitting behind it, the same layered pattern one level deeper.
 const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
+const tunnelLayerBack = tunnelTransition?.querySelector('.tunnel-layer-back');
 
 if (tunnelTransition) {
-  // These are all fractions of the wrapper's *extra* scroll (now 390vh, see
+  // These are all fractions of the wrapper's *extra* scroll (now 481vh, see
   // .tunnel-transition in styles.css) — each phase's fraction is just its
-  // cumulative vh (noted per constant below) divided by 390.
+  // cumulative vh (noted per constant below) divided by 481.
 
   // Ease the zoom in (progress^2) so it starts slow — the tunnel rings
   // visibly enlarge and rush past — and accelerates into the reveal, instead
@@ -48,17 +51,24 @@ if (tunnelTransition) {
   // Negative offset: they start up near the top cloud (behind/above the
   // portrait) and descend into their resting spot, as if protruding down out
   // of the cloud she's on, rather than rising from below.
-  const WEAPON_REVEAL_START = 210 / 390;
-  const WEAPON_REVEAL_END = 261 / 390; // 51vh descent
+  const WEAPON_REVEAL_START = 210 / 481;
+  const WEAPON_REVEAL_END = 261 / 481; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
   // Arrow grows in place: after the weapon settles and a short hold (20vh),
-  // just the arrow (not the bow) grows over 80vh — this is the same arrow
-  // that continues, much bigger, through the target sequence in section-3,
-  // so this reads as it becoming that arrow rather than a generic zoom.
-  // Bow stays put; release + targets are follow-up work.
-  const ARROW_SCALE_START = 281 / 390;
-  const ARROW_SCALE_END = 361 / 390;
+  // just the arrow (not the bow) grows over 80vh, foreshadowing the much
+  // bigger arrow already sitting in place in section-3 (revealed next).
+  // Bow stays put.
+  const ARROW_SCALE_START = 281 / 481;
+  const ARROW_SCALE_END = 361 / 481;
   const ARROW_MAX_SCALE = 2.5;
+  // Section-3 reveal: after the arrow settles and another short hold (30vh),
+  // section-2 (portrait, bow, grown arrow — the whole tunnel-layer-back)
+  // fades out over 60vh to reveal section-3 (targets + its own bigger
+  // arrow), which has been sitting statically in place behind it the whole
+  // time — same "static back layer, front fades away" pattern as
+  // section-1/2, just reused here instead of a hard cut at a section edge.
+  const TARGETS_REVEAL_START = 391 / 481;
+  const TARGETS_REVEAL_END = 451 / 481; // leaves ~30vh hold before section-4
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -109,20 +119,35 @@ if (tunnelTransition) {
       Math.max(0, (fraction - ARROW_SCALE_START) / (ARROW_SCALE_END - ARROW_SCALE_START))
     );
     tunnelTransition.style.setProperty('--arrow-pull-scale', 1 + arrowT * (ARROW_MAX_SCALE - 1));
+
+    // Section-2 fades out to reveal section-3, already in place behind it.
+    const targetsT = Math.min(
+      1,
+      Math.max(0, (fraction - TARGETS_REVEAL_START) / (TARGETS_REVEAL_END - TARGETS_REVEAL_START))
+    );
+    tunnelTransition.style.setProperty('--section2-opacity', 1 - targetsT);
+    // Same belt-and-suspenders as the section-1 foreground: force it fully
+    // out of the way once faded, so nothing (including the now-invisible
+    // heart hotspot) can linger or be tapped on top of section-3.
+    if (tunnelLayerBack) {
+      tunnelLayerBack.style.visibility = fraction >= TARGETS_REVEAL_END ? 'hidden' : 'visible';
+    }
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
   window.addEventListener('resize', updateTunnelScale);
   updateTunnelScale();
-}
 
-// "Enter the tunnel" smooth-scrolls through the whole reveal transition,
-// landing on section-2 once it's fully revealed.
-document.querySelector('.hd2-marquee-btn')?.addEventListener('click', () => {
-  if (!tunnelTransition) return;
-  const targetY = tunnelTransition.offsetTop + tunnelTransition.offsetHeight - window.innerHeight;
-  window.scrollTo({ top: targetY, behavior: 'smooth' });
-});
+  // "Enter the tunnel" smooth-scrolls through just the zoom, landing right
+  // as section-2 finishes being revealed — not all the way through its own
+  // bow/arrow/section-3-reveal scene, which the user can then scroll through
+  // normally at their own pace.
+  document.querySelector('.hd2-marquee-btn')?.addEventListener('click', () => {
+    const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
+    const targetY = tunnelTransition.offsetTop + SCALE_FRACTION * extraScrollable;
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
+  });
+}
 
 // "Peek inside" modal, opened by tapping the heart pendant hotspot.
 const heartHotspot = document.querySelector('.hd3-heart-hotspot');
