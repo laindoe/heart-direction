@@ -540,3 +540,115 @@ html, body {
   height: 626px;
   object-fit: contain;
 }
+
+/* ---------- Section 6 (Figma node 1106:3656, "heart-director-page6") ---------- */
+/* Figma frame is 1125x2248 (same ratio as page2-5); positions scaled by 402/1125.
+   Uses contain like section-5 — the sun sits right at the top edge (y=0) and
+   the field/horse run close to the bottom, so cover-fit would crop them. */
+.section-frame-6 {
+  --hero-scale: min(calc(100vw / 402px), calc(100dvh / 803px));
+  background-color: #3ddaf6;
+}
+
+.hero-section-6 {
+  width: 402px;
+  height: 803px;
+  background: #3ddaf6;
+}
+
+.hd7-clouds {
+  left: -105px;
+  top: -12px;
+  width: 611px;
+  height: 815px;
+  object-fit: cover;
+}
+
+.hd7-sun {
+  left: 60px;
+  top: 0;
+  width: 282px;
+  height: 177px;
+  object-fit: contain;
+}
+
+/* All 4 tickets share one sprite (icon+title+subtitle baked into each row);
+   only the vertical crop offset differs per instance, matching Figma. */
+.hd7-ticket {
+  position: absolute;
+  left: 90px;
+  width: 228px;
+  overflow: hidden;
+  display: block;
+}
+
+.hd7-ticket-sprite {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.hd7-ticket-1 {
+  top: 177px;
+  height: 72px;
+}
+
+.hd7-ticket-1 .hd7-ticket-sprite {
+  top: -18.27%;
+  height: 475.54%;
+}
+
+.hd7-ticket-2 {
+  top: 264px;
+  height: 57px;
+}
+
+.hd7-ticket-2 .hd7-ticket-sprite {
+  top: -151.95%;
+  height: 600%;
+}
+
+.hd7-ticket-3 {
+  top: 337px;
+  height: 58px;
+}
+
+.hd7-ticket-3 .hd7-ticket-sprite {
+  top: -254.83%;
+  height: 593.05%;
+}
+
+.hd7-ticket-4 {
+  top: 402px;
+  height: 64px;
+}
+
+.hd7-ticket-4 .hd7-ticket-sprite {
+  top: -327.05%;
+  height: 546.62%;
+}
+
+.hd7-rainbow {
+  left: -22px;
+  top: 461px;
+  width: 447px;
+  height: 266px;
+  object-fit: cover;
+}
+
+.hd7-field {
+  left: -1px;
+  top: 643px;
+  width: 404px;
+  height: 192px;
+  object-fit: cover;
+}
+
+.hd7-horse-rider {
+  left: 40px;
+  top: 494px;
+  width: 242px;
+  height: 298px;
+  object-fit: contain;
+}
