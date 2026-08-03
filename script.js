@@ -23,6 +23,11 @@ const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
 
 if (tunnelTransition) {
+  // These are all fractions of the wrapper's *extra* scroll (now 300vh, see
+  // .tunnel-transition in styles.css): 0.30 = 90vh for the zoom, 0.70 = 210vh
+  // for zoom + pause, 0.87 = 261vh for zoom + pause + weapon descent, leaving
+  // a further ~40vh hold before section-3.
+
   // Ease the zoom in (progress^2) so it starts slow — the tunnel rings
   // visibly enlarge and rush past — and accelerates into the reveal, instead
   // of snapping open in the first moments of scroll. SCALE_FRACTION is
@@ -31,21 +36,21 @@ if (tunnelTransition) {
   // it (the innermost heart's point) sits a bit further from the pivot and
   // needs more scale to fully clear the viewport than the hole itself does.
   // Rather than measure that ring precisely, finish the ramp (and force-hide
-  // the foreground, below) well before the halfway point of the scroll, so
-  // there's a large safety margin — and a generous static hold afterward —
-  // regardless of exactly where a user's scroll settles.
-  const SCALE_FRACTION = 0.45;
+  // the foreground, below) with a large safety margin regardless of exactly
+  // where a user's scroll settles — well before WEAPON_REVEAL_START.
+  const SCALE_FRACTION = 0.3;
   // The opening's real canvas-space radius (~28px out of the 402x871
   // design canvas), measured by flood-filling heart-tunnel.webp's alpha
   // channel from its visual center to isolate just the enclosed hole.
   const CANVAS_OPENING_RADIUS = 28;
-  // Bow + arrow reveal: starts once the zoom's done plus a short pause
-  // (0.55), finishes with a decent chunk of static hold still left before
-  // section-3 (0.8). Negative offset: they start up near the top cloud
+  // Bow + arrow reveal: starts well after the zoom's done, with a long pause
+  // in between so there's time to look at the portrait and tap the heart
+  // before anything else happens, and still finishes with some static hold
+  // left before section-3. Negative offset: they start up near the top cloud
   // (behind/above the portrait) and descend into their resting spot, as if
   // protruding down out of the cloud she's on, rather than rising from below.
-  const WEAPON_REVEAL_START = 0.55;
-  const WEAPON_REVEAL_END = 0.8;
+  const WEAPON_REVEAL_START = 0.7;
+  const WEAPON_REVEAL_END = 0.87;
   const WEAPON_OFFSET_PX = -140;
 
   const updateTunnelScale = () => {
