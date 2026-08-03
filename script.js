@@ -52,8 +52,10 @@ if (tunnelTransition) {
   const WEAPON_REVEAL_END = 261 / 390; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
   // Bow "pulls back": after the weapon settles and a short hold (20vh), the
-  // bow itself grows in place over 80vh — first beat of building tension
-  // before the eventual arrow release (arrow + target sequence come later).
+  // whole bow+arrow group grows together in place over 80vh (see
+  // .hd3-weapon's transform-origin, anchored on the bow's grip point) — the
+  // tension-building beat before the eventual arrow release (that release +
+  // the target sequence in section-3 come later).
   const BOW_SCALE_START = 281 / 390;
   const BOW_SCALE_END = 361 / 390;
   const BOW_MAX_SCALE = 1.6;
