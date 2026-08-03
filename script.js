@@ -22,14 +22,15 @@ sections.forEach((section) => observer.observe(section));
 const tunnelTransition = document.querySelector('.tunnel-transition');
 
 if (tunnelTransition) {
-  const SCALE_FRACTION = 0.5; // the foreground scales up over the first half of the pinned scroll range
-  // The tunnel's own opening is only a few px wide at rest, so reaching a
-  // scale where it covers the whole screen takes a large factor. Computed
-  // from the viewport's diagonal (not hardcoded) so it holds up at any
-  // screen size; OPENING_RADIUS_PX is a rough estimate of the opening's
-  // rendered radius at 1x — tune this (or the pacing below) once you've
-  // seen the effect in motion.
-  const OPENING_RADIUS_PX = 14;
+  // Use nearly the whole pinned scroll range for the zoom itself (only a
+  // short hold at the end), and ease it in (progress^2) so it starts slow —
+  // the tunnel rings visibly enlarge and rush past — and accelerates into
+  // the reveal, instead of snapping open in the first moments of scroll.
+  const SCALE_FRACTION = 0.85;
+  // The opening's real canvas-space radius (~28px out of the 402x871
+  // design canvas), measured by flood-filling heart-tunnel.webp's alpha
+  // channel from its visual center to isolate just the enclosed hole.
+  const CANVAS_OPENING_RADIUS = 28;
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -38,10 +39,16 @@ if (tunnelTransition) {
     const scrolledIntoWrapper = -tunnelTransition.getBoundingClientRect().top;
     const fraction = Math.min(1, Math.max(0, scrolledIntoWrapper / extraScrollable));
     const progress = Math.min(1, fraction / SCALE_FRACTION);
+    const eased = progress * progress;
 
+    // The opening's on-screen size at 1x depends on the same cover-fit
+    // hero-scale the CSS uses (--hero-scale), so this has to track it
+    // rather than assume a fixed pixel radius.
+    const heroScale = Math.max(window.innerWidth / 402, window.innerHeight / 871);
+    const openingRadiusPx = CANVAS_OPENING_RADIUS * heroScale;
     const viewportDiagonal = Math.hypot(window.innerWidth, window.innerHeight);
-    const maxScale = (viewportDiagonal * 1.1) / OPENING_RADIUS_PX;
-    const scale = 1 + progress * (maxScale - 1);
+    const maxScale = (viewportDiagonal * 1.15) / openingRadiusPx;
+    const scale = 1 + eased * (maxScale - 1);
 
     tunnelTransition.style.setProperty('--tunnel-scale', scale);
   };
