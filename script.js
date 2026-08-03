@@ -20,6 +20,7 @@ sections.forEach((section) => observer.observe(section));
 // back layer) sits fully still underneath, gradually exposed through that
 // one real opening as the foreground grows past it.
 const tunnelTransition = document.querySelector('.tunnel-transition');
+const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
 
 if (tunnelTransition) {
   // Use nearly the whole pinned scroll range for the zoom itself (only a
@@ -51,6 +52,16 @@ if (tunnelTransition) {
     const scale = 1 + eased * (maxScale - 1);
 
     tunnelTransition.style.setProperty('--tunnel-scale', scale);
+
+    // Belt-and-suspenders: the scale math is tuned to carry every part of
+    // the foreground past all four edges by the time progress hits 1, but
+    // rather than trust that pixel-perfectly across every viewport size
+    // (and iOS's dynamic toolbar resizing mid-scroll), just hide it outright
+    // once the reveal is done, so nothing blurry can linger on top of
+    // section-2. Toggled back on scrolling up so the zoom still works both ways.
+    if (tunnelLayerFront) {
+      tunnelLayerFront.style.visibility = fraction >= SCALE_FRACTION ? 'hidden' : 'visible';
+    }
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
