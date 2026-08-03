@@ -9,15 +9,18 @@
 <body>
   <main id="scrolly">
 
-    <!-- Section 1 -> Section 2 scroll-pinned reveal transition.
-         section-1 stays sticky-pinned while the heart-shaped mask hole grows,
-         exposing section-2 (lower z-index) behind it; section-2 then gets its
-         own resting scroll time before section-3 continues normally. -->
+    <!-- Section 1 -> Section 2 scroll-pinned "camera through a doorway" transition.
+         section-2 is a completely static full-screen background layer. section-1
+         is the foreground, scaling up from 1x pivoted on the tunnel's actual
+         transparent opening, carrying the rest of its artwork out past the
+         viewport edges as it grows — section-2 was there the whole time, just
+         hidden behind the (until-now opaque-looking) foreground. Section-2 then
+         gets its own resting scroll time before section-3 continues normally. -->
     <div class="tunnel-transition">
       <div class="tunnel-pin">
 
         <!-- Section 1: heart-director-2 (Figma node 1098:2), illustrated hero intro -->
-        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-back">
+        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-front">
           <div class="hero-section hero-illustrated">
             <h1 class="visually-hidden">
               Introducing Laindoe Love — The Heart Director. Revealing the invisible.
@@ -45,7 +48,7 @@
         </section>
 
         <!-- Section 2: heart-director-page2 (Figma node 1102:2) -->
-        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-front">
+        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-back">
           <div class="hero-section hero-section-2">
             <h1 class="visually-hidden">Meet Lain Doe Love. Tap the heart to peek inside.</h1>
 
