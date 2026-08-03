@@ -356,12 +356,12 @@ html, body {
   object-fit: cover;
 }
 
-/* Bow + arrow are one unit that rises into place from below, so the portrait
-   reads first and they "pop out from under" the lower clouds a bit later in
-   the scroll. --weapon-offset/--weapon-opacity are set by script.js on
-   .tunnel-transition (an ancestor of section-2) as the user scrolls through
-   the section-1/2 pinned transition. Defaults (0px / 1) keep them in their
-   normal resting spot if JS is off. */
+/* Bow + arrow are one unit that descends into place from above, so the
+   portrait reads first and they protrude down out of the cloud she's on a
+   bit later in the scroll. --weapon-offset/--weapon-opacity are set by
+   script.js on .tunnel-transition (an ancestor of section-2) as the user
+   scrolls through the section-1/2 pinned transition. Defaults (0px / 1)
+   keep them in their normal resting spot if JS is off. */
 .hd3-weapon {
   position: absolute;
   inset: 0;

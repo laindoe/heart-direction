@@ -41,10 +41,12 @@ if (tunnelTransition) {
   const CANVAS_OPENING_RADIUS = 28;
   // Bow + arrow reveal: starts once the zoom's done plus a short pause
   // (0.55), finishes with a decent chunk of static hold still left before
-  // section-3 (0.8).
+  // section-3 (0.8). Negative offset: they start up near the top cloud
+  // (behind/above the portrait) and descend into their resting spot, as if
+  // protruding down out of the cloud she's on, rather than rising from below.
   const WEAPON_REVEAL_START = 0.55;
   const WEAPON_REVEAL_END = 0.8;
-  const WEAPON_OFFSET_PX = 70;
+  const WEAPON_OFFSET_PX = -140;
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -77,9 +79,10 @@ if (tunnelTransition) {
     }
 
     // Once section-2 is settled (with a short pause after the zoom so it
-    // doesn't feel rushed), the bow + arrow rise up into place over their
-    // own scroll stretch — they start faded down and out of the way so the
-    // portrait reads first, then "pop out from under" the lower clouds.
+    // doesn't feel rushed), the bow + arrow descend into place over their
+    // own scroll stretch — they start faded out and shifted up behind the
+    // portrait so she reads first, then settle down as if protruding out
+    // from the cloud she's on.
     const weaponT = Math.min(
       1,
       Math.max(0, (fraction - WEAPON_REVEAL_START) / (WEAPON_REVEAL_END - WEAPON_REVEAL_START))
