@@ -23,10 +23,9 @@ const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
 
 if (tunnelTransition) {
-  // These are all fractions of the wrapper's *extra* scroll (now 300vh, see
-  // .tunnel-transition in styles.css): 0.30 = 90vh for the zoom, 0.70 = 210vh
-  // for zoom + pause, 0.87 = 261vh for zoom + pause + weapon descent, leaving
-  // a further ~40vh hold before section-3.
+  // These are all fractions of the wrapper's *extra* scroll (now 390vh, see
+  // .tunnel-transition in styles.css) — each phase's fraction is just its
+  // cumulative vh (noted per constant below) divided by 390.
 
   // Ease the zoom in (progress^2) so it starts slow — the tunnel rings
   // visibly enlarge and rush past — and accelerates into the reveal, instead
@@ -45,13 +44,19 @@ if (tunnelTransition) {
   const CANVAS_OPENING_RADIUS = 28;
   // Bow + arrow reveal: starts well after the zoom's done, with a long pause
   // in between so there's time to look at the portrait and tap the heart
-  // before anything else happens, and still finishes with some static hold
-  // left before section-3. Negative offset: they start up near the top cloud
-  // (behind/above the portrait) and descend into their resting spot, as if
-  // protruding down out of the cloud she's on, rather than rising from below.
-  const WEAPON_REVEAL_START = 0.7;
-  const WEAPON_REVEAL_END = 0.87;
+  // before anything else happens (90vh zoom + 120vh pause = 210vh in).
+  // Negative offset: they start up near the top cloud (behind/above the
+  // portrait) and descend into their resting spot, as if protruding down out
+  // of the cloud she's on, rather than rising from below.
+  const WEAPON_REVEAL_START = 210 / 390;
+  const WEAPON_REVEAL_END = 261 / 390; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
+  // Bow "pulls back": after the weapon settles and a short hold (20vh), the
+  // bow itself grows in place over 80vh — first beat of building tension
+  // before the eventual arrow release (arrow + target sequence come later).
+  const BOW_SCALE_START = 281 / 390;
+  const BOW_SCALE_END = 361 / 390;
+  const BOW_MAX_SCALE = 1.6;
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -94,6 +99,15 @@ if (tunnelTransition) {
     );
     tunnelTransition.style.setProperty('--weapon-offset', `${(1 - weaponT) * WEAPON_OFFSET_PX}px`);
     tunnelTransition.style.setProperty('--weapon-opacity', weaponT);
+
+    // Bow pull-back: grows from 1x to BOW_MAX_SCALE in place once the
+    // descent's settled, as the tension-building lead-in to the eventual
+    // arrow release.
+    const bowT = Math.min(
+      1,
+      Math.max(0, (fraction - BOW_SCALE_START) / (BOW_SCALE_END - BOW_SCALE_START))
+    );
+    tunnelTransition.style.setProperty('--bow-pull-scale', 1 + bowT * (BOW_MAX_SCALE - 1));
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });

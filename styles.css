@@ -61,10 +61,12 @@ html, body {
 }
 
 /* ---------- Section 1 -> Section 2 scroll-pinned reveal transition ---------- */
-/* 400vh total = section-1's own 100vh + 300vh of extra scroll, split (in
+/* 490vh total = section-1's own 100vh + 390vh of extra scroll, split (in
    script.js) into: the tunnel push-through zoom, a long pause on section-2
    so there's time to look at the portrait and tap the heart before anything
-   else happens, the bow+arrow descent, and a short hold before section-3.
+   else happens, the bow+arrow descent, a short hold, the bow "pulling back"
+   (scaling up in place) as the next scene's tension-building beat, and a
+   final hold before section-3.
 
    Camera-through-a-doorway effect: section-2 is a completely static
    full-screen background layer (z-index 1, no animation of its own).
@@ -92,7 +94,7 @@ html, body {
 .tunnel-transition {
   position: relative;
   width: 100%;
-  height: 400vh;
+  height: 490vh;
 }
 
 .tunnel-pin {
@@ -371,6 +373,10 @@ html, body {
   will-change: transform, opacity;
 }
 
+/* Once the descent settles, the bow grows in place — a "pulling back and
+   building tension" beat, driven by --bow-pull-scale (set by script.js on
+   .tunnel-transition, same pattern as --weapon-offset above). Arrow doesn't
+   scale with it yet; that's a later pass on the rest of this scene. */
 .hd3-bow-crop {
   position: absolute;
   left: -20px;
@@ -378,6 +384,8 @@ html, body {
   width: 412px;
   height: 184px;
   overflow: hidden;
+  transform: scale(var(--bow-pull-scale, 1));
+  will-change: transform;
 }
 
 .hd3-bow {
