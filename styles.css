@@ -61,8 +61,8 @@ html, body {
 }
 
 /* ---------- Section 1 -> Section 2 scroll-pinned reveal transition ---------- */
-/* 300vh total = section-1's own 100vh + 100vh driving the mask-hole growth
-   (--reveal-scale, set by script.js from scroll position) + 100vh of resting
+/* 300vh total = section-1's own 100vh + 100vh driving the reveal-hole growth
+   (--reveal-radius, set by script.js from scroll position) + 100vh of resting
    time for section-2 once fully revealed, before section-3 continues normally. */
 .tunnel-transition {
   position: relative;
@@ -83,23 +83,28 @@ html, body {
   inset: 0;
 }
 
+/* section-2 is the front layer, clipped to a growing circle centered on
+   section-1's tunnel graphic's actual vanishing-point opening (verified via
+   its alpha channel — 55.2%/60.4% is that point's position as a fraction of
+   section-1's 402x871 canvas). At rest the circle is tiny, so section-2 is
+   invisible outside that pinpoint and section-1 (the plain, un-clipped back
+   layer) shows normally; growing the circle progressively reveals more of
+   section-2 while covering more of section-1 in the same stroke — clip-path
+   affects the whole element (including its own background), so there's no
+   separate opaque layer left over to block the reveal.
+   (Previous attempt used an SVG <mask> element referenced via url(#id) to
+   punch an actual hole in section-1 — semantically the more direct approach,
+   but it silently didn't render at all on Safari, leaving section-1
+   permanently opaque. This clip-path technique needs no such external
+   reference, just this one property.) */
 .tunnel-layer-front {
   z-index: 2;
-  /* Cover-fit means .hero-section always fully covers this box, so this
-     background never shows under normal viewing — but it WOULD otherwise
-     paint solid behind the mask hole below, blocking section-2 from
-     showing through. Making it transparent lets the hole reach all the
-     way through to section-2. */
-  background: transparent;
+  clip-path: circle(var(--reveal-radius, 8px) at 55.2% 60.4%);
+  -webkit-clip-path: circle(var(--reveal-radius, 8px) at 55.2% 60.4%);
 }
 
 .tunnel-layer-back {
   z-index: 1;
-}
-
-.hero-illustrated {
-  mask: url(#heart-reveal-mask);
-  -webkit-mask: url(#heart-reveal-mask);
 }
 
 #heart-hole-path {

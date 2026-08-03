@@ -7,26 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Shared heart-shaped reveal mask for the section-1 -> section-2 transition.
-       White = visible, black = hole. The hole's own path is centered on its
-       local origin; #heart-hole-path is scaled up via --reveal-scale (set by
-       script.js from scroll position) to grow the hole from the tunnel's
-       actual tiny vanishing-point opening to cover the whole canvas. -->
-  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <mask id="heart-reveal-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="402" height="871">
-        <rect x="0" y="0" width="402" height="871" fill="white" />
-        <g transform="translate(210, 515)">
-          <path
-            id="heart-hole-path"
-            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-            fill="black"
-          />
-        </g>
-      </mask>
-    </defs>
-  </svg>
-
   <main id="scrolly">
 
     <!-- Section 1 -> Section 2 scroll-pinned reveal transition.
@@ -37,7 +17,7 @@
       <div class="tunnel-pin">
 
         <!-- Section 1: heart-director-2 (Figma node 1098:2), illustrated hero intro -->
-        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-front">
+        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-back">
           <div class="hero-section hero-illustrated">
             <h1 class="visually-hidden">
               Introducing Laindoe Love — The Heart Director. Revealing the invisible.
@@ -65,7 +45,7 @@
         </section>
 
         <!-- Section 2: heart-director-page2 (Figma node 1102:2) -->
-        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-back">
+        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-front">
           <div class="hero-section hero-section-2">
             <h1 class="visually-hidden">Meet Lain Doe Love. Tap the heart to peek inside.</h1>
 
