@@ -61,9 +61,10 @@ html, body {
 }
 
 /* ---------- Section 1 -> Section 2 scroll-pinned reveal transition ---------- */
-/* 300vh total = section-1's own 100vh + 100vh driving the tunnel push-through
-   (--tunnel-scale, set by script.js from scroll position) + 100vh of resting
-   time for section-2 once fully revealed, before section-3 continues normally.
+/* 400vh total = section-1's own 100vh + 300vh of extra scroll, split (in
+   script.js) into: the tunnel push-through zoom, a long pause on section-2
+   so there's time to look at the portrait and tap the heart before anything
+   else happens, the bow+arrow descent, and a short hold before section-3.
 
    Camera-through-a-doorway effect: section-2 is a completely static
    full-screen background layer (z-index 1, no animation of its own).
@@ -91,7 +92,7 @@ html, body {
 .tunnel-transition {
   position: relative;
   width: 100%;
-  height: 300vh;
+  height: 400vh;
 }
 
 .tunnel-pin {
