@@ -51,14 +51,14 @@ if (tunnelTransition) {
   const WEAPON_REVEAL_START = 210 / 390;
   const WEAPON_REVEAL_END = 261 / 390; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
-  // Bow "pulls back": after the weapon settles and a short hold (20vh), the
-  // whole bow+arrow group grows together in place over 80vh (see
-  // .hd3-weapon's transform-origin, anchored on the bow's grip point) — the
-  // tension-building beat before the eventual arrow release (that release +
-  // the target sequence in section-3 come later).
-  const BOW_SCALE_START = 281 / 390;
-  const BOW_SCALE_END = 361 / 390;
-  const BOW_MAX_SCALE = 1.6;
+  // Arrow grows in place: after the weapon settles and a short hold (20vh),
+  // just the arrow (not the bow) grows over 80vh — this is the same arrow
+  // that continues, much bigger, through the target sequence in section-3,
+  // so this reads as it becoming that arrow rather than a generic zoom.
+  // Bow stays put; release + targets are follow-up work.
+  const ARROW_SCALE_START = 281 / 390;
+  const ARROW_SCALE_END = 361 / 390;
+  const ARROW_MAX_SCALE = 2.5;
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -102,14 +102,13 @@ if (tunnelTransition) {
     tunnelTransition.style.setProperty('--weapon-offset', `${(1 - weaponT) * WEAPON_OFFSET_PX}px`);
     tunnelTransition.style.setProperty('--weapon-opacity', weaponT);
 
-    // Bow pull-back: grows from 1x to BOW_MAX_SCALE in place once the
-    // descent's settled, as the tension-building lead-in to the eventual
-    // arrow release.
-    const bowT = Math.min(
+    // Arrow grows from 1x to ARROW_MAX_SCALE in place once the descent's
+    // settled — the bow itself doesn't scale.
+    const arrowT = Math.min(
       1,
-      Math.max(0, (fraction - BOW_SCALE_START) / (BOW_SCALE_END - BOW_SCALE_START))
+      Math.max(0, (fraction - ARROW_SCALE_START) / (ARROW_SCALE_END - ARROW_SCALE_START))
     );
-    tunnelTransition.style.setProperty('--bow-pull-scale', 1 + bowT * (BOW_MAX_SCALE - 1));
+    tunnelTransition.style.setProperty('--arrow-pull-scale', 1 + arrowT * (ARROW_MAX_SCALE - 1));
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
