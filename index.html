@@ -47,58 +47,58 @@
           </div>
         </section>
 
-        <!-- Section 2: heart-director-page2 (Figma node 1102:2) -->
+        <!-- Section 2: heart-director-page2 (Figma node 1102:2) + section 3:
+             heart-director-page3 (Figma node 1103:2179), merged into one tall
+             canvas (.hero-section-2-canvas, page3's content offset 803px down
+             via .hd4-scene-offset) instead of two separately-clipped sections.
+             .hero-section-2 is the fixed 803-tall "window" (unchanged size,
+             still overflow:hidden) and the canvas pans upward within it
+             (--scene2-pan, set by script.js) to scroll from the portrait/bow
+             scene into the targets — one continuous piece of art, not a cut
+             or a cross-fade between two separate containers. -->
         <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-back">
           <div class="hero-section hero-section-2">
-            <h1 class="visually-hidden">Meet Lain Doe Love. Tap the heart to peek inside.</h1>
+            <div class="hero-section-2-canvas">
+              <h1 class="visually-hidden">
+                Meet Lain Doe Love. Tap the heart to peek inside. Her arrow flies
+                down through three targets on its way down.
+              </h1>
 
-            <!-- Behind the portrait and clouds (both of which are real cutouts with
-                 transparent gaps around/below her) so the descent reads as coming from
-                 behind her and the cloud, not floating in front of her body. -->
-            <div class="hd3-weapon">
-              <div class="hd3-bow-crop">
-                <img class="hd3-bow" src="assets/images/heart-director-page2/bow.webp" alt="" />
+              <!-- Behind the portrait and clouds (both of which are real cutouts with
+                   transparent gaps around/below her) so the descent reads as coming from
+                   behind her and the cloud, not floating in front of her body. -->
+              <div class="hd3-weapon">
+                <div class="hd3-bow-crop">
+                  <img class="hd3-bow" src="assets/images/heart-director-page2/bow.webp" alt="" />
+                </div>
+
+                <img class="hd3-arrow" src="assets/images/heart-director-page2/arrow.webp" alt="" />
               </div>
 
-              <img class="hd3-arrow" src="assets/images/heart-director-page2/arrow.webp" alt="" />
-            </div>
+              <img class="hd3-portrait" src="assets/images/heart-director-page2/portrait.webp" alt="" />
+              <img class="hd3-clouds-upper" src="assets/images/heart-director-page2/clouds-upper.webp" alt="" />
+              <img class="hd3-banner" src="assets/images/heart-director-page2/banner.webp" alt="" />
+              <img class="hd3-dove-left" src="assets/images/heart-director-page2/dove-left.webp" alt="" />
+              <img class="hd3-dove-right" src="assets/images/heart-director-page2/dove-right.webp" alt="" />
+              <img class="hd3-clouds-lower" src="assets/images/heart-director-page2/clouds-lower.webp" alt="" />
 
-            <img class="hd3-portrait" src="assets/images/heart-director-page2/portrait.webp" alt="" />
-            <img class="hd3-clouds-upper" src="assets/images/heart-director-page2/clouds-upper.webp" alt="" />
-            <img class="hd3-banner" src="assets/images/heart-director-page2/banner.webp" alt="" />
-            <img class="hd3-dove-left" src="assets/images/heart-director-page2/dove-left.webp" alt="" />
-            <img class="hd3-dove-right" src="assets/images/heart-director-page2/dove-right.webp" alt="" />
-            <img class="hd3-clouds-lower" src="assets/images/heart-director-page2/clouds-lower.webp" alt="" />
+              <button type="button" class="hd3-heart-hotspot" aria-label="Peek inside Lain Doe Love's heart" aria-haspopup="dialog">
+              </button>
 
-            <button type="button" class="hd3-heart-hotspot" aria-label="Peek inside Lain Doe Love's heart" aria-haspopup="dialog">
-            </button>
-          </div>
-        </section>
+              <div class="hd4-scene-offset">
+                <img class="hd4-arrow" src="assets/images/heart-director-page3/arrow.webp" alt="" />
+                <img class="hd4-clouds" src="assets/images/heart-director-page3/clouds.webp" alt="" />
 
-        <!-- Section 3: heart-director-page3 (Figma node 1103:2179). Sits behind
-             section-2 in the same pin (not its own separate, overflow-clipped
-             section) so the arrow growing at the end of section-2 can lead
-             straight into this fully-formed scene instead of getting cut off
-             at a section boundary. Section-2 fades out to reveal it once the
-             arrow's done growing; static for now otherwise — a future pass
-             will light up each target in sequence as its own scroll beat. -->
-        <section id="section-3" class="section-frame section-frame-3 tunnel-layer tunnel-layer-targets">
-          <div class="hero-section hero-section-3">
-            <h1 class="visually-hidden">
-              The Heart Director's arrow passes through three targets on its way down.
-            </h1>
-
-            <img class="hd4-arrow" src="assets/images/heart-director-page3/arrow.webp" alt="" />
-            <img class="hd4-clouds" src="assets/images/heart-director-page3/clouds.webp" alt="" />
-
-            <div class="hd4-target hd4-target-1">
-              <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-            </div>
-            <div class="hd4-target hd4-target-2">
-              <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-            </div>
-            <div class="hd4-target hd4-target-3">
-              <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
+                <div class="hd4-target hd4-target-1">
+                  <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
+                </div>
+                <div class="hd4-target hd4-target-2">
+                  <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
+                </div>
+                <div class="hd4-target hd4-target-3">
+                  <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
+                </div>
+              </div>
             </div>
           </div>
         </section>

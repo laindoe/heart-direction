@@ -65,16 +65,16 @@ html, body {
    script.js) into: the tunnel push-through zoom, a long pause on section-2
    so there's time to look at the portrait and tap the heart before anything
    else happens, the bow+arrow descent, a short hold, the arrow growing in
-   place, another hold, section-2 fading out to reveal section-3 (already
-   sitting behind it, static, the same "back layer" pattern as section-1/2),
-   and a final hold before section-4 continues normally. All three sections
-   share this one pin so nothing gets clipped at a section boundary —
-   section-3 used to be its own separate, overflow-clipped section, which
-   cut off the arrow mid-grow instead of letting it lead into that scene.
+   place, another hold, then panning the merged section-2/3 canvas upward to
+   scroll from the portrait/bow scene into the targets (see
+   .hero-section-2-canvas below — section-3's content literally lives inside
+   section-2's own canvas now, not a separate section cross-faded on top of
+   it, so there's no clipping or fading between them, just one continuous
+   piece of art panning through), and a final hold before section-4
+   continues normally.
 
    Camera-through-a-doorway effect: section-2 is a completely static
-   full-screen background layer (z-index 1, no animation of its own) through
-   its own scene, only fading near the very end (see .tunnel-layer-back).
+   full-screen background layer (z-index 1, no animation of its own).
    Section-1 is the foreground (z-index 2) and scales up from 1x via a real
    transform: scale(), pivoting on the tunnel graphic's actual vanishing-point
    opening (49.9%/61.9% of the viewport — found by flood-filling the
@@ -123,17 +123,8 @@ html, body {
   will-change: transform;
 }
 
-/* Section-2 stays opaque (z-index 1) through its own reveal, pause, and bow
-   scene, then fades out late in the scroll (--section2-opacity, set by
-   script.js) to reveal section-3 sitting behind it (z-index 0) — the same
-   "static back layer revealed as the front fades" pattern as section-1/2. */
 .tunnel-layer-back {
   z-index: 1;
-  opacity: var(--section2-opacity, 1);
-}
-
-.tunnel-layer-targets {
-  z-index: 0;
 }
 
 /* Section-1's own backgrounds would otherwise sit opaque behind the tunnel
@@ -311,18 +302,50 @@ html, body {
   pointer-events: none;
 }
 
-/* ---------- Section 2 (Figma node 1102:2, "heart-director-page2") ---------- */
-/* Figma frame is 1125x2248; all child positions below are scaled by 402/1125. */
+/* ---------- Section 2 (Figma node 1102:2, "heart-director-page2") + ---------- */
+/* ---------- Section 3 (Figma node 1103:2179, "heart-director-page3") ---------- */
+/* Figma frame is 1125x2248; all child positions below are scaled by 402/1125.
+   Section 3's frame is the same size/ratio, reused as-is (see
+   .hd4-scene-offset) — both were designed as consecutive storyboard frames
+   of the same width, which is what makes stacking them into one canvas and
+   panning through work visually. */
 
 .section-frame-2 {
   --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
   background-color: #242121;
 }
 
+/* .hero-section-2 is the fixed-size "window" (unchanged from before: still
+   803px tall, still overflow:hidden via the shared .hero-section rule) — it
+   always shows exactly one screen's worth of the taller canvas below. */
 .hero-section-2 {
   width: 402px;
   height: 803px;
   background: #242121;
+}
+
+/* The actual content: section-2's own scene (803px) followed immediately by
+   section-3's (offset 803px down via .hd4-scene-offset), one continuous
+   1606px-tall canvas. --scene2-pan (set by script.js, canvas px, 0 to -803)
+   slides it upward within the window above to scroll from one into the
+   other — same sprite-crop technique as .hd4-target's sprite sheet, just at
+   scene scale, instead of cross-fading two separately-clipped layers. */
+.hero-section-2-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 402px;
+  height: 1606px;
+  transform: translateY(var(--scene2-pan, 0px));
+  will-change: transform;
+}
+
+.hd4-scene-offset {
+  position: absolute;
+  left: 0;
+  top: 803px;
+  width: 402px;
+  height: 803px;
 }
 
 .hd3-portrait {
@@ -441,8 +464,11 @@ html, body {
   outline-offset: 2px;
 }
 
-/* ---------- Section 3 (Figma node 1103:2179, "heart-director-page3") ---------- */
-/* Figma frame is 1125x2248 (same ratio as page2); positions scaled by 402/1125. */
+/* ---------- Section 3 content (used inside .hd4-scene-offset, above) ---------- */
+/* Figma frame is 1125x2248 (same ratio as page2); positions scaled by 402/1125.
+   .section-frame-3/.hero-section-3 aren't applied to section-3 itself
+   anymore (its content lives inside section-2's canvas now) but are kept
+   here since section-4 still reuses them for its own, separate frame. */
 
 .section-frame-3 {
   --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
