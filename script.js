@@ -23,11 +23,18 @@ const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
 
 if (tunnelTransition) {
-  // Use nearly the whole pinned scroll range for the zoom itself (only a
-  // short hold at the end), and ease it in (progress^2) so it starts slow —
-  // the tunnel rings visibly enlarge and rush past — and accelerates into
-  // the reveal, instead of snapping open in the first moments of scroll.
-  const SCALE_FRACTION = 0.85;
+  // Ease the zoom in (progress^2) so it starts slow — the tunnel rings
+  // visibly enlarge and rush past — and accelerates into the reveal, instead
+  // of snapping open in the first moments of scroll. SCALE_FRACTION is
+  // deliberately well under 1: CANVAS_OPENING_RADIUS is the *transparent
+  // hole's* own measured extent, but the opaque ring immediately bordering
+  // it (the innermost heart's point) sits a bit further from the pivot and
+  // needs more scale to fully clear the viewport than the hole itself does.
+  // Rather than measure that ring precisely, finish the ramp (and force-hide
+  // the foreground, below) well before the halfway point of the scroll, so
+  // there's a large safety margin — and a generous static hold afterward —
+  // regardless of exactly where a user's scroll settles.
+  const SCALE_FRACTION = 0.45;
   // The opening's real canvas-space radius (~28px out of the 402x871
   // design canvas), measured by flood-filling heart-tunnel.webp's alpha
   // channel from its visual center to isolate just the enclosed hole.
@@ -48,7 +55,7 @@ if (tunnelTransition) {
     const heroScale = Math.max(window.innerWidth / 402, window.innerHeight / 871);
     const openingRadiusPx = CANVAS_OPENING_RADIUS * heroScale;
     const viewportDiagonal = Math.hypot(window.innerWidth, window.innerHeight);
-    const maxScale = (viewportDiagonal * 1.15) / openingRadiusPx;
+    const maxScale = (viewportDiagonal * 1.4) / openingRadiusPx;
     const scale = 1 + eased * (maxScale - 1);
 
     tunnelTransition.style.setProperty('--tunnel-scale', scale);
