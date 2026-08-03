@@ -59,11 +59,16 @@
             <img class="hd3-dove-right" src="assets/images/heart-director-page2/dove-right.webp" alt="" />
             <img class="hd3-clouds-lower" src="assets/images/heart-director-page2/clouds-lower.webp" alt="" />
 
-            <div class="hd3-bow-crop">
-              <img class="hd3-bow" src="assets/images/heart-director-page2/bow.webp" alt="" />
+            <div class="hd3-weapon">
+              <div class="hd3-bow-crop">
+                <img class="hd3-bow" src="assets/images/heart-director-page2/bow.webp" alt="" />
+              </div>
+
+              <img class="hd3-arrow" src="assets/images/heart-director-page2/arrow.webp" alt="" />
             </div>
 
-            <img class="hd3-arrow" src="assets/images/heart-director-page2/arrow.webp" alt="" />
+            <button type="button" class="hd3-heart-hotspot" aria-label="Peek inside Lain Doe Love's heart" aria-haspopup="dialog">
+            </button>
           </div>
         </section>
 
@@ -181,6 +186,16 @@
     </section>
 
   </main>
+
+  <!-- "Peek inside" modal, opened by tapping the heart pendant hotspot in
+       section-2. TODO: swap this placeholder copy for the real content. -->
+  <div class="heart-modal-overlay" id="heart-modal-overlay" hidden>
+    <div class="heart-modal" role="dialog" aria-modal="true" aria-labelledby="heart-modal-title">
+      <button type="button" class="heart-modal-close" aria-label="Close">&times;</button>
+      <h2 id="heart-modal-title">Peek Inside</h2>
+      <p>Placeholder copy — tell Claude what this should actually say, and it'll swap it in.</p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

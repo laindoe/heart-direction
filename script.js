@@ -39,6 +39,12 @@ if (tunnelTransition) {
   // design canvas), measured by flood-filling heart-tunnel.webp's alpha
   // channel from its visual center to isolate just the enclosed hole.
   const CANVAS_OPENING_RADIUS = 28;
+  // Bow + arrow reveal: starts once the zoom's done plus a short pause
+  // (0.55), finishes with a decent chunk of static hold still left before
+  // section-3 (0.8).
+  const WEAPON_REVEAL_START = 0.55;
+  const WEAPON_REVEAL_END = 0.8;
+  const WEAPON_OFFSET_PX = 70;
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -69,6 +75,17 @@ if (tunnelTransition) {
     if (tunnelLayerFront) {
       tunnelLayerFront.style.visibility = fraction >= SCALE_FRACTION ? 'hidden' : 'visible';
     }
+
+    // Once section-2 is settled (with a short pause after the zoom so it
+    // doesn't feel rushed), the bow + arrow rise up into place over their
+    // own scroll stretch — they start faded down and out of the way so the
+    // portrait reads first, then "pop out from under" the lower clouds.
+    const weaponT = Math.min(
+      1,
+      Math.max(0, (fraction - WEAPON_REVEAL_START) / (WEAPON_REVEAL_END - WEAPON_REVEAL_START))
+    );
+    tunnelTransition.style.setProperty('--weapon-offset', `${(1 - weaponT) * WEAPON_OFFSET_PX}px`);
+    tunnelTransition.style.setProperty('--weapon-opacity', weaponT);
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
@@ -83,3 +100,32 @@ document.querySelector('.hd2-marquee-btn')?.addEventListener('click', () => {
   const targetY = tunnelTransition.offsetTop + tunnelTransition.offsetHeight - window.innerHeight;
   window.scrollTo({ top: targetY, behavior: 'smooth' });
 });
+
+// "Peek inside" modal, opened by tapping the heart pendant hotspot.
+const heartHotspot = document.querySelector('.hd3-heart-hotspot');
+const heartModalOverlay = document.getElementById('heart-modal-overlay');
+const heartModalClose = document.querySelector('.heart-modal-close');
+
+if (heartHotspot && heartModalOverlay) {
+  const openHeartModal = () => {
+    heartModalOverlay.hidden = false;
+    heartModalClose?.focus();
+    document.addEventListener('keydown', onHeartModalKeydown);
+  };
+
+  const closeHeartModal = () => {
+    heartModalOverlay.hidden = true;
+    document.removeEventListener('keydown', onHeartModalKeydown);
+    heartHotspot.focus();
+  };
+
+  function onHeartModalKeydown(event) {
+    if (event.key === 'Escape') closeHeartModal();
+  }
+
+  heartHotspot.addEventListener('click', openHeartModal);
+  heartModalClose?.addEventListener('click', closeHeartModal);
+  heartModalOverlay.addEventListener('click', (event) => {
+    if (event.target === heartModalOverlay) closeHeartModal();
+  });
+}

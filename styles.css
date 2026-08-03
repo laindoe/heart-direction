@@ -356,6 +356,20 @@ html, body {
   object-fit: cover;
 }
 
+/* Bow + arrow are one unit that rises into place from below, so the portrait
+   reads first and they "pop out from under" the lower clouds a bit later in
+   the scroll. --weapon-offset/--weapon-opacity are set by script.js on
+   .tunnel-transition (an ancestor of section-2) as the user scrolls through
+   the section-1/2 pinned transition. Defaults (0px / 1) keep them in their
+   normal resting spot if JS is off. */
+.hd3-weapon {
+  position: absolute;
+  inset: 0;
+  transform: translateY(var(--weapon-offset, 0px));
+  opacity: var(--weapon-opacity, 1);
+  will-change: transform, opacity;
+}
+
 .hd3-bow-crop {
   position: absolute;
   left: -20px;
@@ -381,6 +395,27 @@ html, body {
   width: 579px;
   height: 772px;
   object-fit: cover;
+}
+
+/* Invisible tap target over the heart pendant in the portrait artwork —
+   the heart itself is just pixels in the flattened portrait.webp, so this
+   button is positioned on top of it by hand-measured coordinates. */
+.hd3-heart-hotspot {
+  position: absolute;
+  left: 163px;
+  top: 312px;
+  width: 60px;
+  height: 64px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.hd3-heart-hotspot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 /* ---------- Section 3 (Figma node 1103:2179, "heart-director-page3") ---------- */
@@ -720,4 +755,60 @@ html, body {
   width: 242px;
   height: 298px;
   object-fit: contain;
+}
+
+/* ---------- "Peek inside" modal (opened from the heart hotspot on section-2) ---------- */
+
+.heart-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 16, 14, 0.72);
+}
+
+.heart-modal-overlay[hidden] {
+  display: none;
+}
+
+.heart-modal {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 32px 28px;
+  border-radius: 12px;
+  background: #fff8e7;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #2a2320;
+}
+
+.heart-modal h2 {
+  margin: 0 0 12px;
+  color: #7a1414;
+  font-style: italic;
+}
+
+.heart-modal p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.heart-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  color: #7a1414;
+  cursor: pointer;
 }
