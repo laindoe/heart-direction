@@ -359,24 +359,26 @@ html, body {
   object-fit: cover;
 }
 
-/* Bow + arrow are one unit that descends into place from above, so the
+/* Bow + arrow are one unit. They descend into place from above (so the
    portrait reads first and they protrude down out of the cloud she's on a
-   bit later in the scroll. --weapon-offset/--weapon-opacity are set by
-   script.js on .tunnel-transition (an ancestor of section-2) as the user
-   scrolls through the section-1/2 pinned transition. Defaults (0px / 1)
-   keep them in their normal resting spot if JS is off. */
+   bit later in the scroll), then — once settled — grow together in place as
+   a "pulling back and building tension" beat. --weapon-offset/
+   --weapon-opacity/--bow-pull-scale are all set by script.js on
+   .tunnel-transition (an ancestor of section-2) as the user scrolls through
+   the section-1/2 pinned transition; defaults (0px / 1 / 1) keep this group
+   in its normal resting spot, unscaled, if JS is off. transform-origin is
+   the bow's own grip point (46.3%/83.2% of this box, i.e. .hd3-bow-crop's
+   center) so both bow and arrow grow anchored there, in sync, rather than
+   drifting apart or scaling from the group's unrelated center. */
 .hd3-weapon {
   position: absolute;
   inset: 0;
-  transform: translateY(var(--weapon-offset, 0px));
+  transform-origin: 46.3% 83.2%;
+  transform: translateY(var(--weapon-offset, 0px)) scale(var(--bow-pull-scale, 1));
   opacity: var(--weapon-opacity, 1);
   will-change: transform, opacity;
 }
 
-/* Once the descent settles, the bow grows in place — a "pulling back and
-   building tension" beat, driven by --bow-pull-scale (set by script.js on
-   .tunnel-transition, same pattern as --weapon-offset above). Arrow doesn't
-   scale with it yet; that's a later pass on the rest of this scene. */
 .hd3-bow-crop {
   position: absolute;
   left: -20px;
@@ -384,8 +386,6 @@ html, body {
   width: 412px;
   height: 184px;
   overflow: hidden;
-  transform: scale(var(--bow-pull-scale, 1));
-  will-change: transform;
 }
 
 .hd3-bow {
