@@ -61,9 +61,33 @@ html, body {
 }
 
 /* ---------- Section 1 -> Section 2 scroll-pinned reveal transition ---------- */
-/* 300vh total = section-1's own 100vh + 100vh driving the reveal-hole growth
-   (--reveal-radius, set by script.js from scroll position) + 100vh of resting
-   time for section-2 once fully revealed, before section-3 continues normally. */
+/* 300vh total = section-1's own 100vh + 100vh driving the tunnel push-through
+   (--tunnel-scale, set by script.js from scroll position) + 100vh of resting
+   time for section-2 once fully revealed, before section-3 continues normally.
+
+   Camera-through-a-doorway effect: section-2 is a completely static
+   full-screen background layer (z-index 1, no animation of its own).
+   Section-1 is the foreground (z-index 2) and scales up from 1x via a real
+   transform: scale(), pivoting on the tunnel graphic's actual vanishing-point
+   opening (49.9%/61.9% of the viewport — found by flood-filling the
+   heart-tunnel.webp alpha channel from its visual center to isolate just the
+   enclosed transparent hole at the end of the tunnel, as opposed to the
+   transparent padding around the whole artwork). As the foreground scales
+   around that pivot, the opening grows along with everything else and the
+   rest of the artwork (rings, clouds, title, cherubs) is carried outward past
+   the viewport edges — the opening isn't animated independently, it just
+   grows because it's part of the one scaling layer.
+   For section-2 to actually show through that opening, nothing in section-1
+   can be opaque there: .section-frame's and .hero-section's background
+   colors are overridden to transparent below, and bg-blue.webp (section-1's
+   own sky, which sits behind the tunnel graphic but still in front of
+   section-2) had a matching soft-edged hole punched into its alpha channel
+   at the same spot — it's a flattened rectangle with no transparency of its
+   own, so without that punch it opaquely blocked the reveal.
+   (An earlier attempt animated an independent circular clip-path/mask
+   instead — visually similar at a glance, but semantically backwards from
+   "one foreground layer physically moving toward the camera," per feedback,
+   and the SVG <mask> version of it didn't even render on Safari.) */
 .tunnel-transition {
   position: relative;
   width: 100%;
@@ -83,33 +107,26 @@ html, body {
   inset: 0;
 }
 
-/* section-2 is the front layer, clipped to a growing circle centered on
-   section-1's tunnel graphic's actual vanishing-point opening (verified via
-   its alpha channel — 55.2%/60.4% is that point's position as a fraction of
-   section-1's 402x871 canvas). At rest the circle is tiny, so section-2 is
-   invisible outside that pinpoint and section-1 (the plain, un-clipped back
-   layer) shows normally; growing the circle progressively reveals more of
-   section-2 while covering more of section-1 in the same stroke — clip-path
-   affects the whole element (including its own background), so there's no
-   separate opaque layer left over to block the reveal.
-   (Previous attempt used an SVG <mask> element referenced via url(#id) to
-   punch an actual hole in section-1 — semantically the more direct approach,
-   but it silently didn't render at all on Safari, leaving section-1
-   permanently opaque. This clip-path technique needs no such external
-   reference, just this one property.) */
 .tunnel-layer-front {
   z-index: 2;
-  clip-path: circle(var(--reveal-radius, 8px) at 55.2% 60.4%);
-  -webkit-clip-path: circle(var(--reveal-radius, 8px) at 55.2% 60.4%);
+  background: transparent;
+  transform-origin: 49.9% 61.9%;
+  transform: scale(var(--tunnel-scale, 1));
+  will-change: transform;
 }
 
 .tunnel-layer-back {
   z-index: 1;
 }
 
-#heart-hole-path {
-  transform-origin: 12px 11px;
-  transform: scale(var(--reveal-scale, 1));
+/* Section-1's own backgrounds would otherwise sit opaque behind the tunnel
+   artwork's transparent opening, blocking section-2 from showing through. */
+.tunnel-layer-front.section-frame {
+  background-color: transparent;
+}
+
+.hero-illustrated {
+  background: transparent;
 }
 
 .hd2-bg {
