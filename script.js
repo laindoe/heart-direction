@@ -19,11 +19,12 @@ sections.forEach((section) => observer.observe(section));
 // the viewport edges while section-2 (the plain, static back layer) sits
 // fully still underneath, gradually exposed through that one real opening
 // as the foreground grows past it. Later, section-2 itself plays out its
-// own scene (bow + arrow descend, arrow grows) and fades to reveal
-// section-3 sitting behind it, the same layered pattern one level deeper.
+// own scene (bow + arrow descend, arrow grows), then the merged section-2/3
+// canvas pans upward within its window to scroll from that scene into the
+// targets — section-3's content literally lives inside section-2's canvas
+// (see .hero-section-2-canvas in styles.css), not a separate layer.
 const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
-const tunnelLayerBack = tunnelTransition?.querySelector('.tunnel-layer-back');
 
 if (tunnelTransition) {
   // These are all fractions of the wrapper's *extra* scroll (now 481vh, see
@@ -61,14 +62,13 @@ if (tunnelTransition) {
   const ARROW_SCALE_START = 281 / 481;
   const ARROW_SCALE_END = 361 / 481;
   const ARROW_MAX_SCALE = 2.5;
-  // Section-3 reveal: after the arrow settles and another short hold (30vh),
-  // section-2 (portrait, bow, grown arrow — the whole tunnel-layer-back)
-  // fades out over 60vh to reveal section-3 (targets + its own bigger
-  // arrow), which has been sitting statically in place behind it the whole
-  // time — same "static back layer, front fades away" pattern as
-  // section-1/2, just reused here instead of a hard cut at a section edge.
-  const TARGETS_REVEAL_START = 391 / 481;
-  const TARGETS_REVEAL_END = 451 / 481; // leaves ~30vh hold before section-4
+  // Scene pan: after the arrow settles and another short hold (30vh), the
+  // merged section-2/3 canvas pans upward by a full 803px (its own scene's
+  // height) over 60vh, scrolling from the portrait/bow scene into the
+  // targets — one continuous canvas, not a fade between two layers.
+  const SCENE_PAN_START = 391 / 481;
+  const SCENE_PAN_END = 451 / 481; // leaves ~30vh hold before section-4
+  const SCENE_PAN_DISTANCE_PX = 803;
 
   const updateTunnelScale = () => {
     const extraScrollable = tunnelTransition.offsetHeight - window.innerHeight;
@@ -100,17 +100,32 @@ if (tunnelTransition) {
       tunnelLayerFront.style.visibility = fraction >= SCALE_FRACTION ? 'hidden' : 'visible';
     }
 
+    // Pan the merged canvas up to scroll from section-2's scene into
+    // section-3's, within the same fixed-size window (see
+    // .hero-section-2-canvas) — negative because the canvas moves up to
+    // reveal what's below it. Computed before weaponT below since the
+    // weapon's own opacity needs it too.
+    const panT = Math.min(
+      1,
+      Math.max(0, (fraction - SCENE_PAN_START) / (SCENE_PAN_END - SCENE_PAN_START))
+    );
+    tunnelTransition.style.setProperty('--scene2-pan', `${-panT * SCENE_PAN_DISTANCE_PX}px`);
+
     // Once section-2 is settled (with a short pause after the zoom so it
     // doesn't feel rushed), the bow + arrow descend into place over their
     // own scroll stretch — they start faded out and shifted up behind the
     // portrait so she reads first, then settle down as if protruding out
-    // from the cloud she's on.
+    // from the cloud she's on. Faded out again by (1 - panT) once the pan
+    // starts: the grown arrow's own scale pushes it past the 803px seam
+    // into section-3's territory, so it needs to be gone by the time the
+    // window pans far enough to show that area, or it doubles up with
+    // section-3's own arrow.
     const weaponT = Math.min(
       1,
       Math.max(0, (fraction - WEAPON_REVEAL_START) / (WEAPON_REVEAL_END - WEAPON_REVEAL_START))
     );
     tunnelTransition.style.setProperty('--weapon-offset', `${(1 - weaponT) * WEAPON_OFFSET_PX}px`);
-    tunnelTransition.style.setProperty('--weapon-opacity', weaponT);
+    tunnelTransition.style.setProperty('--weapon-opacity', weaponT * (1 - panT));
 
     // Arrow grows from 1x to ARROW_MAX_SCALE in place once the descent's
     // settled — the bow itself doesn't scale.
@@ -119,19 +134,6 @@ if (tunnelTransition) {
       Math.max(0, (fraction - ARROW_SCALE_START) / (ARROW_SCALE_END - ARROW_SCALE_START))
     );
     tunnelTransition.style.setProperty('--arrow-pull-scale', 1 + arrowT * (ARROW_MAX_SCALE - 1));
-
-    // Section-2 fades out to reveal section-3, already in place behind it.
-    const targetsT = Math.min(
-      1,
-      Math.max(0, (fraction - TARGETS_REVEAL_START) / (TARGETS_REVEAL_END - TARGETS_REVEAL_START))
-    );
-    tunnelTransition.style.setProperty('--section2-opacity', 1 - targetsT);
-    // Same belt-and-suspenders as the section-1 foreground: force it fully
-    // out of the way once faded, so nothing (including the now-invisible
-    // heart hotspot) can linger or be tapped on top of section-3.
-    if (tunnelLayerBack) {
-      tunnelLayerBack.style.visibility = fraction >= TARGETS_REVEAL_END ? 'hidden' : 'visible';
-    }
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
