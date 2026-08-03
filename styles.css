@@ -359,22 +359,16 @@ html, body {
   object-fit: cover;
 }
 
-/* Bow + arrow are one unit. They descend into place from above (so the
-   portrait reads first and they protrude down out of the cloud she's on a
-   bit later in the scroll), then — once settled — grow together in place as
-   a "pulling back and building tension" beat. --weapon-offset/
-   --weapon-opacity/--bow-pull-scale are all set by script.js on
+/* Bow + arrow descend into place together from above, so the portrait reads
+   first and they protrude down out of the cloud she's on a bit later in the
+   scroll. --weapon-offset/--weapon-opacity are set by script.js on
    .tunnel-transition (an ancestor of section-2) as the user scrolls through
-   the section-1/2 pinned transition; defaults (0px / 1 / 1) keep this group
-   in its normal resting spot, unscaled, if JS is off. transform-origin is
-   the bow's own grip point (46.3%/83.2% of this box, i.e. .hd3-bow-crop's
-   center) so both bow and arrow grow anchored there, in sync, rather than
-   drifting apart or scaling from the group's unrelated center. */
+   the section-1/2 pinned transition; defaults (0px / 1) keep this group in
+   its normal resting spot if JS is off. */
 .hd3-weapon {
   position: absolute;
   inset: 0;
-  transform-origin: 46.3% 83.2%;
-  transform: translateY(var(--weapon-offset, 0px)) scale(var(--bow-pull-scale, 1));
+  transform: translateY(var(--weapon-offset, 0px));
   opacity: var(--weapon-opacity, 1);
   will-change: transform, opacity;
 }
@@ -398,12 +392,18 @@ html, body {
   pointer-events: none;
 }
 
+/* Once the bow+arrow have settled, only the arrow grows in place — building
+   toward the bigger arrow that continues the shot in section-3.
+   --arrow-pull-scale is set by script.js on .tunnel-transition, same
+   pattern as --weapon-offset. Default (1) leaves it at rest if JS is off. */
 .hd3-arrow {
   left: -55px;
   top: 208px;
   width: 579px;
   height: 772px;
   object-fit: cover;
+  transform: scale(var(--arrow-pull-scale, 1));
+  will-change: transform;
 }
 
 /* Invisible tap target over the heart pendant in the portrait artwork —
