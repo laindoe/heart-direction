@@ -56,12 +56,14 @@ if (tunnelTransition) {
   const WEAPON_REVEAL_END = 261 / 481; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
   // Arrow grows in place: after the weapon settles and a short hold (20vh),
-  // just the arrow (not the bow) grows over 80vh, foreshadowing the much
-  // bigger arrow already sitting in place in section-3 (revealed next).
-  // Bow stays put.
+  // just the arrow (not the bow) grows over 80vh, as if shooting forward
+  // toward the camera before it passes on behind the targets. Bow stays put.
+  // Modest max (unlike an earlier version of this effect) since this is the
+  // same arrow that has to stay in a sane relationship with the targets'
+  // fixed positions once it settles, not a stand-in that gets swapped out.
   const ARROW_SCALE_START = 281 / 481;
   const ARROW_SCALE_END = 361 / 481;
-  const ARROW_MAX_SCALE = 2.5;
+  const ARROW_MAX_SCALE = 1.4;
   // Scene pan: after the arrow settles and another short hold (30vh), the
   // merged section-2/3 canvas pans upward by a full 803px (its own scene's
   // height) over 60vh, scrolling from the portrait/bow scene into the
@@ -112,20 +114,22 @@ if (tunnelTransition) {
     tunnelTransition.style.setProperty('--scene2-pan', `${-panT * SCENE_PAN_DISTANCE_PX}px`);
 
     // Once section-2 is settled (with a short pause after the zoom so it
-    // doesn't feel rushed), the bow + arrow descend into place over their
-    // own scroll stretch — they start faded out and shifted up behind the
-    // portrait so she reads first, then settle down as if protruding out
-    // from the cloud she's on. Faded out again by (1 - panT) once the pan
-    // starts: the grown arrow's own scale pushes it past the 803px seam
-    // into section-3's territory, so it needs to be gone by the time the
-    // window pans far enough to show that area, or it doubles up with
-    // section-3's own arrow.
+    // doesn't feel rushed), the bow + arrow descend into place together over
+    // their own scroll stretch — they start faded out and shifted up behind
+    // the portrait so she reads first, then settle down as if protruding out
+    // from the cloud she's on. This entrance fade is shared by the whole
+    // group (bow + arrow), but the bow alone ALSO fades back out once the
+    // pan starts (--bow-opacity, multiplying on top of this one on just
+    // .hd3-bow-crop) — the bow has no business lingering once the scene's
+    // panned into the targets, but the arrow does: it's the same one arrow
+    // that keeps threading behind them the whole time, so it stays put here.
     const weaponT = Math.min(
       1,
       Math.max(0, (fraction - WEAPON_REVEAL_START) / (WEAPON_REVEAL_END - WEAPON_REVEAL_START))
     );
     tunnelTransition.style.setProperty('--weapon-offset', `${(1 - weaponT) * WEAPON_OFFSET_PX}px`);
-    tunnelTransition.style.setProperty('--weapon-opacity', weaponT * (1 - panT));
+    tunnelTransition.style.setProperty('--weapon-opacity', weaponT);
+    tunnelTransition.style.setProperty('--bow-opacity', 1 - panT);
 
     // Arrow grows from 1x to ARROW_MAX_SCALE in place once the descent's
     // settled — the bow itself doesn't scale.
