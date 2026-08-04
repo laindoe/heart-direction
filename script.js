@@ -18,18 +18,19 @@ sections.forEach((section) => observer.observe(section));
 // tunnel's real transparent opening, so it carries its own artwork out past
 // the viewport edges while section-2 (the plain, static back layer) sits
 // fully still underneath, gradually exposed through that one real opening
-// as the foreground grows past it. Later, section-2 itself plays out its
-// own scene (bow + arrow descend, arrow grows), then the merged section-2/3
-// canvas pans upward within its window to scroll from that scene into the
-// targets — section-3's content literally lives inside section-2's canvas
-// (see .hero-section-2-canvas in styles.css), not a separate layer.
+// as the foreground grows past it. Later, section-2 itself plays out its own
+// scene (bow + arrow descend, arrow grows to full size, she scoots up while
+// the bow + arrow draw back), then the merged section-2/3 canvas pans
+// upward within its window — the "release" — to scroll from that scene into
+// the targets — section-3's content literally lives inside section-2's
+// canvas (see .hero-section-2-canvas in styles.css), not a separate layer.
 const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
 
 if (tunnelTransition) {
-  // These are all fractions of the wrapper's *extra* scroll (now 481vh, see
+  // These are all fractions of the wrapper's *extra* scroll (now 571vh, see
   // .tunnel-transition in styles.css) — each phase's fraction is just its
-  // cumulative vh (noted per constant below) divided by 481.
+  // cumulative vh (noted per constant below) divided by 571.
 
   // Ease the zoom in (progress^2) so it starts slow — the tunnel rings
   // visibly enlarge and rush past — and accelerates into the reveal, instead
@@ -52,24 +53,35 @@ if (tunnelTransition) {
   // Negative offset: they start up near the top cloud (behind/above the
   // portrait) and descend into their resting spot, as if protruding down out
   // of the cloud she's on, rather than rising from below.
-  const WEAPON_REVEAL_START = 210 / 481;
-  const WEAPON_REVEAL_END = 261 / 481; // 51vh descent
+  const WEAPON_REVEAL_START = 210 / 571;
+  const WEAPON_REVEAL_END = 261 / 571; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
   // Arrow grows in place: after the weapon settles and a short hold (20vh),
-  // just the arrow (not the bow) grows over 80vh, as if shooting forward
-  // toward the camera before it passes on behind the targets. Bow stays put.
-  // Modest max (unlike an earlier version of this effect) since this is the
-  // same arrow that has to stay in a sane relationship with the targets'
-  // fixed positions once it settles, not a stand-in that gets swapped out.
-  const ARROW_SCALE_START = 281 / 481;
-  const ARROW_SCALE_END = 361 / 481;
-  const ARROW_MAX_SCALE = 1.4;
-  // Scene pan: after the arrow settles and another short hold (30vh), the
-  // merged section-2/3 canvas pans upward by a full 803px (its own scene's
-  // height) over 60vh, scrolling from the portrait/bow scene into the
-  // targets — one continuous canvas, not a fade between two layers.
-  const SCENE_PAN_START = 391 / 481;
-  const SCENE_PAN_END = 451 / 481; // leaves ~30vh hold before section-4
+  // just the arrow (not the bow) grows over 80vh, up to a size proportionate
+  // to the bow and everything else in this scene — see .hd4-arrow in
+  // styles.css for why the *starting* box is small (it used to start already
+  // at this grown size, which looked oversized next to the bow at rest).
+  const ARROW_SCALE_START = 281 / 571;
+  const ARROW_SCALE_END = 361 / 571;
+  const ARROW_MAX_SCALE = 2.2;
+  // Draw: after the arrow settles and another short hold (30vh), she scoots
+  // up over 70vh (--character-scoot) to open up room, while the bow shifts
+  // up with her a shorter distance (--bow-stretch-offset, on .hd3-weapon)
+  // and the arrow additionally stretches further up from a fixed bottom
+  // anchor (--arrow-stretch-y, see .hd4-arrow-stretch) — the string/arrow
+  // visibly drawing back further than the bow itself moves. Holds at full
+  // draw for a beat (20vh) before the release/pan below.
+  const DRAW_START = 391 / 571;
+  const DRAW_END = 461 / 571;
+  const CHARACTER_SCOOT_PX = -200;
+  const BOW_STRETCH_OFFSET_PX = -70;
+  const ARROW_STRETCH_MAX = 1.6;
+  // Scene pan ("release"): after the draw holds, the merged section-2/3
+  // canvas pans upward by a full 803px (its own scene's height) over 60vh,
+  // scrolling from the portrait/bow scene into the targets — one continuous
+  // canvas, not a fade between two layers.
+  const SCENE_PAN_START = 481 / 571;
+  const SCENE_PAN_END = 541 / 571; // leaves ~30vh hold before section-4
   const SCENE_PAN_DISTANCE_PX = 803;
 
   const updateTunnelScale = () => {
@@ -138,6 +150,19 @@ if (tunnelTransition) {
       Math.max(0, (fraction - ARROW_SCALE_START) / (ARROW_SCALE_END - ARROW_SCALE_START))
     );
     tunnelTransition.style.setProperty('--arrow-pull-scale', 1 + arrowT * (ARROW_MAX_SCALE - 1));
+
+    // Draw: she scoots up to make room, the bow shifts up a shorter distance
+    // "alongside" her, and the arrow stretches further still from its own
+    // fixed bottom anchor — three different distances for the same motion,
+    // which is what sells the string actually being pulled back rather than
+    // everything just sliding up together.
+    const drawT = Math.min(
+      1,
+      Math.max(0, (fraction - DRAW_START) / (DRAW_END - DRAW_START))
+    );
+    tunnelTransition.style.setProperty('--character-scoot', `${drawT * CHARACTER_SCOOT_PX}px`);
+    tunnelTransition.style.setProperty('--bow-stretch-offset', `${drawT * BOW_STRETCH_OFFSET_PX}px`);
+    tunnelTransition.style.setProperty('--arrow-stretch-y', 1 + drawT * (ARROW_STRETCH_MAX - 1));
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
