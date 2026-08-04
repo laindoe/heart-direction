@@ -401,7 +401,8 @@ html, body {
    scroll. --weapon-offset/--weapon-opacity are set by script.js on
    .tunnel-transition (an ancestor of section-2) as the user scrolls through
    the section-1/2 pinned transition; defaults (0px / 1) keep this group in
-   its normal resting spot if JS is off. */
+   its normal resting spot if JS is off. (The bow alone also fades back out
+   later, once the scene pans — see --bow-opacity on .hd3-bow-crop below.) */
 .hd3-weapon {
   position: absolute;
   inset: 0;
@@ -410,6 +411,11 @@ html, body {
   will-change: transform, opacity;
 }
 
+/* Fades back out once the scene pans into the targets (--bow-opacity,
+   script.js) — unlike the arrow, the bow has no reason to still be visible
+   once the canvas has scrolled past it. Multiplies on top of .hd3-weapon's
+   own opacity above (both at 1 after the entrance settles, so this is the
+   only thing pulling the bow back down at that point). */
 .hd3-bow-crop {
   position: absolute;
   left: -20px;
@@ -417,6 +423,7 @@ html, body {
   width: 412px;
   height: 184px;
   overflow: hidden;
+  opacity: var(--bow-opacity, 1);
 }
 
 .hd3-bow {
@@ -427,20 +434,6 @@ html, body {
   height: 444.39%;
   max-width: none;
   pointer-events: none;
-}
-
-/* Once the bow+arrow have settled, only the arrow grows in place — building
-   toward the bigger arrow that continues the shot in section-3.
-   --arrow-pull-scale is set by script.js on .tunnel-transition, same
-   pattern as --weapon-offset. Default (1) leaves it at rest if JS is off. */
-.hd3-arrow {
-  left: -55px;
-  top: 208px;
-  width: 579px;
-  height: 772px;
-  object-fit: cover;
-  transform: scale(var(--arrow-pull-scale, 1));
-  will-change: transform;
 }
 
 /* Invisible tap target over the heart pendant in the portrait artwork —
@@ -481,12 +474,21 @@ html, body {
   background: #242121;
 }
 
+/* The one arrow: nocked through the bow (positioned in the un-offset,
+   .hd3-weapon coordinate space, not .hd4-scene-offset — it's sized/placed
+   to reach from there down behind all 3 targets on its own), and grows in
+   place once the bow settles (--arrow-pull-scale, script.js), as if
+   shooting forward toward the camera. Same box aspect ratio as the
+   original (628x838) scaled up ~1.25x so it still reaches past target-3
+   once repositioned higher to meet the bow. */
 .hd4-arrow {
-  left: -113px;
-  top: -17px;
-  width: 628px;
-  height: 838px;
+  left: -208px;
+  top: 550px;
+  width: 787px;
+  height: 1050px;
   object-fit: cover;
+  transform: scale(var(--arrow-pull-scale, 1));
+  will-change: transform;
 }
 
 .hd4-clouds {
