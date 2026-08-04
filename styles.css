@@ -61,17 +61,20 @@ html, body {
 }
 
 /* ---------- Section 1 -> 2 -> 3 scroll-pinned reveal transition ---------- */
-/* 581vh total = section-1's own 100vh + 481vh of extra scroll, split (in
+/* 671vh total = section-1's own 100vh + 571vh of extra scroll, split (in
    script.js) into: the tunnel push-through zoom, a long pause on section-2
    so there's time to look at the portrait and tap the heart before anything
-   else happens, the bow+arrow descent, a short hold, the arrow growing in
-   place, another hold, then panning the merged section-2/3 canvas upward to
-   scroll from the portrait/bow scene into the targets (see
-   .hero-section-2-canvas below — section-3's content literally lives inside
-   section-2's own canvas now, not a separate section cross-faded on top of
-   it, so there's no clipping or fading between them, just one continuous
-   piece of art panning through), and a final hold before section-4
-   continues normally.
+   else happens, the bow+arrow descent, a short hold, the arrow growing to
+   full size in place, another hold, then she scoots up (--character-scoot)
+   while the bow shifts up with her and the arrow additionally stretches
+   upward — drawing back (--bow-stretch-offset / --arrow-stretch-y) — a
+   brief hold at full draw, then panning the merged section-2/3 canvas
+   upward (the "release") to scroll from the portrait/bow scene into the
+   targets (see .hero-section-2-canvas below — section-3's content literally
+   lives inside section-2's own canvas now, not a separate section
+   cross-faded on top of it, so there's no clipping or fading between them,
+   just one continuous piece of art panning through), and a final hold
+   before section-4 continues normally.
 
    Camera-through-a-doorway effect: section-2 is a completely static
    full-screen background layer (z-index 1, no animation of its own).
@@ -99,7 +102,7 @@ html, body {
 .tunnel-transition {
   position: relative;
   width: 100%;
-  height: 581vh;
+  height: 671vh;
 }
 
 .tunnel-pin {
@@ -348,6 +351,17 @@ html, body {
   height: 803px;
 }
 
+/* She + her clouds/banner/doves/heart-hotspot scoot up together
+   (--character-scoot, script.js on .tunnel-transition) once the bow's
+   settled, to open up room below for the arrow's draw stretch. Default
+   (0px) leaves her in her normal spot if JS is off. */
+.hd3-character {
+  position: absolute;
+  inset: 0;
+  transform: translateY(var(--character-scoot, 0px));
+  will-change: transform;
+}
+
 .hd3-portrait {
   left: -88px;
   top: 61px;
@@ -402,11 +416,15 @@ html, body {
    .tunnel-transition (an ancestor of section-2) as the user scrolls through
    the section-1/2 pinned transition; defaults (0px / 1) keep this group in
    its normal resting spot if JS is off. (The bow alone also fades back out
-   later, once the scene pans — see --bow-opacity on .hd3-bow-crop below.) */
+   later, once the scene pans — see --bow-opacity on .hd3-bow-crop below.)
+   Later still, once she's scooted up (see .hd3-character), the whole group
+   also shifts up a little of its own (--bow-stretch-offset) — "the bow
+   moving alongside" the arrow's own, bigger stretch (see
+   .hd4-arrow-stretch) — added on top of the same translateY via calc(). */
 .hd3-weapon {
   position: absolute;
   inset: 0;
-  transform: translateY(var(--weapon-offset, 0px));
+  transform: translateY(calc(var(--weapon-offset, 0px) + var(--bow-stretch-offset, 0px)));
   opacity: var(--weapon-opacity, 1);
   will-change: transform, opacity;
 }
@@ -476,18 +494,39 @@ html, body {
 
 /* The one arrow: nocked through the bow (positioned in the un-offset,
    .hd3-weapon coordinate space, not .hd4-scene-offset — it's sized/placed
-   to reach from there down behind all 3 targets on its own), and grows in
-   place once the bow settles (--arrow-pull-scale, script.js), as if
-   shooting forward toward the camera. Same box aspect ratio as the
-   original (628x838) scaled up ~1.25x so it still reaches past target-3
-   once repositioned higher to meet the bow. */
+   to reach from there down behind all 3 targets on its own). Starts small
+   here — proportionate to the bow, per feedback that it looked oversized
+   next to it at rest — then grows (--arrow-pull-scale, script.js) as if
+   shooting forward, up to a size that reaches past target-3.
+   transform-origin is top-anchored (not the default center): the fletching
+   sits close to the top of this box's crop, so a center-anchored scale
+   would've dragged the visible top edge down past the fletching entirely as
+   the box shrunk. Anchoring at the top keeps the fletching in place at rest
+   and lets height alone do the "reaching further down" as it grows —
+   top(550) + height(477) * ARROW_MAX_SCALE(2.2) lands the grown bottom
+   at ~1600, matching what the original always-787x1050 box covered. */
 .hd4-arrow {
-  left: -208px;
+  left: 7px;
   top: 550px;
-  width: 787px;
-  height: 1050px;
+  width: 358px;
+  height: 477px;
   object-fit: cover;
+  transform-origin: 50% 0%;
   transform: scale(var(--arrow-pull-scale, 1));
+  will-change: transform;
+}
+
+/* Wraps .hd4-arrow for the later "draw back" stretch (--arrow-stretch-y,
+   script.js): anchored at the bottom so growth pulls the fletching/nock end
+   further up and back while the tip stays anchored near the bow, instead of
+   growing symmetrically like the scale above. Separate element/transform
+   because CSS transform-origin applies to a whole transform list, and these
+   two stretches need different origins (center vs bottom). */
+.hd4-arrow-stretch {
+  position: absolute;
+  inset: 0;
+  transform-origin: bottom center;
+  transform: scaleY(var(--arrow-stretch-y, 1));
   will-change: transform;
 }
 
