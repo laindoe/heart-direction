@@ -28,9 +28,9 @@ const tunnelTransition = document.querySelector('.tunnel-transition');
 const tunnelLayerFront = tunnelTransition?.querySelector('.tunnel-layer-front');
 
 if (tunnelTransition) {
-  // These are all fractions of the wrapper's *extra* scroll (now 571vh, see
+  // These are all fractions of the wrapper's *extra* scroll (now 511vh, see
   // .tunnel-transition in styles.css) — each phase's fraction is just its
-  // cumulative vh (noted per constant below) divided by 571.
+  // cumulative vh (noted per constant below) divided by 511.
 
   // Ease the zoom in (progress^2) so it starts slow — the tunnel rings
   // visibly enlarge and rush past — and accelerates into the reveal, instead
@@ -53,35 +53,34 @@ if (tunnelTransition) {
   // Negative offset: they start up near the top cloud (behind/above the
   // portrait) and descend into their resting spot, as if protruding down out
   // of the cloud she's on, rather than rising from below.
-  const WEAPON_REVEAL_START = 210 / 571;
-  const WEAPON_REVEAL_END = 261 / 571; // 51vh descent
+  const WEAPON_REVEAL_START = 210 / 511;
+  const WEAPON_REVEAL_END = 261 / 511; // 51vh descent
   const WEAPON_OFFSET_PX = -140;
-  // Arrow grows in place: after the weapon settles and a short hold (20vh),
-  // just the arrow (not the bow) grows over 80vh, up to a size proportionate
-  // to the bow and everything else in this scene — see .hd4-arrow in
-  // styles.css for why the *starting* box is small (it used to start already
-  // at this grown size, which looked oversized next to the bow at rest).
-  const ARROW_SCALE_START = 281 / 571;
-  const ARROW_SCALE_END = 361 / 571;
-  const ARROW_MAX_SCALE = 2.2;
-  // Draw: after the arrow settles and another short hold (30vh), she scoots
-  // up over 70vh (--character-scoot) to open up room, while the bow shifts
-  // up with her a shorter distance (--bow-stretch-offset, on .hd3-weapon)
-  // and the arrow additionally stretches further up from a fixed bottom
-  // anchor (--arrow-stretch-y, see .hd4-arrow-stretch) — the string/arrow
-  // visibly drawing back further than the bow itself moves. Holds at full
-  // draw for a beat (20vh) before the release/pan below.
-  const DRAW_START = 391 / 571;
-  const DRAW_END = 461 / 571;
+  // Draw: after the weapon settles and a short hold (20vh), she scoots up
+  // over 80vh to open up room overhead, the bow rides up with her, and the
+  // arrow rides up further still. The three different distances are the
+  // whole point — if they all moved together it'd just read as the scene
+  // sliding up, whereas the arrow outrunning the bow reads as the string
+  // being drawn. The arrow does NOT change size during any of this.
+  const DRAW_START = 281 / 511;
+  const DRAW_END = 361 / 511;
   const CHARACTER_SCOOT_PX = -200;
-  const BOW_STRETCH_OFFSET_PX = -70;
-  const ARROW_STRETCH_MAX = 1.6;
-  // Scene pan ("release"): after the draw holds, the merged section-2/3
-  // canvas pans upward by a full 803px (its own scene's height) over 60vh,
-  // scrolling from the portrait/bow scene into the targets — one continuous
-  // canvas, not a fade between two layers.
-  const SCENE_PAN_START = 481 / 571;
-  const SCENE_PAN_END = 541 / 571; // leaves ~30vh hold before section-4
+  const BOW_DRAW_PX = -70;
+  const ARROW_DRAW_PX = -110;
+  // The shot: after a beat at full draw (20vh), everything below runs off
+  // one eased progress over 90vh — the bow unwinding back down, the arrow
+  // flying down and growing, AND the canvas panning to the targets. They're
+  // deliberately locked to the same curve rather than sequenced: the arrow
+  // covers 420px of canvas while the camera covers 803px, so the camera
+  // outruns it, which is what carries the bow up and out of frame while the
+  // arrow stays on screen the whole way (and the medallions rise up to meet
+  // it). Sequencing them instead left a dead stretch where the arrow had
+  // already flown out the bottom and the camera hadn't started following.
+  // Eased out so it leaves fast off the string and settles on arrival.
+  const SHOT_START = 381 / 511;
+  const SHOT_END = 471 / 511; // leaves 40vh hold before section-4
+  const ARROW_FLIGHT_PX = 310;
+  const ARROW_MAX_SCALE = 1.6;
   const SCENE_PAN_DISTANCE_PX = 803;
 
   const updateTunnelScale = () => {
@@ -114,55 +113,52 @@ if (tunnelTransition) {
       tunnelLayerFront.style.visibility = fraction >= SCALE_FRACTION ? 'hidden' : 'visible';
     }
 
-    // Pan the merged canvas up to scroll from section-2's scene into
-    // section-3's, within the same fixed-size window (see
-    // .hero-section-2-canvas) — negative because the canvas moves up to
-    // reveal what's below it. Computed before weaponT below since the
-    // weapon's own opacity needs it too.
-    const panT = Math.min(
-      1,
-      Math.max(0, (fraction - SCENE_PAN_START) / (SCENE_PAN_END - SCENE_PAN_START))
-    );
-    tunnelTransition.style.setProperty('--scene2-pan', `${-panT * SCENE_PAN_DISTANCE_PX}px`);
-
     // Once section-2 is settled (with a short pause after the zoom so it
     // doesn't feel rushed), the bow + arrow descend into place together over
     // their own scroll stretch — they start faded out and shifted up behind
     // the portrait so she reads first, then settle down as if protruding out
-    // from the cloud she's on. This entrance fade is shared by the whole
-    // group (bow + arrow), but the bow alone ALSO fades back out once the
-    // pan starts (--bow-opacity, multiplying on top of this one on just
-    // .hd3-bow-crop) — the bow has no business lingering once the scene's
-    // panned into the targets, but the arrow does: it's the same one arrow
-    // that keeps threading behind them the whole time, so it stays put here.
+    // from the cloud she's on.
     const weaponT = Math.min(
       1,
       Math.max(0, (fraction - WEAPON_REVEAL_START) / (WEAPON_REVEAL_END - WEAPON_REVEAL_START))
     );
     tunnelTransition.style.setProperty('--weapon-offset', `${(1 - weaponT) * WEAPON_OFFSET_PX}px`);
     tunnelTransition.style.setProperty('--weapon-opacity', weaponT);
-    tunnelTransition.style.setProperty('--bow-opacity', 1 - panT);
 
-    // Arrow grows from 1x to ARROW_MAX_SCALE in place once the descent's
-    // settled — the bow itself doesn't scale.
-    const arrowT = Math.min(
-      1,
-      Math.max(0, (fraction - ARROW_SCALE_START) / (ARROW_SCALE_END - ARROW_SCALE_START))
-    );
-    tunnelTransition.style.setProperty('--arrow-pull-scale', 1 + arrowT * (ARROW_MAX_SCALE - 1));
-
-    // Draw: she scoots up to make room, the bow shifts up a shorter distance
-    // "alongside" her, and the arrow stretches further still from its own
-    // fixed bottom anchor — three different distances for the same motion,
-    // which is what sells the string actually being pulled back rather than
-    // everything just sliding up together.
+    // Draw: she scoots up to make room, the bow rides up a shorter distance
+    // with her, and the arrow rides up further still — three different
+    // distances for the same motion, which is what sells the string actually
+    // being pulled rather than everything sliding up together. She stays up
+    // from here on; only the bow and arrow come back down.
     const drawT = Math.min(
       1,
       Math.max(0, (fraction - DRAW_START) / (DRAW_END - DRAW_START))
     );
     tunnelTransition.style.setProperty('--character-scoot', `${drawT * CHARACTER_SCOOT_PX}px`);
-    tunnelTransition.style.setProperty('--bow-stretch-offset', `${drawT * BOW_STRETCH_OFFSET_PX}px`);
-    tunnelTransition.style.setProperty('--arrow-stretch-y', 1 + drawT * (ARROW_STRETCH_MAX - 1));
+
+    // The shot, all on one eased curve (see SHOT_START above for why the pan
+    // is locked to it rather than sequenced after it): the bow unwinds back
+    // to its resting spot, the arrow flies down past it — growing only now,
+    // as it travels — and the camera pans down to the targets along with it.
+    const shotRaw = Math.min(
+      1,
+      Math.max(0, (fraction - SHOT_START) / (SHOT_END - SHOT_START))
+    );
+    const shotT = 1 - Math.pow(1 - shotRaw, 3);
+
+    tunnelTransition.style.setProperty('--bow-draw-offset', `${drawT * BOW_DRAW_PX * (1 - shotT)}px`);
+    tunnelTransition.style.setProperty(
+      '--arrow-travel',
+      `${drawT * ARROW_DRAW_PX * (1 - shotT) + ARROW_FLIGHT_PX * shotT}px`
+    );
+    tunnelTransition.style.setProperty('--arrow-pull-scale', 1 + shotT * (ARROW_MAX_SCALE - 1));
+    tunnelTransition.style.setProperty('--scene2-pan', `${-shotT * SCENE_PAN_DISTANCE_PX}px`);
+    // The pan carries the bow up out of frame on its own, but fade it over
+    // the back half of the shot too so it can't linger over the targets.
+    tunnelTransition.style.setProperty(
+      '--bow-opacity',
+      1 - Math.min(1, Math.max(0, (shotT - 0.5) / 0.5))
+    );
   };
 
   window.addEventListener('scroll', updateTunnelScale, { passive: true });
