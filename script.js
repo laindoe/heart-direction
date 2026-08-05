@@ -176,31 +176,43 @@ if (tunnelTransition) {
   });
 }
 
-// "Peek inside" modal, opened by tapping the heart pendant hotspot.
-const heartHotspot = document.querySelector('.hd3-heart-hotspot');
-const heartModalOverlay = document.getElementById('heart-modal-overlay');
-const heartModalClose = document.querySelector('.heart-modal-close');
+// Modals: the heart pendant hotspot and each of the three medallions.
+// Wired generically by matching a trigger's data-modal to a panel's
+// data-modal-panel, so adding another one is markup-only.
+{
+  let openOverlay = null;
+  let lastTrigger = null;
 
-if (heartHotspot && heartModalOverlay) {
-  const openHeartModal = () => {
-    heartModalOverlay.hidden = false;
-    heartModalClose?.focus();
-    document.addEventListener('keydown', onHeartModalKeydown);
+  const closeModal = () => {
+    if (!openOverlay) return;
+    openOverlay.hidden = true;
+    openOverlay = null;
+    document.removeEventListener('keydown', onKeydown);
+    lastTrigger?.focus();
   };
 
-  const closeHeartModal = () => {
-    heartModalOverlay.hidden = true;
-    document.removeEventListener('keydown', onHeartModalKeydown);
-    heartHotspot.focus();
-  };
-
-  function onHeartModalKeydown(event) {
-    if (event.key === 'Escape') closeHeartModal();
+  function onKeydown(event) {
+    if (event.key === 'Escape') closeModal();
   }
 
-  heartHotspot.addEventListener('click', openHeartModal);
-  heartModalClose?.addEventListener('click', closeHeartModal);
-  heartModalOverlay.addEventListener('click', (event) => {
-    if (event.target === heartModalOverlay) closeHeartModal();
-  });
+  for (const trigger of document.querySelectorAll('[data-modal]')) {
+    const overlay = document.querySelector(
+      `[data-modal-panel="${trigger.dataset.modal}"]`
+    );
+    if (!overlay) continue;
+
+    trigger.addEventListener('click', () => {
+      closeModal(); // never leave two open at once
+      openOverlay = overlay;
+      lastTrigger = trigger;
+      overlay.hidden = false;
+      overlay.querySelector('.hd-modal-close')?.focus();
+      document.addEventListener('keydown', onKeydown);
+    });
+
+    overlay.querySelector('.hd-modal-close')?.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) closeModal();
+    });
+  }
 }

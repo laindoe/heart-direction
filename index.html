@@ -95,22 +95,25 @@
                 <img class="hd3-dove-right" src="assets/images/heart-director-page2/dove-right.webp" alt="" />
                 <img class="hd3-clouds-lower" src="assets/images/heart-director-page2/clouds-lower.webp" alt="" />
 
-                <button type="button" class="hd3-heart-hotspot" aria-label="Peek inside Lain Doe Love's heart" aria-haspopup="dialog">
+                <button type="button" class="hd3-heart-hotspot" data-modal="heart" aria-label="Peek inside Lain Doe Love's heart" aria-haspopup="dialog">
                 </button>
               </div>
 
+              <!-- The three medallions the arrow passes through are each a
+                   button opening their own modal (data-modal -> the matching
+                   data-modal-panel near the end of this file). -->
               <div class="hd4-scene-offset">
                 <img class="hd4-clouds" src="assets/images/heart-director-page3/clouds.webp" alt="" />
 
-                <div class="hd4-target hd4-target-1">
+                <button type="button" class="hd4-target hd4-target-1" data-modal="target-1" aria-label="The first target: the rising sun" aria-haspopup="dialog">
                   <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-                </div>
-                <div class="hd4-target hd4-target-2">
+                </button>
+                <button type="button" class="hd4-target hd4-target-2" data-modal="target-2" aria-label="The second target: the writing hand" aria-haspopup="dialog">
                   <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-                </div>
-                <div class="hd4-target hd4-target-3">
+                </button>
+                <button type="button" class="hd4-target hd4-target-3" data-modal="target-3" aria-label="The third target: the open eye" aria-haspopup="dialog">
                   <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -209,11 +212,39 @@
 
   <!-- "Peek inside" modal, opened by tapping the heart pendant hotspot in
        section-2. TODO: swap this placeholder copy for the real content. -->
-  <div class="heart-modal-overlay" id="heart-modal-overlay" hidden>
-    <div class="heart-modal" role="dialog" aria-modal="true" aria-labelledby="heart-modal-title">
-      <button type="button" class="heart-modal-close" aria-label="Close">&times;</button>
-      <h2 id="heart-modal-title">Peek Inside</h2>
+  <!-- Modals. Each one is matched to its trigger by data-modal-panel <->
+       the trigger's data-modal (script.js wires them up generically, so a
+       new one only needs a button and a panel — no JS changes).
+       TODO: all four bodies are placeholder copy pending real content. -->
+  <div class="hd-modal-overlay" data-modal-panel="heart" hidden>
+    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-heart">
+      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
+      <h2 id="hd-modal-title-heart">Peek Inside</h2>
       <p>Placeholder copy — tell Claude what this should actually say, and it'll swap it in.</p>
+    </div>
+  </div>
+
+  <div class="hd-modal-overlay" data-modal-panel="target-1" hidden>
+    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-target-1">
+      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
+      <h2 id="hd-modal-title-target-1">The Rising Sun</h2>
+      <p>Placeholder copy for the first medallion — the sun rising over the mountains and the winding river.</p>
+    </div>
+  </div>
+
+  <div class="hd-modal-overlay" data-modal-panel="target-2" hidden>
+    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-target-2">
+      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
+      <h2 id="hd-modal-title-target-2">The Writing Hand</h2>
+      <p>Placeholder copy for the second medallion — the hand at work with the quill.</p>
+    </div>
+  </div>
+
+  <div class="hd-modal-overlay" data-modal-panel="target-3" hidden>
+    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-target-3">
+      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
+      <h2 id="hd-modal-title-target-3">The Open Eye</h2>
+      <p>Placeholder copy for the third medallion — the eye that sees what's invisible.</p>
     </div>
   </div>
 
