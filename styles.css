@@ -4,6 +4,20 @@
   padding: 0;
 }
 
+/* iOS/Safari renders its own button chrome (a white/gray rounded pill)
+   underneath whatever background you set unless appearance is reset too —
+   background:none alone doesn't suppress it. Global reset so every button
+   on the site (marquee, quest, tickets, hotspots, medallions, modal close)
+   gets a clean slate instead of patching it per-button as it turns up. */
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Background matches the hero's blue so Safari's natural overscroll/bounce
    reveals more blue instead of a black flash — no need to fight the bounce
    itself, which also lets Safari auto-hide its toolbar on scroll as usual. */
