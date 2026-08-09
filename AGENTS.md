@@ -54,10 +54,21 @@ When implementing a scene, read all relevant documentation before editing code.
 This includes:
 
 scene overview
-full detail
+full details
 transition
-asset checklist
 global scroll / transition rules
+
+When implementing a scene, read all documentation available for that scene.
+
+This may include:
+
+- scene#-overview.md
+- scene#-full-details.md
+- scene#-transition.md
+
+Asset requirements may be included inside the Full Details document rather than stored as a separate file.
+
+Always read the complete Full Details document before implementation.
 
 If the current implementation conflicts with the animation documentation, the documentation should be treated as the intended behavior unless explicitly instructed otherwise.
 
