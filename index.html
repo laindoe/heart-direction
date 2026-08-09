@@ -20,7 +20,7 @@
       <div class="tunnel-pin">
 
         <!-- Section 1: heart-director-2 (Figma node 1098:2), illustrated hero intro -->
-        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-front">
+        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-front" data-scene="01">
           <div class="hero-section hero-illustrated">
             <h1 class="visually-hidden">
               Introducing Laindoe Love — The Heart Director. Revealing the invisible.
@@ -56,7 +56,7 @@
              (--scene2-pan, set by script.js) to scroll from the portrait/bow
              scene into the targets — one continuous piece of art, not a cut
              or a cross-fade between two separate containers. -->
-        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-back">
+        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-back" data-scene="02">
           <div class="hero-section hero-section-2">
             <div class="hero-section-2-canvas">
               <h1 class="visually-hidden">
@@ -102,7 +102,7 @@
               <!-- The three medallions the arrow passes through are each a
                    button opening their own modal (data-modal -> the matching
                    data-modal-panel near the end of this file). -->
-              <div class="hd4-scene-offset">
+              <div class="hd4-scene-offset" data-scene-fragment="03">
                 <img class="hd4-clouds" src="assets/images/heart-director-page3/clouds.webp" alt="" />
 
                 <button type="button" class="hd4-target hd4-target-1" data-modal="target-1" aria-label="The first target: the rising sun" aria-haspopup="dialog">
@@ -127,7 +127,7 @@
          the heart, which then pulsates with light. "The Quest" button opens a
          modal telling this part of the story. "Back to Reality" is the exit —
          the heart tunnel expands as if traveling back out into daytime. -->
-    <section id="section-4" class="section-frame section-frame-3">
+    <section id="section-4" class="section-frame section-frame-3" data-scene="04" data-includes-scene="05">
       <div class="hero-section hero-section-3">
         <h1 class="visually-hidden">
           The arrow strikes the heart. Open the quest, or head back to reality.
@@ -156,7 +156,7 @@
     <!-- Cherubs hover like section-1's. Planned scroll animation: this scroll
          stays open until the bottom of the section, then rolls back up while
          clouds descend, revealing the next scene underneath. -->
-    <section id="section-5" class="section-frame section-frame-5">
+    <section id="section-5" class="section-frame section-frame-5" data-scene="06">
       <div class="hero-section hero-section-5">
         <h1 class="visually-hidden">
           Hear ye, hear ye. By divine declaration we joyfully announce: the gift
@@ -178,7 +178,7 @@
     <!-- Section 6: heart-director-page6 (Figma node 1106:3656) — final section -->
     <!-- The 4 tickets are real links but point nowhere yet (placeholder hrefs) —
          need actual URLs: newsletter signup, Substack, contact, socials. -->
-    <section id="section-6" class="section-frame section-frame-6">
+    <section id="section-6" class="section-frame section-frame-6" data-scene="07">
       <div class="hero-section hero-section-6">
         <h1 class="visually-hidden">
           Be my sweetheart: join the Heart Direction newsletter. Read the
@@ -248,6 +248,10 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- GSAP remains CDN-loaded so this static site needs no package manager or
+       build step. Narrative scene modules register ScrollTrigger timelines. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -140,7 +140,6 @@ html, body {
   background: transparent;
   transform-origin: 49.9% 61.9%;
   transform: scale(var(--tunnel-scale, 1));
-  will-change: transform;
 }
 
 .tunnel-layer-back {
@@ -357,7 +356,6 @@ html, body {
   width: 402px;
   height: 1606px;
   transform: translateY(var(--scene2-pan, 0px));
-  will-change: transform;
 }
 
 .hd4-scene-offset {
@@ -376,7 +374,6 @@ html, body {
   position: absolute;
   inset: 0;
   transform: translateY(var(--character-scoot, 0px));
-  will-change: transform;
 }
 
 .hd3-portrait {
@@ -440,7 +437,6 @@ html, body {
   inset: 0;
   transform: translateY(var(--weapon-offset, 0px));
   opacity: var(--weapon-opacity, 1);
-  will-change: transform, opacity;
 }
 
 /* Rides up with her during the draw, then drops back to its resting spot as
@@ -457,7 +453,6 @@ html, body {
   overflow: hidden;
   transform: translateY(var(--bow-draw-offset, 0px));
   opacity: var(--bow-opacity, 1);
-  will-change: transform, opacity;
 }
 
 .hd3-bow {
@@ -528,7 +523,6 @@ html, body {
   object-fit: cover;
   transform-origin: 50% 0%;
   transform: scale(var(--arrow-pull-scale, 1));
-  will-change: transform;
 }
 
 /* Wraps .hd4-arrow for its own travel (--arrow-travel, script.js), which
@@ -541,7 +535,6 @@ html, body {
   position: absolute;
   inset: 0;
   transform: translateY(var(--arrow-travel, 0px));
-  will-change: transform;
 }
 
 .hd4-clouds {
@@ -889,6 +882,11 @@ html, body {
 
 .hd-modal-overlay[hidden] {
   display: none;
+}
+
+html.modal-open {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .hd-modal {
