@@ -1,635 +1,162 @@
-# Heart Direction Website - Codex Instructions
+# Heart Direction Rebuild — Codex Instructions
 
-## Project Overview
+## Project status
 
-This repository contains the Heart Direction scrollytelling website.
+This repository contains a legacy illustrated scrollytelling website on
+`main`. A new immersive Heart Direction experience is being designed and must
+be developed incrementally on a separate production branch.
 
-It is a lightweight static website built with:
+The current rebuild is not a revision of the old seven-scene story. It is a
+new mobile-first spaceship journey through Lain Doe Love's heart, mind,
+philosophy, artifacts, body of work, store, and expanding creative worlds.
 
-- HTML
-- CSS
-- JavaScript
+Do not use the legacy page structure, scene numbering, copy, animation plan,
+or artwork as requirements for the rebuild. Preserve the legacy implementation
+through Git history unless the user explicitly requests an archive inside the
+working tree.
 
-There is currently no framework, package manager, build system, or component architecture.
+## Required reading
 
-Do not introduce React, Next.js, Vite, or another framework unless explicitly requested.
-
-The current project structure should remain lightweight.
-
----
-
-# Primary Goal
-
-The current priority is to rebuild and improve the animation architecture for the Heart Direction website.
-
-The website is a continuous illustrated scroll experience made of seven scenes.
-
-The animation system must support:
-
-- smooth scroll-driven transitions
-- reversible animation
-- mobile-first behavior
-- native-feeling scrolling
-- independent ambient animation
-- reusable scene logic
-- future artwork replacement without rebuilding the animation system
-
-The current artwork is still temporary in places.
-
-Do not treat current image positioning or temporary artwork as permanent design requirements when the animation documentation specifies otherwise.
-
----
-
-# Source of Truth
-
-The complete animation specification lives in:
+Before planning or modifying the rebuild, read every file in:
 
 ```text
-/docs/heart-direction-animation/
-
-These documents define the intended behavior of the website.
-
-When implementing a scene, read all relevant documentation before editing code.
-
-This includes:
-
-scene overview
-full details
-transition
-global scroll / transition rules
-
-When implementing a scene, read all documentation available for that scene.
-
-This may include:
-
-- scene#-overview.md
-- scene#-full-details.md
-- scene#-transition.md
-
-Asset requirements may be included inside the Full Details document rather than stored as a separate file.
-
-Always read the complete Full Details document before implementation.
-
-If the current implementation conflicts with the animation documentation, the documentation should be treated as the intended behavior unless explicitly instructed otherwise.
-
-Do not invent new choreography when the documentation already defines it.
-
-Scene Structure
-
-The intended narrative structure is:
-
-Scene 1 - The Entrance
-Scene 2 - Meet Lain Doe Love
-Scene 3 - The Medallions
-Scene 4 - The Quest
-Scene 5 - Back to Reality
-Scene 6 - The Proclamation
-Scene 7 - The Finale
-
-The current repository may not match this structure yet.
-
-For example, some existing scenes are merged or numbered inconsistently.
-
-When refactoring, prefer the intended seven-scene structure.
-
-Do not rely on legacy class names, IDs, or page numbers as the canonical scene numbering.
-
-Global Scroll Philosophy
-
-The user should feel like they are scrolling through a normal webpage while the illustrated world responds to that scroll.
-
-The animation should never feel like it is controlling the user.
-
-The experience should feel:
-
-natural
-responsive
-smooth
-reversible
-continuous
-
-The user must be able to:
-
-scroll slowly
-scroll quickly
-stop anywhere
-reverse direction
-use trackpad scrolling
-use mouse-wheel scrolling
-use native mobile touch scrolling
-
-Do not aggressively hijack scroll behavior.
-
-Avoid:
-
-forced snapping
-custom scroll physics
-replacing native scrolling
-locking the user inside animations
-fixed-speed autoplay
-blocking reverse scrolling
-large delays between user input and visual response
-
-Pinned sections are allowed when required for storytelling, but the user must still feel like their normal scroll input is directly controlling visible progress.
-
-Reversible Animation
-
-All narrative scroll-driven animations must reverse cleanly when scrolling upward.
-
-If an element:
-
-enters
-exits
-opens
-closes
-moves
-scales
-reveals
-hides
-changes lighting
-changes position
-
-while scrolling downward, reversing the scroll should restore the previous visual state predictably.
-
-The user should be able to retrace the entire website without:
-
-animation resets
-duplicated elements
-broken masks
-timeline jumps
-stale states
-requiring a page refresh
-
-Every intermediate state should remain visually valid if the user stops scrolling.
-
-Scroll-Driven vs Ambient Animation
-
-These are two different systems.
-
-Scroll-Driven Narrative Animation
-
-Examples:
-
-entering the heart tunnel
-moving through the tunnel
-revealing the bow
-drawing the bow
-firing the arrow
-arrow movement between scenes
-heart impact
-exiting the tunnel
-opening the proclamation
-closing the proclamation
-revealing the finale
-
-These animations should be controlled by scroll progress.
-
-They must reverse with scroll.
-
-Ambient Animation
-
-Examples:
-
-drifting clouds
-floating cherubs
-marquee flicker
-glowing heart
-sun glow
-horse stepping
-grass movement
-stars twinkling
-
-These animations are time-based.
-
-They should continue when the user stops scrolling.
-
-They do not need to reverse when the user scrolls upward.
-
-Keep ambient animation separate from narrative timelines.
-
-Preferred Animation Architecture
-
-Prefer a modular GSAP + ScrollTrigger architecture for narrative animation.
-
-The current project does not use GSAP yet.
-
-GSAP and ScrollTrigger may be introduced without converting the project to a framework or build system.
-
-Preferred structure: js/
-    scroll.js
-    ambient.js
-    modals.js
-
-    scenes/
-        scene-01.js
-        scene-02.js
-        scene-03.js
-        scene-04.js
-        scene-05.js
-        scene-06.js
-        scene-07.js
-
-script.js should eventually become a lightweight initializer rather than containing the entire animation system.
-
-Each scene module should own its own choreography.
-
-Do not replace one giant manual timeline with one giant GSAP timeline.
-
-Prefer multiple connected scene timelines that together create one continuous experience.
-
-Current Architecture Warning
-
-The current implementation contains legacy scroll logic that is fragile.
-
-Known issues include:
-
-hard-coded vh timing values
-fixed pixel motion distances
-scene-specific CSS variables written on every scroll event
-merged Scene 2 and Scene 3 canvas
-direct geometry reads during scrolling
-mixed viewport measurement systems
-static future scenes with animation comments but no implementation
-inconsistent scene numbering
-duplicate scene assets
-modal scrolling that currently continues behind overlays
-
-Do not build new animation behavior on top of brittle legacy logic if that logic directly conflicts with the new animation architecture.
-
-Refactor safely and incrementally.
-
-Implementation Strategy
-
-Work in stages.
-
-Do not attempt to rebuild all seven scenes in one task.
-
-Preferred order:
-
-inspect repository
-establish animation foundation
-stabilize modal behavior
-establish scene module structure
-implement Scene 1
-test
-implement Scene 2
-test
-continue scene by scene
-
-Do not continue automatically into the next scene unless explicitly requested.
-
-Change Scope
-
-Before modifying code:
-
-inspect the current implementation
-identify which code is reusable
-identify which code conflicts with the requested behavior
-make the smallest safe change
-preserve unrelated working behavior
-
-Do not perform broad unrelated refactors.
-
-Do not redesign the website.
-
-Do not change copy unless explicitly requested.
-
-Do not replace assets unless explicitly requested.
-
-Do not reorganize the entire image library unless explicitly requested.
-
-Artwork
-
-Current artwork should be treated as animation-ready placeholders where necessary.
-
-The animation system should allow art to be replaced later without rewriting choreography.
-
-Whenever an object needs independent motion, prefer independent assets or logical wrappers for that object.
-
-Examples:
-
-clouds
-cherubs
-tunnel layers
-arrows
-medallions
-heart lighting
-scroll rollers
-sun rays
-horse legs
-grass layers
-
-Avoid flattening independently animated objects into one large image when that would prevent the documented animation.
-
-Mobile First
-
-Mobile portrait is the primary experience.
-
-The current visual system is based around a narrow illustrated design canvas.
-
-Preserve the mobile-first composition where practical.
-
-Desktop should adapt the same scene choreography rather than becoming a completely separate website.
-
-Test especially for:
-
-iPhone Safari
-dynamic browser chrome
-100dvh
-orientation changes
-touch scrolling
-fast swipes
-reverse scrolling
-viewport resize
-
-Avoid mixing multiple viewport measurement systems without a clear reason.
-
-Scroll Performance
-
-Prioritize smooth mobile performance.
-
-Prefer:
-
-transform
-opacity
-GSAP transforms
-cached measurements
-ScrollTrigger refresh hooks
-lightweight masking
-
-Avoid:
-
-layout reads on every native scroll event
-repeated getBoundingClientRect() during every scroll callback
-unnecessary style writes
-heavy real-time blur filters
-large numbers of permanently active will-change layers
-giant GIFs
-unnecessary full-screen frame sequences
-
-Use pre-rendered glow layers where appropriate.
-
-Pinning
-
-Pinned sections are acceptable when required by the narrative.
-
-Examples include:
-
-tunnel travel
-proclamation opening
-
-Pinning should feel invisible.
-
-The user should always see a visual response when scrolling.
-
-Avoid situations where the page feels frozen or stuck.
-
-Pinned sections should transition smoothly back into normal document movement.
-
-Easing
-
-Use restrained motion.
-
-Most narrative animation should remain closely tied to scroll progress.
-
-Avoid:
-
-bounce
-elastic easing
-exaggerated overshoot
-cartoon-like spring behavior
-
-Faster triggered motion is acceptable when the story requires it.
-
-Examples:
-
-arrow release
-bowstring snap
-brief light impact
-
-These should still reconnect correctly to reverse scrolling.
-
-Modals
-
-Modal behavior must preserve animation state.
-
-When a modal opens:
-
-preserve current scroll position
-prevent background scrolling
-preserve scene timeline state
-prevent underlying narrative progression
-
-When a modal closes:
-
-restore the exact previous scroll position
-resume the same animation state
-avoid jumps
-avoid restarting the scene
-
-Modal transitions themselves may be animated, but should not alter narrative scroll progress.
-
-Reduced Motion
-
-Respect: prefers-reduced-motion
-
-Reduced-motion behavior should preserve narrative understanding while reducing major animated travel.
-
-Possible adjustments include:
-
-shorter transitions
-fewer ambient loops
-simplified scale movement
-simplified tunnel travel
-reduced parallax
-reduced horse/grass movement
-direct document reveal for proclamation
-
-Do not remove access to content or navigation.
-
-Scene 1 Specific Direction
-
-Scene 1 is the entrance into Heart Direction.
-
-The final implementation must eventually support:
-
-living sky
-drifting clouds
-independent cherub float
-subtle tunnel glow
-marquee light behavior
-Enter the Tunnel interaction
-forward camera movement through the heart
-layered tunnel depth
-reversible entrance
-
-Do not implement Scene 1 until explicitly asked after the foundation architecture is approved.
-
-Scene 2 Specific Direction
-
-Scene 2 contains:
-
-Lain Doe Love
-sacred-heart interaction
-birds holding the banner
-bow and arrow reveal
-bow draw
-arrow release
-
-Birds and banner must move as one connected assembly during entrance.
-
-The bow draw and arrow release must behave as documented.
-
-Do not assume the current merged canvas is the final architecture.
-
-Scene 3 Specific Direction
-
-Scene 3 contains:
-
-three medallions
-arrow traveling behind all three
-medallion glow
-optional interactive medallion buttons
-arrow continuing toward the Quest scene
-
-Scene 3 should be independently controllable from Scene 2.
-
-Scene 4 Specific Direction
-
-Scene 4 contains:
-
-arrow
-heart
-Quest marquee button
-heart impact
-light burst
-transition toward Back to Reality
-
-The Quest sign is physically attached to the heart and powers on after impact.
-
-Scene 5 Specific Direction
-
-Scene 5 is the tunnel exit.
-
-It should reuse the same conceptual tunnel system as Scene 1, but the viewer is traveling outward.
-
-The exterior world should already exist beyond the tunnel opening.
-
-The next scene's closed proclamation scroll should already be present in the exterior world.
-
-Scene 6 Specific Direction
-
-Scene 6 contains the proclamation.
-
-Core behavior:
-
-closed scroll
-viewport remains pinned
-scroll physically unfurls
-proclamation grows
-once taller than viewport, document travel begins
-full proclamation is read
-scroll rolls closed again
-finale begins appearing beneath it
-
-Do not fake this by simply scaling one long parchment image vertically.
-
-The scroll rollers and visible parchment region should behave like a physical scroll.
-
-Scene 7 Specific Direction
-
-Scene 7 is the final resting tableau.
-
-Once established:
-
-sun glows subtly
-sun rays wiggle slightly
-CTA buttons remain stable
-buttons are direct links
-rainbow remains stable
-Lain Doe Love remains mostly still
-horse legs animate gently
-grass and flowers move subtly
-clouds drift
-
-There is no additional major narrative scene after this.
-
-Final CTA Links
-
-The final scene contains four links:
-
-Be My Sweetheart
-Read the Journal
-Contact Me
-Follow the Journey
-
-Do not invent or change their destinations unless explicitly provided.
-
-Placeholder URLs may remain placeholders until destinations are supplied.
-
-The entire illustrated sign should act as the clickable area.
-
-Code Quality
-
-Prefer readable implementation over clever implementation.
-
-Use:
-
-descriptive function names
-clear scene boundaries
-named timing constants where necessary
-comments for unusual choreography
-reusable helpers only where they genuinely simplify the code
-
-Avoid:
-
-unexplained magic numbers
-huge anonymous animation blocks
-deeply nested transform logic
-duplicate scene timing calculations
-silent mutation of global state
-Testing Expectations
-
-After significant animation work, verify:
-
-scroll down
-scroll up
-pause midway
-fast scroll
-slow scroll
-mouse wheel
-trackpad
-mobile touch
-resize
-orientation change
-modal open/close
-reduced motion
-scene handoffs
-
-Do not consider an animation complete if it only works when scrolling downward at one speed.
-
-Reporting Changes
-
-After completing a task, report:
-
-files created
-files modified
-behavior implemented
-behavior intentionally preserved
-behavior intentionally removed
-temporary compromises
-remaining issues
-testing steps
-
-Do not automatically proceed into additional scene work without explicit approval.
-
-Important Final Rule
-
-The visual goal is not to create a website that showcases animation technology.
-
-The goal is to make the animation mechanics disappear.
-
-The visitor should feel like they are simply scrolling through an illustrated world that responds naturally to their movement.
-
-
-
+docs/heart-direction-rebuild/
+```
+
+Use this authority order when sources disagree:
+
+1. The user's newest explicit instruction
+2. `docs/heart-direction-rebuild/STATUS.md`
+3. `docs/heart-direction-rebuild/CREATIVE_BRIEF.md`
+4. `docs/heart-direction-rebuild/EXPERIENCE_FLOW.md`
+5. `docs/heart-direction-rebuild/VISUAL_SYSTEM.md`
+6. `docs/heart-direction-rebuild/ASSET_MANIFEST.md`
+7. `docs/heart-direction-rebuild/PRODUCTION_PLAN.md`
+8. Approved visual references supplied for the current task
+9. Legacy code and Git history, for historical context only
+
+Do not recover an older or rejected decision from conversation history when a
+newer rebuild document resolves it.
+
+## Current milestone
+
+The first milestone is the responsive lavender-cloud background and framing
+system. Do not implement the portal, spaceship, water, dashboard, artifact
+trail, or 3D runtime until the milestone in `STATUS.md` advances.
+
+## Change boundaries
+
+- Work on `production/homepage-rebuild`, not `main`.
+- Do not merge or deploy without explicit approval.
+- Make one reviewable milestone at a time.
+- Do not begin the next scene or asset automatically.
+- Do not change approved copy without explicit direction.
+- Do not invent scenes, messages, UI, sounds, portals, or interactions.
+- Do not install a framework or dependency without explaining its purpose,
+  payload, alternatives, and mobile-performance effect, then receiving approval.
+- Keep the visible homepage unchanged while working on documentation or asset
+  preparation unless the user explicitly asks for implementation.
+
+## Technical baseline
+
+The repository is currently a lightweight static site using HTML, CSS, and
+JavaScript. Preserve that baseline until the approved experience demonstrates
+a concrete need for additional tooling.
+
+Potential tools such as GSAP, ScrollTrigger, or Three.js are not pre-approved.
+Propose them at the milestone where they become necessary.
+
+The experience must be:
+
+- mobile portrait first;
+- responsive on desktop without becoming a separate product;
+- performant on current mobile Safari;
+- navigable with touch, mouse, trackpad, and keyboard where applicable;
+- understandable with reduced motion;
+- built with semantic interactive controls and useful fallback content.
+
+Preserve native-feeling scrolling. Do not introduce forced scroll physics,
+aggressive snapping, or a navigation system that traps the visitor.
+
+## Motion architecture
+
+Separate two systems:
+
+1. Narrative motion driven by user progress. It should pause cleanly and
+   reverse predictably when the visitor reverses direction.
+2. Ambient motion driven by time, such as water ripples, cherub hovering,
+   cloud drift, glows, and restrained light flicker.
+
+Do not bake independently animated elements into one layer. Conversely, do
+not use live 3D for an element when an optimized 2.5D layer produces the same
+experience more efficiently.
+
+## Visual-production pipeline
+
+The approved pipeline is:
+
+```text
+Creative direction and references
+  -> turnaround sheets generated and approved in ChatGPT Work
+  -> mesh generation in Tripo
+  -> mesh cleanup, materials, scale, lighting, animation, and export in Blender
+  -> optimization and integration into the website with Codex
+```
+
+Tripo output is a source mesh, not a final web asset. Inspect and repair every
+mesh in Blender before it enters the website.
+
+Codex may generate Blender Python scripts using `bpy`. A `.blend` file can only
+be generated and verified in an environment where Blender is installed and
+available to the command line.
+
+Do not commit large `.blend` files, raw renders, or high-resolution source
+textures to this web repository until a storage strategy or Git LFS plan is
+explicitly approved. Commit scripts, manifests, documentation, and optimized
+web exports only.
+
+## Asset rules
+
+- Preserve source assets separately from optimized web exports.
+- Use stable, descriptive filenames and record them in `ASSET_MANIFEST.md`.
+- Keep animated pieces separable.
+- Record coordinate scale, orientation, origin, materials, and export settings
+  for every mesh.
+- Maintain a mobile performance budget before approving live GLB assets.
+- Use AVIF/WebP for approved raster plates where supported, with appropriate
+  fallbacks.
+- Use compressed video only when a transition cannot be recreated efficiently
+  with layers or lightweight runtime animation.
+- Do not ship temporary AI generations as final assets without approval and
+  cleanup.
+
+## Verification
+
+For every implementation milestone, test at minimum:
+
+- narrow mobile portrait viewport;
+- iPhone Safari behavior and dynamic browser chrome;
+- desktop layout;
+- slow and fast scroll;
+- forward and reverse movement;
+- pausing at intermediate states;
+- touch and pointer interaction;
+- keyboard focus for controls and modals;
+- modal scroll locking and focus restoration;
+- `prefers-reduced-motion`;
+- missing or slow-loading media;
+- loading weight and runtime performance.
+
+## Reporting
+
+After each task, report:
+
+1. Branch used.
+2. Files created or modified.
+3. What was implemented.
+4. What was intentionally preserved.
+5. Validation performed and results.
+6. Temporary compromises or open risks.
+7. The exact next recommended task.
+
+Do not automatically perform that next task without approval.
