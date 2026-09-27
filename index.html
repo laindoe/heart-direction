@@ -1,257 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heart Direction World</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main id="scrolly">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#8077eb" />
+    <title>Heart Direction</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="scene" aria-labelledby="scene-title">
+      <h1 id="scene-title" class="visually-hidden">Heart Direction</h1>
 
-    <!-- Section 1 -> Section 2 scroll-pinned "camera through a doorway" transition.
-         section-2 is a completely static full-screen background layer. section-1
-         is the foreground, scaling up from 1x pivoted on the tunnel's actual
-         transparent opening, carrying the rest of its artwork out past the
-         viewport edges as it grows — section-2 was there the whole time, just
-         hidden behind the (until-now opaque-looking) foreground. Section-2 then
-         gets its own resting scroll time before section-3 continues normally. -->
-    <div class="tunnel-transition">
-      <div class="tunnel-pin">
+      <picture class="scene__layer scene__sky" aria-hidden="true">
+        <source
+          media="(min-width: 900px) and (orientation: landscape)"
+          srcset="assets/images/heart-direction-rebuild/scene-01-background/sky-base-desktop.png"
+        />
+        <img
+          src="assets/images/heart-direction-rebuild/scene-01-background/sky-base-mobile.png"
+          alt=""
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
 
-        <!-- Section 1: heart-director-2 (Figma node 1098:2), illustrated hero intro -->
-        <section id="section-1" class="section-frame tunnel-layer tunnel-layer-front" data-scene="01">
-          <div class="hero-section hero-illustrated">
-            <h1 class="visually-hidden">
-              Introducing Laindoe Love — The Heart Director. Revealing the invisible.
-            </h1>
+      <picture class="scene__layer scene__cloud scene__cloud--left" aria-hidden="true">
+        <source
+          media="(min-width: 900px) and (orientation: landscape)"
+          srcset="assets/images/heart-direction-rebuild/scene-01-background/cloud-left-desktop.png"
+        />
+        <img
+          src="assets/images/heart-direction-rebuild/scene-01-background/cloud-left-mobile.png"
+          alt=""
+          decoding="async"
+        />
+      </picture>
 
-            <img class="hd2-bg" src="assets/images/heart-director-2/bg-blue.webp" alt="" />
-            <img class="hd2-clouds-left" src="assets/images/heart-director-2/clouds-left.webp" alt="" />
-            <img class="hd2-clouds-right" src="assets/images/heart-director-2/clouds-right.webp" alt="" />
-            <img class="hd2-tunnel" src="assets/images/heart-director-2/heart-tunnel.webp" alt="" />
-            <img class="hd2-title" src="assets/images/heart-director-2/title.webp" alt="" />
-            <img class="hd2-ribbon-introducing" src="assets/images/heart-director-2/ribbon-introducing.webp" alt="" />
-            <img class="hd2-ribbon-revealing" src="assets/images/heart-director-2/ribbon-revealing.webp" alt="" />
-            <img class="hd2-cherub-left" src="assets/images/heart-director-2/cherub.webp" alt="" />
-            <img class="hd2-cherub-right" src="assets/images/heart-director-2/cherub.webp" alt="" />
-            <img class="hd2-sacred-heart" src="assets/images/heart-director-2/sacred-heart.webp" alt="" />
-            <img class="hd2-star hd2-star-1" src="assets/images/heart-director-2/star.webp" alt="" />
-            <img class="hd2-star hd2-star-2" src="assets/images/heart-director-2/star.webp" alt="" />
-            <img class="hd2-star hd2-star-3" src="assets/images/heart-director-2/star.webp" alt="" />
+      <picture class="scene__layer scene__cloud scene__cloud--right" aria-hidden="true">
+        <source
+          media="(min-width: 900px) and (orientation: landscape)"
+          srcset="assets/images/heart-direction-rebuild/scene-01-background/cloud-right-desktop.png"
+        />
+        <img
+          src="assets/images/heart-direction-rebuild/scene-01-background/cloud-right-mobile.png"
+          alt=""
+          decoding="async"
+        />
+      </picture>
 
-            <button type="button" class="hd2-marquee-btn">
-              <img class="hd2-marquee-bg" src="assets/images/heart-director-2/marquee-board.webp" alt="" />
-              <span class="hd2-marquee-label">Enter the Tunnel</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- Section 2: heart-director-page2 (Figma node 1102:2) + section 3:
-             heart-director-page3 (Figma node 1103:2179), merged into one tall
-             canvas (.hero-section-2-canvas, page3's content offset 803px down
-             via .hd4-scene-offset) instead of two separately-clipped sections.
-             .hero-section-2 is the fixed 803-tall "window" (unchanged size,
-             still overflow:hidden) and the canvas pans upward within it
-             (--scene2-pan, set by script.js) to scroll from the portrait/bow
-             scene into the targets — one continuous piece of art, not a cut
-             or a cross-fade between two separate containers. -->
-        <section id="section-2" class="section-frame section-frame-2 tunnel-layer tunnel-layer-back" data-scene="02">
-          <div class="hero-section hero-section-2">
-            <div class="hero-section-2-canvas">
-              <h1 class="visually-hidden">
-                Meet Lain Doe Love. Tap the heart to peek inside. Her arrow flies
-                down through three targets on its way down.
-              </h1>
-
-              <!-- Behind the portrait and clouds (both of which are real cutouts with
-                   transparent gaps around/below her) so the descent reads as coming from
-                   behind her and the cloud, not floating in front of her body.
-                   hd4-arrow (not hd3-arrow — see styles.css) is the one true arrow:
-                   nocked through the bow here, and the same asset continues on,
-                   unclipped, behind the targets below. It used to be duplicated
-                   with a separate small arrow that grew to "become" this one, which
-                   just produced two misaligned arrows on screen at once. -->
-              <!-- Bow + arrow: descend into place, grow to full size, then (once
-                   she's scooted up out of the way, below) the arrow additionally
-                   stretches upward — drawing back — before the release/pan. -->
-              <div class="hd3-weapon">
-                <div class="hd3-bow-crop">
-                  <img class="hd3-bow" src="assets/images/heart-director-page2/bow.webp" alt="" />
-                </div>
-
-                <div class="hd4-arrow-travel">
-                  <img class="hd4-arrow" src="assets/images/heart-director-page3/arrow.webp" alt="" />
-                </div>
-              </div>
-
-              <!-- She + her clouds/banner/doves scoot up together (--character-scoot)
-                   once the bow's ready, opening up room below for the arrow's draw. -->
-              <div class="hd3-character">
-                <img class="hd3-portrait" src="assets/images/heart-director-page2/portrait.webp" alt="" />
-                <img class="hd3-clouds-upper" src="assets/images/heart-director-page2/clouds-upper.webp" alt="" />
-                <img class="hd3-banner" src="assets/images/heart-director-page2/banner.webp" alt="" />
-                <img class="hd3-dove-left" src="assets/images/heart-director-page2/dove-left.webp" alt="" />
-                <img class="hd3-dove-right" src="assets/images/heart-director-page2/dove-right.webp" alt="" />
-                <img class="hd3-clouds-lower" src="assets/images/heart-director-page2/clouds-lower.webp" alt="" />
-
-                <button type="button" class="hd3-heart-hotspot" data-modal="heart" aria-label="Peek inside Lain Doe Love's heart" aria-haspopup="dialog">
-                </button>
-              </div>
-
-              <!-- The three medallions the arrow passes through are each a
-                   button opening their own modal (data-modal -> the matching
-                   data-modal-panel near the end of this file). -->
-              <div class="hd4-scene-offset" data-scene-fragment="03">
-                <img class="hd4-clouds" src="assets/images/heart-director-page3/clouds.webp" alt="" />
-
-                <button type="button" class="hd4-target hd4-target-1" data-modal="target-1" aria-label="The first target: the rising sun" aria-haspopup="dialog">
-                  <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-                </button>
-                <button type="button" class="hd4-target hd4-target-2" data-modal="target-2" aria-label="The second target: the writing hand" aria-haspopup="dialog">
-                  <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-                </button>
-                <button type="button" class="hd4-target hd4-target-3" data-modal="target-3" aria-label="The third target: the open eye" aria-haspopup="dialog">
-                  <img class="hd4-target-sprite" src="assets/images/heart-director-page3/targets-sprite.webp" alt="" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </div>
-
-    <!-- Section 4: heart-director-page4 (Figma node 1104:2231) -->
-    <!-- Static for now. Planned animation: the arrow continues down and strikes
-         the heart, which then pulsates with light. "The Quest" button opens a
-         modal telling this part of the story. "Back to Reality" is the exit —
-         the heart tunnel expands as if traveling back out into daytime. -->
-    <section id="section-4" class="section-frame section-frame-3" data-scene="04" data-includes-scene="05">
-      <div class="hero-section hero-section-3">
-        <h1 class="visually-hidden">
-          The arrow strikes the heart. Open the quest, or head back to reality.
-        </h1>
-
-        <img class="hd5-clouds" src="assets/images/heart-director-page4/clouds.webp" alt="" />
-        <img class="hd5-arrow" src="assets/images/heart-director-page4/arrow.webp" alt="" />
-
-        <button type="button" class="hd5-quest-btn" aria-label="The Quest">
-          <img class="hd5-quest-heart" src="assets/images/heart-director-page4/heart-quest.webp" alt="" />
-        </button>
-
-        <button type="button" class="hd5-ticket-btn" aria-label="Back to Reality">
-          <div class="hd5-ticket-crop">
-            <img class="hd5-ticket-texture" src="assets/images/heart-director-page4/ticket-texture.webp" alt="" />
-          </div>
-        </button>
-
-        <div class="hd5-tunnel-return-crop">
-          <img class="hd5-tunnel-return" src="assets/images/heart-director-page4/heart-tunnel-return.webp" alt="" />
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 5: heart-director-page5 (Figma node 1106:3607) -->
-    <!-- Cherubs hover like section-1's. Planned scroll animation: this scroll
-         stays open until the bottom of the section, then rolls back up while
-         clouds descend, revealing the next scene underneath. -->
-    <section id="section-5" class="section-frame section-frame-5" data-scene="06">
-      <div class="hero-section hero-section-5">
-        <h1 class="visually-hidden">
-          Hear ye, hear ye. By divine declaration we joyfully announce: the gift
-          revealed from following your heart. A creative supply chain building
-          the infrastructure that moves ideas into intellectual property. A
-          system for creators, a platform for culture, a legacy for
-          generations. This is the beginning of Ten Grand.
-        </h1>
-
-        <img class="hd6-clouds" src="assets/images/heart-director-page5/clouds.webp" alt="" />
-
-        <img class="hd6-cherub hd6-cherub-left" src="assets/images/heart-director-page5/cherub-trumpet.webp" alt="" />
-        <img class="hd6-cherub hd6-cherub-right" src="assets/images/heart-director-page5/cherub-trumpet.webp" alt="" />
-
-        <img class="hd6-scroll" src="assets/images/heart-director-page5/scroll.webp" alt="" />
-      </div>
-    </section>
-
-    <!-- Section 6: heart-director-page6 (Figma node 1106:3656) — final section -->
-    <!-- The 4 tickets are real links but point nowhere yet (placeholder hrefs) —
-         need actual URLs: newsletter signup, Substack, contact, socials. -->
-    <section id="section-6" class="section-frame section-frame-6" data-scene="07">
-      <div class="hero-section hero-section-6">
-        <h1 class="visually-hidden">
-          Be my sweetheart: join the Heart Direction newsletter. Read the
-          journal: follow along on Substack. Contact me: send a letter my way.
-          Follow the journey: find me on socials.
-        </h1>
-
-        <img class="hd7-clouds" src="assets/images/heart-director-page6/clouds.webp" alt="" />
-        <img class="hd7-sun" src="assets/images/heart-director-page6/sun.webp" alt="" />
-
-        <a href="#" class="hd7-ticket hd7-ticket-1">
-          <img class="hd7-ticket-sprite" src="assets/images/heart-director-page6/ticket-sprite.webp" alt="Be My Sweetheart — join the Heart Direction newsletter" />
-        </a>
-        <a href="#" class="hd7-ticket hd7-ticket-2">
-          <img class="hd7-ticket-sprite" src="assets/images/heart-director-page6/ticket-sprite.webp" alt="Read the Journal — follow along on Substack" />
-        </a>
-        <a href="#" class="hd7-ticket hd7-ticket-3">
-          <img class="hd7-ticket-sprite" src="assets/images/heart-director-page6/ticket-sprite.webp" alt="Contact Me — send a letter my way" />
-        </a>
-        <a href="#" class="hd7-ticket hd7-ticket-4">
-          <img class="hd7-ticket-sprite" src="assets/images/heart-director-page6/ticket-sprite.webp" alt="Follow the Journey — find me on socials" />
-        </a>
-
-        <img class="hd7-rainbow" src="assets/images/heart-director-page6/rainbow.webp" alt="" />
-        <img class="hd7-field" src="assets/images/heart-director-page6/field.webp" alt="" />
-        <img class="hd7-horse-rider" src="assets/images/heart-director-page6/horse-rider.webp" alt="" />
-      </div>
-    </section>
-
-  </main>
-
-  <!-- "Peek inside" modal, opened by tapping the heart pendant hotspot in
-       section-2. TODO: swap this placeholder copy for the real content. -->
-  <!-- Modals. Each one is matched to its trigger by data-modal-panel <->
-       the trigger's data-modal (script.js wires them up generically, so a
-       new one only needs a button and a panel — no JS changes).
-       TODO: all four bodies are placeholder copy pending real content. -->
-  <div class="hd-modal-overlay" data-modal-panel="heart" hidden>
-    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-heart">
-      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
-      <h2 id="hd-modal-title-heart">Peek Inside</h2>
-      <p>Placeholder copy — tell Claude what this should actually say, and it'll swap it in.</p>
-    </div>
-  </div>
-
-  <div class="hd-modal-overlay" data-modal-panel="target-1" hidden>
-    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-target-1">
-      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
-      <h2 id="hd-modal-title-target-1">The Rising Sun</h2>
-      <p>Placeholder copy for the first medallion — the sun rising over the mountains and the winding river.</p>
-    </div>
-  </div>
-
-  <div class="hd-modal-overlay" data-modal-panel="target-2" hidden>
-    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-target-2">
-      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
-      <h2 id="hd-modal-title-target-2">The Writing Hand</h2>
-      <p>Placeholder copy for the second medallion — the hand at work with the quill.</p>
-    </div>
-  </div>
-
-  <div class="hd-modal-overlay" data-modal-panel="target-3" hidden>
-    <div class="hd-modal" role="dialog" aria-modal="true" aria-labelledby="hd-modal-title-target-3">
-      <button type="button" class="hd-modal-close" aria-label="Close">&times;</button>
-      <h2 id="hd-modal-title-target-3">The Open Eye</h2>
-      <p>Placeholder copy for the third medallion — the eye that sees what's invisible.</p>
-    </div>
-  </div>
-
-  <!-- GSAP remains CDN-loaded so this static site needs no package manager or
-       build step. Narrative scene modules register ScrollTrigger timelines. -->
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-  <script type="module" src="script.js"></script>
-</body>
+      <picture class="scene__layer scene__cloud scene__cloud--foreground" aria-hidden="true">
+        <source
+          media="(min-width: 900px) and (orientation: landscape)"
+          srcset="assets/images/heart-direction-rebuild/scene-01-background/cloud-foreground-desktop.png"
+        />
+        <img
+          src="assets/images/heart-direction-rebuild/scene-01-background/cloud-foreground-mobile.png"
+          alt=""
+          decoding="async"
+        />
+      </picture>
+    </main>
+  </body>
 </html>
