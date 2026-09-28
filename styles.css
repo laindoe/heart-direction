@@ -1,931 +1,141 @@
-* {
+:root {
+  color-scheme: only light;
+  background: #000;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
   margin: 0;
-  padding: 0;
+  overflow-x: hidden;
+  background: #000;
 }
 
-/* iOS/Safari renders its own button chrome (a white/gray rounded pill)
-   underneath whatever background you set unless appearance is reset too —
-   background:none alone doesn't suppress it. Global reset so every button
-   on the site (marquee, quest, tickets, hotspots, medallions, modal close)
-   gets a clean slate instead of patching it per-button as it turns up. */
-button {
-  appearance: none;
-  -webkit-appearance: none;
-  font: inherit;
-  color: inherit;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Background matches the hero's blue so Safari's natural overscroll/bounce
-   reveals more blue instead of a black flash — no need to fight the bounce
-   itself, which also lets Safari auto-hide its toolbar on scroll as usual. */
-html, body {
-  background: #1cbbec;
-}
-
-#scrolly {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
 }
 
-/* ---------- Section 1 (Figma node 1098:2, "heart-director-2") ---------- */
-/* Figma frame is 1125x2436; all child positions below are scaled by 402/1125. */
-
-/* .hero-section is a fixed 402x871 design canvas; .section-frame locks it to
-   exactly one viewport (100dvh accounts for mobile browser chrome, so there's
-   no gap or scroll). It's scaled like background-size: cover so it always
-   fills the full screen — safe now that there's no border graphic whose own
-   edges need to stay intact; the sky/clouds crop believably instead. */
-.section-frame {
-  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 871px));
+.scene {
   position: relative;
-  width: 100vw;
+  isolation: isolate;
+  width: 100%;
+  height: 100vh;
   height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
-  background-color: #1cbbec;
+  background: #8077eb;
 }
 
-.hero-section {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 402px;
-  height: 871px;
-  overflow: hidden;
-  background: #1cbbec;
-  transform: translate(-50%, -50%) scale(var(--hero-scale));
-}
-
-.hero-section img {
-  position: absolute;
-  pointer-events: none;
-}
-
-/* ---------- Section 1 -> 2 -> 3 scroll-pinned reveal transition ---------- */
-/* 611vh total = section-1's own 100vh + 511vh of extra scroll, split (in
-   script.js) into: the tunnel push-through zoom, a long pause on section-2
-   so there's time to look at the portrait and tap the heart before anything
-   else happens, the bow+arrow descent, a short hold, then the shot —
-   the draw (she scoots up out of the way, --character-scoot, while the bow
-   rides up with her, --bow-draw-offset, and the arrow rides up further
-   still, --arrow-travel, so the string reads as being pulled; the arrow
-   does NOT change size here), a beat at full draw, then the release (bow
-   drops back to its resting spot while the arrow shoots down and only now
-   grows, --arrow-pull-scale, as it flies toward the viewer). The canvas pan
-   overlaps the tail of that flight so the camera follows the arrow down
-   into the targets, where it comes to rest behind them (see
-   .hero-section-2-canvas below — section-3's content literally lives inside
-   section-2's own canvas now, not a separate section cross-faded on top of
-   it, so there's no clipping or fading between them, just one continuous
-   piece of art panning through), and a final hold before section-4
-   continues normally.
-
-   Camera-through-a-doorway effect: section-2 is a completely static
-   full-screen background layer (z-index 1, no animation of its own).
-   Section-1 is the foreground (z-index 2) and scales up from 1x via a real
-   transform: scale(), pivoting on the tunnel graphic's actual vanishing-point
-   opening (49.9%/61.9% of the viewport — found by flood-filling the
-   heart-tunnel.webp alpha channel from its visual center to isolate just the
-   enclosed transparent hole at the end of the tunnel, as opposed to the
-   transparent padding around the whole artwork). As the foreground scales
-   around that pivot, the opening grows along with everything else and the
-   rest of the artwork (rings, clouds, title, cherubs) is carried outward past
-   the viewport edges — the opening isn't animated independently, it just
-   grows because it's part of the one scaling layer.
-   For section-2 to actually show through that opening, nothing in section-1
-   can be opaque there: .section-frame's and .hero-section's background
-   colors are overridden to transparent below, and bg-blue.webp (section-1's
-   own sky, which sits behind the tunnel graphic but still in front of
-   section-2) had a matching soft-edged hole punched into its alpha channel
-   at the same spot — it's a flattened rectangle with no transparency of its
-   own, so without that punch it opaquely blocked the reveal.
-   (An earlier attempt animated an independent circular clip-path/mask
-   instead — visually similar at a glance, but semantically backwards from
-   "one foreground layer physically moving toward the camera," per feedback,
-   and the SVG <mask> version of it didn't even render on Safari.) */
-.tunnel-transition {
-  position: relative;
-  width: 100%;
-  height: 611vh;
-}
-
-.tunnel-pin {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100dvh;
-  overflow: hidden;
-}
-
-.tunnel-layer {
+.scene__layer {
   position: absolute;
   inset: 0;
-}
-
-.tunnel-layer-front {
-  z-index: 2;
-  background: transparent;
-  transform-origin: 49.9% 61.9%;
-  transform: scale(var(--tunnel-scale, 1));
-  will-change: transform;
-}
-
-.tunnel-layer-back {
-  z-index: 1;
-}
-
-/* Section-1's own backgrounds would otherwise sit opaque behind the tunnel
-   artwork's transparent opening, blocking section-2 from showing through. */
-.tunnel-layer-front.section-frame {
-  background-color: transparent;
-}
-
-.hero-illustrated {
-  background: transparent;
-}
-
-.hd2-bg {
-  left: -78px;
-  top: -25px;
-  width: 524px;
-  height: 920px;
-  object-fit: cover;
-}
-
-.hd2-clouds-left {
-  left: 0;
-  top: 0;
-  width: 158px;
-  height: 739px;
-  object-fit: cover;
-}
-
-.hd2-clouds-right {
-  right: 0;
-  top: 0;
-  width: 149px;
-  height: 733px;
-  object-fit: cover;
-}
-
-.hd2-tunnel {
-  left: 43px;
-  top: 276px;
-  width: 359px;
-  height: 509px;
-  object-fit: contain;
-}
-
-.hd2-title {
-  left: -10px;
-  top: 76px;
-  width: 457px;
-  height: 315px;
-  object-fit: contain;
-}
-
-.hd2-ribbon-introducing {
-  left: 56px;
-  top: 88px;
-  width: 360px;
-  height: 150px;
-  object-fit: contain;
-}
-
-.hd2-ribbon-revealing {
-  left: 54px;
-  top: 261px;
-  width: 327px;
-  height: 174px;
-  object-fit: contain;
-}
-
-.hd2-cherub-left {
-  left: -41px;
-  top: 289px;
-  width: 283px;
-  height: 272px;
-  object-fit: contain;
-}
-
-.hd2-cherub-right {
-  left: 160px;
-  top: 289px;
-  width: 283px;
-  height: 272px;
-  object-fit: contain;
-  transform: scaleX(-1);
-}
-
-/* Hovering motion for both cherubs; translate is independent of the
-   right cherub's scaleX(-1) transform, so they compose cleanly. */
-@media (prefers-reduced-motion: no-preference) {
-  .hd2-cherub-left,
-  .hd2-cherub-right {
-    animation: cherub-hover 3.4s ease-in-out infinite;
-  }
-
-  .hd2-cherub-right {
-    animation-delay: -1.7s;
-  }
-}
-
-@keyframes cherub-hover {
-  0%, 100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -10px;
-  }
-}
-
-.hd2-sacred-heart {
-  left: 172px;
-  top: 23px;
-  width: 88px;
-  height: 77px;
-  object-fit: contain;
-}
-
-.hd2-star {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.hd2-star-1 {
-  left: 40px;
-  top: 140px;
-}
-
-.hd2-star-2 {
-  left: 330px;
-  top: 170px;
-}
-
-.hd2-star-3 {
-  left: 55px;
-  top: 610px;
-}
-
-.hd2-marquee-btn {
-  position: absolute;
-  left: 28px;
-  top: 637px;
-  width: 347px;
-  height: 144px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.hd2-marquee-bg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-.hd2-marquee-label {
-  position: absolute;
-  left: 31px;
-  top: 62px;
-  width: 285px;
-  height: 62px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-weight: 700;
-  font-style: italic;
-  font-size: 22px;
-  letter-spacing: 0.03em;
-  color: #7a1414;
-  text-align: center;
-  pointer-events: none;
-}
-
-/* ---------- Section 2 (Figma node 1102:2, "heart-director-page2") + ---------- */
-/* ---------- Section 3 (Figma node 1103:2179, "heart-director-page3") ---------- */
-/* Figma frame is 1125x2248; all child positions below are scaled by 402/1125.
-   Section 3's frame is the same size/ratio, reused as-is (see
-   .hd4-scene-offset) — both were designed as consecutive storyboard frames
-   of the same width, which is what makes stacking them into one canvas and
-   panning through work visually. */
-
-.section-frame-2 {
-  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
-  background-color: #242121;
-}
-
-/* .hero-section-2 is the fixed-size "window" (unchanged from before: still
-   803px tall, still overflow:hidden via the shared .hero-section rule) — it
-   always shows exactly one screen's worth of the taller canvas below. */
-.hero-section-2 {
-  width: 402px;
-  height: 803px;
-  background: #242121;
-}
-
-/* The actual content: section-2's own scene (803px) followed immediately by
-   section-3's (offset 803px down via .hd4-scene-offset), one continuous
-   1606px-tall canvas. --scene2-pan (set by script.js, canvas px, 0 to -803)
-   slides it upward within the window above to scroll from one into the
-   other — same sprite-crop technique as .hd4-target's sprite sheet, just at
-   scene scale, instead of cross-fading two separately-clipped layers. */
-.hero-section-2-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 402px;
-  height: 1606px;
-  transform: translateY(var(--scene2-pan, 0px));
-  will-change: transform;
-}
-
-.hd4-scene-offset {
-  position: absolute;
-  left: 0;
-  top: 803px;
-  width: 402px;
-  height: 803px;
-}
-
-/* She + her clouds/banner/doves/heart-hotspot scoot up together
-   (--character-scoot, script.js on .tunnel-transition) once the bow's
-   settled, to open up room below for the arrow's draw stretch. Default
-   (0px) leaves her in her normal spot if JS is off. */
-.hd3-character {
-  position: absolute;
-  inset: 0;
-  transform: translateY(var(--character-scoot, 0px));
-  will-change: transform;
-}
-
-.hd3-portrait {
-  left: -88px;
-  top: 61px;
-  width: 579px;
-  height: 772px;
-  object-fit: cover;
-}
-
-.hd3-clouds-upper {
-  left: -103px;
-  top: 45px;
-  width: 579px;
-  height: 772px;
-  object-fit: cover;
-}
-
-.hd3-banner {
-  left: 57px;
-  top: 38px;
-  width: 307px;
-  height: 144px;
-  object-fit: contain;
-}
-
-.hd3-dove-left {
-  left: -2px;
-  top: 4px;
-  width: 130px;
-  height: 157px;
-  object-fit: contain;
-}
-
-.hd3-dove-right {
-  left: 279px;
-  top: 0;
-  width: 123px;
-  height: 155px;
-  object-fit: contain;
-}
-
-.hd3-clouds-lower {
-  left: -70px;
-  top: 357px;
-  width: 579px;
-  height: 772px;
-  object-fit: cover;
-}
-
-/* Bow + arrow descend into place together from above, so the portrait reads
-   first and they protrude down out of the cloud she's on a bit later in the
-   scroll. --weapon-offset/--weapon-opacity are set by script.js on
-   .tunnel-transition (an ancestor of section-2) as the user scrolls through
-   the section-1/2 pinned transition; defaults (0px / 1) keep this group in
-   its normal resting spot if JS is off. Only the shared *entrance* lives
-   here — the draw and the shot move the bow and the arrow by different
-   amounts, so those are on .hd3-bow-crop and .hd4-arrow-travel separately. */
-.hd3-weapon {
-  position: absolute;
-  inset: 0;
-  transform: translateY(var(--weapon-offset, 0px));
-  opacity: var(--weapon-opacity, 1);
-  will-change: transform, opacity;
-}
-
-/* Rides up with her during the draw, then drops back to its resting spot as
-   the shot releases (--bow-draw-offset, script.js). Also fades out once the
-   scene pans on into the targets (--bow-opacity) — unlike the arrow, the bow
-   has no reason to still be visible once the canvas has scrolled past it.
-   Both multiply on top of .hd3-weapon's own transform/opacity above. */
-.hd3-bow-crop {
-  position: absolute;
-  left: -20px;
-  top: 576px;
-  width: 412px;
-  height: 184px;
-  overflow: hidden;
-  transform: translateY(var(--bow-draw-offset, 0px));
-  opacity: var(--bow-opacity, 1);
-  will-change: transform, opacity;
-}
-
-.hd3-bow {
-  position: absolute;
-  left: -23.7%;
-  top: -287.58%;
-  width: 148.78%;
-  height: 444.39%;
-  max-width: none;
-  pointer-events: none;
-}
-
-/* Invisible tap target over the heart pendant in the portrait artwork —
-   the heart itself is just pixels in the flattened portrait.webp, so this
-   button is positioned on top of it by hand-measured coordinates. */
-.hd3-heart-hotspot {
-  position: absolute;
-  left: 163px;
-  top: 312px;
-  width: 60px;
-  height: 64px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-.hd3-heart-hotspot:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-
-/* ---------- Section 3 content (used inside .hd4-scene-offset, above) ---------- */
-/* Figma frame is 1125x2248 (same ratio as page2); positions scaled by 402/1125.
-   .section-frame-3/.hero-section-3 aren't applied to section-3 itself
-   anymore (its content lives inside section-2's canvas now) but are kept
-   here since section-4 still reuses them for its own, separate frame. */
-
-.section-frame-3 {
-  --hero-scale: max(calc(100vw / 402px), calc(100dvh / 803px));
-  background-color: #242121;
-}
-
-.hero-section-3 {
-  width: 402px;
-  height: 803px;
-  background: #242121;
-}
-
-/* The one arrow: nocked through the bow (positioned in the un-offset,
-   .hd3-weapon coordinate space, not .hd4-scene-offset — it's sized/placed
-   to reach from there down behind all 3 targets on its own). Sized here to
-   sit in proportion to the bow at rest; it stays this size right through
-   the draw and only grows (--arrow-pull-scale, script.js) while it's
-   actually flying, which is what makes the shot read as coming toward the
-   viewer rather than just sliding down the screen.
-   transform-origin is top-anchored (not the default center) so the fletching
-   stays put as the anchor and the growth all goes into the shaft reaching
-   further down: top(550) + travel(310) + height(477) * ARROW_MAX_SCALE(1.6)
-   lands the tip past target-3 with the fletching sitting just above
-   target-1, matching the final frame of the reference sequence. */
-.hd4-arrow {
-  left: 7px;
-  top: 550px;
-  width: 358px;
-  height: 477px;
-  object-fit: cover;
-  transform-origin: 50% 0%;
-  transform: scale(var(--arrow-pull-scale, 1));
-  will-change: transform;
-}
-
-/* Wraps .hd4-arrow for its own travel (--arrow-travel, script.js), which
-   runs on a different schedule from the bow's: up during the draw (further
-   than the bow moves, so the string reads as actually being pulled), then
-   all the way down through the targets as the shot releases. Separate
-   element from the scale above because the two need different origins —
-   the travel is a plain translate, the growth is top-anchored. */
-.hd4-arrow-travel {
-  position: absolute;
-  inset: 0;
-  transform: translateY(var(--arrow-travel, 0px));
-  will-change: transform;
-}
-
-.hd4-clouds {
-  left: -105px;
-  top: 0;
-  width: 611px;
-  height: 815px;
-  object-fit: cover;
-}
-
-/* Same sprite sheet (3 medallions stacked) reused for all three targets;
-   only the vertical crop offset differs per instance, matching Figma. */
-/* Each medallion is a button opening its own modal. The sprite inside is an
-   img, so .hero-section img's pointer-events:none already keeps clicks on
-   the button itself; the rest here is just undoing the default button chrome
-   so it stays a bare crop window over the sprite sheet. */
-.hd4-target {
-  position: absolute;
-  left: 123px;
-  overflow: hidden;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.hd4-target:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-
-.hd4-target-sprite {
-  position: absolute;
-  left: -134.85%;
-  width: 369.02%;
-  max-width: none;
-}
-
-.hd4-target-1 {
-  top: 157px;
-  width: 157px;
-  height: 149px;
-}
-
-.hd4-target-1 .hd4-target-sprite {
-  top: -98.09%;
-  height: 516.75%;
-}
-
-.hd4-target-2 {
-  top: 325px;
-  width: 157px;
-  height: 140px;
-}
-
-.hd4-target-2 .hd4-target-sprite {
-  top: -210.46%;
-  height: 551.02%;
-}
-
-.hd4-target-3 {
-  top: 484px;
-  width: 157px;
-  height: 149px;
-}
-
-.hd4-target-3 .hd4-target-sprite {
-  top: -297.85%;
-  height: 516.75%;
-}
-
-/* ---------- Section 4 (Figma node 1104:2231, "heart-director-page4") ---------- */
-/* Figma frame is 1125x2248 (same ratio as page2/3); reuses .section-frame-3 /
-   .hero-section-3 since the canvas size is identical. */
-
-.hd5-clouds {
-  left: -113px;
-  top: -12px;
-  width: 611px;
-  height: 815px;
-  object-fit: cover;
-}
-
-.hd5-arrow {
-  left: -121px;
-  top: -633px;
-  width: 628px;
-  height: 838px;
-  object-fit: cover;
-}
-
-.hd5-quest-btn {
-  position: absolute;
-  left: 43px;
-  top: 83px;
-  width: 301px;
-  height: 313px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.hd5-quest-heart {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-.hd5-ticket-btn {
-  position: absolute;
-  left: 52px;
-  top: 392px;
-  width: 326px;
-  height: 191px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.hd5-ticket-crop {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.hd5-ticket-texture {
-  position: absolute;
-  left: -9.57%;
-  top: -24.42%;
-  width: 130%;
-  height: 137.28%;
-  max-width: none;
-  pointer-events: none;
-}
-
-.hd5-tunnel-return-crop {
-  position: absolute;
-  left: 18px;
-  top: 542px;
-  width: 380px;
-  height: 330px;
-  overflow: hidden;
-}
-
-.hd5-tunnel-return {
-  position: absolute;
-  left: -34.55%;
-  top: -136.61%;
-  width: 166.15%;
-  height: 340.65%;
-  max-width: none;
-  pointer-events: none;
-}
-
-/* ---------- Section 5 (Figma node 1106:3607, "heart-director-page5") ---------- */
-/* Figma frame is 1125x2248 (same ratio as page2/3/4); positions scaled by 402/1125.
-   Uses contain (not cover) — the cherubs sit close to the top edge and the
-   scroll runs close to the bottom, so cover-fit cropping pushed them off
-   screen. The flat blue background matches the design, so any letterboxed
-   space from contain just reads as more sky instead of a bare edge. */
-.section-frame-5 {
-  --hero-scale: min(calc(100vw / 402px), calc(100dvh / 803px));
-  background-color: #3ddaf6;
-}
-
-.hero-section-5 {
-  width: 402px;
-  height: 803px;
-  background: #3ddaf6;
-}
-
-.hd6-clouds {
-  left: -113px;
-  top: -12px;
-  width: 611px;
-  height: 815px;
-  object-fit: cover;
-}
-
-.hd6-cherub {
-  top: 13px;
-  width: 171px;
-  height: 172px;
-  object-fit: contain;
-}
-
-.hd6-cherub-left {
-  left: 13px;
-  transform: scaleX(-1);
-}
-
-.hd6-cherub-right {
-  left: 231px;
-}
-
-/* Same hovering motion as section-1's cherubs. */
-@media (prefers-reduced-motion: no-preference) {
-  .hd6-cherub-left,
-  .hd6-cherub-right {
-    animation: cherub-hover 3.4s ease-in-out infinite;
-  }
-
-  .hd6-cherub-right {
-    animation-delay: -1.7s;
-  }
-}
-
-.hd6-scroll {
-  left: 84px;
-  top: 135px;
-  width: 235px;
-  height: 626px;
-  object-fit: contain;
-}
-
-/* ---------- Section 6 (Figma node 1106:3656, "heart-director-page6") ---------- */
-/* Figma frame is 1125x2248 (same ratio as page2-5); positions scaled by 402/1125.
-   Uses contain like section-5 — the sun sits right at the top edge (y=0) and
-   the field/horse run close to the bottom, so cover-fit would crop them. */
-.section-frame-6 {
-  --hero-scale: min(calc(100vw / 402px), calc(100dvh / 803px));
-  background-color: #3ddaf6;
-}
-
-.hero-section-6 {
-  width: 402px;
-  height: 803px;
-  background: #3ddaf6;
-}
-
-.hd7-clouds {
-  left: -105px;
-  top: -12px;
-  width: 611px;
-  height: 815px;
-  object-fit: cover;
-}
-
-.hd7-sun {
-  left: 60px;
-  top: 0;
-  width: 282px;
-  height: 177px;
-  object-fit: contain;
-}
-
-/* All 4 tickets share one sprite (icon+title+subtitle baked into each row);
-   only the vertical crop offset differs per instance, matching Figma. */
-.hd7-ticket {
-  position: absolute;
-  left: 90px;
-  width: 228px;
-  overflow: hidden;
   display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
-.hd7-ticket-sprite {
-  position: absolute;
-  left: 0;
+.scene__layer img {
+  display: block;
   width: 100%;
-  max-width: none;
-}
-
-.hd7-ticket-1 {
-  top: 177px;
-  height: 72px;
-}
-
-.hd7-ticket-1 .hd7-ticket-sprite {
-  top: -18.27%;
-  height: 475.54%;
-}
-
-.hd7-ticket-2 {
-  top: 264px;
-  height: 57px;
-}
-
-.hd7-ticket-2 .hd7-ticket-sprite {
-  top: -151.95%;
-  height: 600%;
-}
-
-.hd7-ticket-3 {
-  top: 337px;
-  height: 58px;
-}
-
-.hd7-ticket-3 .hd7-ticket-sprite {
-  top: -254.83%;
-  height: 593.05%;
-}
-
-.hd7-ticket-4 {
-  top: 402px;
-  height: 64px;
-}
-
-.hd7-ticket-4 .hd7-ticket-sprite {
-  top: -327.05%;
-  height: 546.62%;
-}
-
-.hd7-rainbow {
-  left: -22px;
-  top: 461px;
-  width: 447px;
-  height: 266px;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
-.hd7-field {
-  left: -1px;
-  top: 643px;
-  width: 404px;
-  height: 192px;
-  object-fit: cover;
+.scene__sky {
+  z-index: 0;
 }
 
-.hd7-horse-rider {
-  left: 40px;
-  top: 494px;
-  width: 242px;
-  height: 298px;
-  object-fit: contain;
+.scene__cloud {
+  z-index: 1;
+  inset: -1.25%;
+  width: 102.5%;
+  height: 102.5%;
+  transform-origin: center;
 }
 
-/* ---------- "Peek inside" modal (opened from the heart hotspot on section-2) ---------- */
-
-.hd-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(20, 16, 14, 0.72);
+.scene__cloud--left {
+  animation: cloud-drift-left 24s ease-in-out infinite alternate;
 }
 
-.hd-modal-overlay[hidden] {
-  display: none;
+.scene__cloud--right {
+  animation: cloud-drift-right 29s ease-in-out infinite alternate;
 }
 
-.hd-modal {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
-  max-height: 80vh;
-  overflow-y: auto;
-  padding: 32px 28px;
-  border-radius: 12px;
-  background: #fff8e7;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  font-family: Georgia, 'Times New Roman', serif;
-  color: #2a2320;
+.scene__cloud--foreground {
+  z-index: 2;
+  animation: cloud-float-foreground 20s ease-in-out infinite alternate;
 }
 
-.hd-modal h2 {
-  margin: 0 0 12px;
-  color: #7a1414;
-  font-style: italic;
+@keyframes cloud-drift-left {
+  from {
+    transform: translate3d(-0.35%, 0, 0) scale(1.01);
+  }
+
+  to {
+    transform: translate3d(0.45%, 0.12%, 0) scale(1.012);
+  }
 }
 
-.hd-modal p {
-  margin: 0;
-  line-height: 1.5;
+@keyframes cloud-drift-right {
+  from {
+    transform: translate3d(0.4%, -0.08%, 0) scale(1.01);
+  }
+
+  to {
+    transform: translate3d(-0.3%, 0.1%, 0) scale(1.012);
+  }
 }
 
-.hd-modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  font-size: 24px;
-  line-height: 1;
-  color: #7a1414;
-  cursor: pointer;
+@keyframes cloud-float-foreground {
+  from {
+    transform: translate3d(0, 0.15%, 0) scale(1.01);
+  }
+
+  to {
+    transform: translate3d(0, -0.35%, 0) scale(1.012);
+  }
+}
+
+@media (min-width: 900px) and (orientation: landscape) {
+  .scene__cloud--foreground {
+    inset: auto -1.25% -1.25%;
+    width: 102.5%;
+    height: auto;
+    aspect-ratio: 2043 / 770;
+  }
+
+  .scene__cloud--foreground img {
+    height: auto;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene__cloud {
+    animation: none;
+    transform: none;
+  }
 }
