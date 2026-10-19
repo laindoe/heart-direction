@@ -3,6 +3,10 @@
 This directory is the durable handoff for the new Heart Direction homepage.
 It replaces the retired seven-scene brief as the working source of truth.
 
+Scope updated 2026-10-19: homepage, boarding and dashboard only; one digital
+product through Payhip/Square; larger worlds deferred. Historical details in
+other documents are explicitly marked where superseded.
+
 Read in this order:
 
 1. `STATUS.md` — current milestone, locks, open decisions, and exact next task.

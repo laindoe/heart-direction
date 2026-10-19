@@ -1,141 +1,274 @@
 :root {
-  color-scheme: only light;
-  background: #000;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  background:#100d19;
+  color-scheme:dark;
+  --dash-height:234px
 }
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+* {
+  box-sizing:border-box
 }
-
-html,
+html {
+  scroll-behavior:auto
+}
 body {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-  overflow-x: hidden;
-  background: #000;
+  margin:0
 }
-
 body {
-  min-height: 100vh;
-  min-height: 100dvh;
+  overflow:hidden
+}
+button,a {
+  touch-action:manipulation
+}
+button {
+  font:inherit;
+  font-size:12px;
+  letter-spacing:.04em;
+  min-height:44px;
+  padding:10px 16px;
+  background:#e1dce7;
+  color:#1b1725;
+  border:1px solid #fff;
+  border-radius:4px;
+  cursor:pointer
+}
+button:hover {
+  background:#fff
+}
+button:disabled {
+  opacity:.5;
+  cursor:wait
+}
+button:focus-visible,a:focus-visible {
+  outline:3px solid #fdaaff;
+  outline-offset:5px
+}
+a {
+  color:inherit;
+  padding:12px
+}
+h1,h2,p {
+  margin:0
+}
+h2 {
+  font-size:clamp(20px,3vw,36px);
+  line-height:1.15
+}
+p {
+  line-height:1.5
+}
+small {
+  font-size:10px
+}
+header {
+  position:fixed;
+  z-index:8;
+  top:0;
+  left:0;
+  right:0;
+  padding:18px 20px;
+  pointer-events:none;
+  text-shadow:0 1px 5px #33243e
+}
+header h1 {
+  font-size:14px;
+  letter-spacing:.13em
+}
+header>span {
+  display:block;
+  font-size:9px;
+  letter-spacing:.08em;
+  margin-top:7px
+}
+#environment {
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:#19b3da;
+  pointer-events:none
+}
+.sky,.void {
+  position:absolute;
+  inset:0
+}
+.sky img {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 50%
+}
+.void {
+  background:#100d19;
+  opacity:var(--darkness,0)
+}
+.sky {
+  pointer-events:none;
+  user-select:none
+}
+.water {
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:43%;
+  bottom:-5%;
+  clip-path:polygon(48% 0,52% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(0deg,#beb2d455 0 2px,transparent 2px 40px),linear-gradient(#80739480,#bb8ffc55);
+  border-bottom:8px solid #ceadff
+}
+#exterior {
+  position:fixed;
+  inset:0
+}
+#ship-view {
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none
+}
+.invitation {
+  position:absolute;
+  bottom:8%;
+  width:100%;
+  text-align:center
+}
+.invitation p {
+  font-size:10px;
+  color:#30243e;
+  margin:10px 0
+}
+.invitation button {
+  min-width:150px
+}
+#ship-fallback {
+  position:absolute;
+  left:20%;
+  right:20%;
+  top:47%;
+  padding:35px 15px;
+  background:#686475;
+  border:2px solid #d9cde9;
+  border-radius:50%;
+  text-align:center;
+  font-size:12px
+}
+#ship-fallback small {
+  display:block;
+  margin-top:10px
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
+/* The Blender GLB supplies every visible dashboard surface and ornament. */
+#dashboard {
+ position:fixed;z-index:10;bottom:env(safe-area-inset-bottom,0px);left:50%;
+ transform:translateX(-50%);width:min(100%,1000px);
+ height:clamp(250px,42vw,430px);max-height:70dvh;
+}
+#dashboard-view { position:absolute;inset:0;width:100%;height:100%;pointer-events:none; }
+#dashboard-screen {
+ position:relative;z-index:2;width:min(88vw,520px);max-height:140px;
+ overflow:auto;overscroll-behavior:contain;background:#08070d;color:#fff5fa;
+ padding:2px 6px;border-radius:5px;line-height:1.2;text-align:center;scrollbar-width:thin;scrollbar-color:#806477 #08070d;
+}
+#dashboard-title { font-size:clamp(12px,1.5vw,18px);line-height:1.1;letter-spacing:.04em; }
+#screen-content p { font-size:clamp(12px,1.4vw,16px);line-height:1.2;margin:2px 0; }
+#screen-content ul { list-style:none;margin:4px 0;padding:0; }
+#screen-content a { display:inline-flex;align-items:center;min-height:44px;padding:4px 10px;color:#ffc7e2; }
+.product-preview { max-width:100%;max-height:90px;object-fit:contain; }
+.art-control { position:relative;min-width:44px;min-height:44px; }
+#dashboard nav { display:flex;justify-content:center;gap:6px; }
+#heart-home { margin:0 auto 6px;display:block; }
+.art-ready #dashboard-screen {
+ position:absolute;left:0;top:0;max-height:none;transform-origin:0 0;
+ border:0;background:#08070d;border-radius:4px;
+}
+.art-ready .art-control {
+ position:absolute;z-index:3;transform:translate(-50%,-50%);margin:0;padding:0;
+ border:1px solid transparent;border-radius:50%;background:transparent;color:#fff;
+ cursor:pointer;transition:box-shadow .15s,border-color .15s;
+}
+.art-ready .art-control span {
+ position:absolute;left:50%;top:100%;transform:translateX(-50%);
+ padding:3px 5px;border-radius:4px;background:#160d20eb;color:#fff4fa;
+ font-size:10px;line-height:1.2;white-space:nowrap;
+}
+.art-ready #heart-home span { top:auto;bottom:100%;font-size:12px; }
+.art-ready .art-control:hover,.art-ready .art-control:focus-visible {
+ border-color:#ffe5f0;box-shadow:0 0 14px 3px #ff76b399;
+}
+.art-ready .art-control[aria-pressed="true"] { border-color:#ffc7e2;box-shadow:0 0 8px #ff76b3aa; }
+.art-ready .art-control:active { background:#ff96bd22;box-shadow:inset 0 0 12px #ff76b3; }
+#dashboard:not(.art-ready) {
+ height:auto;max-height:70dvh;overflow:auto;padding:14px;
+ background:#17101fea;border:1px solid #d1a7bd;border-radius:16px 16px 0 0;
+}
+#dashboard:not(.art-ready) #dashboard-screen { margin:auto; }
+#dashboard:not(.art-ready) #dashboard-view { visibility:hidden; }
+.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0; }
+.no-script { position:fixed;z-index:20;background:#21162e;padding:20px;top:30%; }
+[hidden] { display:none!important; }
+@media(min-width:900px) { .portal-label {top:16%;} .invitation {bottom:9%;} }
+@media(max-height:600px) { header {padding:10px;} .invitation {bottom:2%;} }
+@media(prefers-reduced-motion:reduce) {
+ *,*::before,*::after {scroll-behavior:auto!important;animation:none!important;transition:none!important;}
 }
 
-.scene {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: 100dvh;
-  overflow: hidden;
-  background: #8077eb;
+/* Composition pass: real portal render + spaceship, procedural scenery stand-ins. */
+#portal-fallback { position:absolute;left:50%;top:8%;transform:translateX(-50%);width:min(88vw,65vh);height:auto; }
+.scene-ready #portal-fallback,.scene-ready .water { display:none; }
+.water { background:repeating-linear-gradient(0deg,#d2f5ef55 0 1px,transparent 1px 35px),linear-gradient(#74dcd5aa,#148eac); }
+.invitation { z-index:2;bottom:max(22px,env(safe-area-inset-bottom)); }
+.invitation button { border-radius:30px;border:1px solid #ffe5ef;background:linear-gradient(#fff4fa,#e0d0df);color:#421a39;font-weight:bold;letter-spacing:.16em;box-shadow:0 3px 24px #6b26535c; }
+.invitation p { color:#fff;text-shadow:0 1px 6px #082c42,0 0 8px #082c42; }
+#exterior-assets-status { font-size:9px; }
+@media(max-height:500px) { .invitation p:last-child {display:none;} .invitation {bottom:10px;} }
+
+#board-ship { display:none;position:fixed;z-index:1;background:transparent;border:0;padding:0;border-radius:45%; }
+.scene-ready #board-ship { display:block; }
+body[data-state="boarding"] #board-ship { display:none; }
+#board-ship:focus-visible { outline:3px solid #ffd0e6;outline-offset:4px; }
+#board-ship:hover { box-shadow:0 0 24px #ffc5df44; }
+
+/* Reference-fit pass: neon invitation rests on the water below the foreground ship. */
+.invitation { bottom:max(4dvh,env(safe-area-inset-bottom)); }
+.invitation #get-in {
+ display:inline-flex;flex-direction:column;align-items:center;gap:12px;
+ min-width:190px;min-height:110px;padding:0 12px 4px;
+ border:0;border-radius:8px;background:transparent;box-shadow:none;
+ color:#fff0fa;font-size:clamp(26px,4.5vw,44px);font-style:italic;
+ letter-spacing:.14em;text-shadow:0 0 3px #fff,0 0 9px #ff40c3,0 0 24px #f313b0;
+ transform:perspective(500px) rotateX(28deg);
+}
+.invitation #get-in::before {
+ content:'';display:block;width:45px;height:64px;
+ clip-path:polygon(50% 0,100% 35%,64% 35%,64% 100%,36% 100%,36% 35%,0 35%);
+ background:linear-gradient(#fff,#ff5aca);filter:drop-shadow(0 0 8px #ff31b5);
+}
+.invitation #get-in:hover { color:#fff;text-shadow:0 0 6px #fff,0 0 16px #ff7cd4,0 0 35px #ff30b6; }
+.invitation #get-in:focus-visible { outline:3px solid #fff0fa;outline-offset:7px; }
+.invitation p { margin:3px 0;font-size:10px; }
+#load-status { position:relative;top:-3px; }
+@media(max-height:500px) {
+ .invitation { bottom:8px; }
+ .invitation #get-in { min-height:60px;gap:4px;font-size:24px; }
+ .invitation #get-in::before {height:30px;width:25px;}
 }
 
-.scene__layer {
-  position: absolute;
-  inset: 0;
-  display: block;
-  pointer-events: none;
-  user-select: none;
+.scene-ready #load-status { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
+@media(min-width:900px) {
+ .invitation { bottom:1.5dvh; }
+ .invitation #get-in { min-height:0;gap:6px;font-size:36px; }
+ .invitation #get-in::before { width:28px;height:32px; }
 }
 
-.scene__layer img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+.invitation { pointer-events:none; }
+.invitation #get-in { pointer-events:auto; }
+
+/* The physical cockpit stays in the main scene; only its semantic controls overlay it. */
+#dashboard.art-ready {
+ inset:0;bottom:0;left:0;transform:none;width:100%;height:100%;max-height:none;
+ pointer-events:none;background:none;border:0;padding:0;overflow:visible;
 }
-
-.scene__sky {
-  z-index: 0;
-}
-
-.scene__cloud {
-  z-index: 1;
-  inset: -1.25%;
-  width: 102.5%;
-  height: 102.5%;
-  transform-origin: center;
-}
-
-.scene__cloud--left {
-  animation: cloud-drift-left 24s ease-in-out infinite alternate;
-}
-
-.scene__cloud--right {
-  animation: cloud-drift-right 29s ease-in-out infinite alternate;
-}
-
-.scene__cloud--foreground {
-  z-index: 2;
-  animation: cloud-float-foreground 20s ease-in-out infinite alternate;
-}
-
-@keyframes cloud-drift-left {
-  from {
-    transform: translate3d(-0.35%, 0, 0) scale(1.01);
-  }
-
-  to {
-    transform: translate3d(0.45%, 0.12%, 0) scale(1.012);
-  }
-}
-
-@keyframes cloud-drift-right {
-  from {
-    transform: translate3d(0.4%, -0.08%, 0) scale(1.01);
-  }
-
-  to {
-    transform: translate3d(-0.3%, 0.1%, 0) scale(1.012);
-  }
-}
-
-@keyframes cloud-float-foreground {
-  from {
-    transform: translate3d(0, 0.15%, 0) scale(1.01);
-  }
-
-  to {
-    transform: translate3d(0, -0.35%, 0) scale(1.012);
-  }
-}
-
-@media (min-width: 900px) and (orientation: landscape) {
-  .scene__cloud--foreground {
-    inset: auto -1.25% -1.25%;
-    width: 102.5%;
-    height: auto;
-    aspect-ratio: 2043 / 770;
-  }
-
-  .scene__cloud--foreground img {
-    height: auto;
-    object-fit: contain;
-    object-position: center bottom;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scene__cloud {
-    animation: none;
-    transform: none;
-  }
-}
+#dashboard.art-ready #dashboard-screen,#dashboard.art-ready .art-control { pointer-events:auto; }
+#dashboard:not(.art-ready) .art-control { left:auto!important;top:auto!important;width:auto!important;height:auto!important;transform:none!important; }
+#dashboard:not(.art-ready) #dashboard-screen { width:min(88vw,520px)!important;height:auto!important;transform:none!important; }

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b0a1d4"><title>Heart Direction — Graybox</title>
+<link rel="stylesheet" href="styles.css"><script type="module" src="script.js"></script>
+</head>
+<body data-state="exterior">
+<div id="environment" aria-hidden="true">
+ <picture class="sky">
+  <source media="(orientation: landscape)" srcset="assets/images/heart-direction-rebuild/scene-01-background/airbrushed-cyan-sky-desktop.webp" type="image/webp">
+  <img src="assets/images/heart-direction-rebuild/scene-01-background/airbrushed-cyan-sky-mobile.webp" alt="" fetchpriority="high" decoding="async">
+ </picture>
+ <div class="void"></div><div class="water"></div><div id="hearts"></div>
+ <div class="landmarks"><span class="saturn sphere"></span><span class="moon sphere"></span></div>
+</div>
+<header><h1>HEART DIRECTION</h1><span>FUNCTIONAL GRAYBOX · <span id="state-label">EXTERIOR</span></span></header>
+<main>
+ <section id="exterior" aria-label="Exterior invitation">
+  <p class="portal-label">HEART PORTAL · PLACEHOLDER</p>
+  <canvas id="ship-view" aria-label="Temporary spaceship model with independently opening canopy"></canvas>
+  <div id="ship-fallback" hidden>SPACESHIP PLACEHOLDER<br><small>3D preview unavailable; all journey controls remain available.</small></div>
+  <div class="invitation"><p id="load-status" role="status">Loading prototype spaceship…</p><button id="get-in">GET IN</button><p>Temporary water surface · prototype spaceship</p></div>
+ </section>
+ <div id="journey" hidden>
+  <section class="stop arrival" id="arrival" tabindex="-1"><h2>WELCOME TO<br>LAIN DOE LOVE’S HEART</h2><p>Inner world · neon stream and chrome ribs placeholders</p><p>Scroll to travel. Select an artifact to pause and explore.</p></section>
+  <section class="stop" id="artifact-1"><button class="artifact paper" data-content="Writing 01"><small>WRITING · PLACEHOLDER 01</small><strong>Essay</strong><span>Open reading placeholder ↗</span></button></section>
+  <section class="stop" id="artifact-2"><button class="artifact paper" data-content="Writing 02"><small>WRITING · PLACEHOLDER 02</small><strong>Journal page</strong><span>Open reading placeholder ↗</span></button></section>
+  <section class="stop" id="artifact-3"><button class="artifact disc" data-content="Audio / CD"><small>AUDIO · PLACEHOLDER 03</small><i aria-hidden="true"></i><strong>CD / audio</strong><span>Open audio placeholder ↗</span></button></section>
+  <section class="stop" id="artifact-4"><button class="artifact paper" data-content="Writing 04"><small>WRITING · PLACEHOLDER 04</small><strong>Philosophy notes</strong><span>Open reading placeholder ↗</span></button></section>
+  <section class="stop" id="artifact-5"><button class="artifact television" data-content="Video / TV"><small>VIDEO · PLACEHOLDER 05</small><strong>▷ TV / video</strong><span>Open video placeholder ↗</span></button></section>
+  <section class="stop" id="artifact-6"><button class="artifact paper" data-content="Writing 06"><small>WRITING · PLACEHOLDER 06</small><strong>Creative process</strong><span>Open reading placeholder ↗</span></button></section>
+  <section class="stop destinations" id="destinations"><h2>DESTINATIONS</h2><p>Saturn & Moon · distant sphere placeholders</p><div class="destination-buttons"><button data-content="Saturn">SATURN</button><button data-content="Moon">MOON</button></div><button class="world-portal" data-content="Funemployed">FUNEMPLOYED<br><small>PORTAL PLACEHOLDER · ENTER</small></button><a href="#end">Continue along the trail ↓</a></section>
+  <section class="stop" id="end"><h2>END OF GRAYBOX</h2><p>Temporary journey endpoint</p><button class="restart">RESTART JOURNEY</button></section>
+ </div>
+</main>
+<aside id="dashboard" aria-label="Cockpit dashboard" hidden>
+ <canvas id="dashboard-view" aria-hidden="true"></canvas>
+ <div class="screen"><div id="orientation"><h2>WELCOME TO HEART DIRECTION</h2><p>Journey through Lain Doe Love’s heart, mind, and body of work.</p><button id="takeoff">PREPARE FOR TAKEOFF</button></div>
+ <div id="travel-controls" hidden><p id="travel-status" aria-live="polite">Scroll to travel · select an artifact</p><div class="step-controls"><button id="previous" aria-label="Previous trail stop">← BACK</button><button id="next" aria-label="Next trail stop">NEXT →</button><button class="restart">RESET</button></div></div></div>
+ <nav aria-label="Destinations"><button data-content="Saturn">SATURN</button><button data-content="Moon">MOON</button><button data-content="Store">STORE</button><button data-content="Socials">SOCIALS</button></nav>
+</aside>
+<dialog id="detail" aria-labelledby="detail-title"><button id="close-detail" aria-label="Close and return to journey">CLOSE ×</button><p>GRAYBOX PLACEHOLDER</p><h2 id="detail-title"></h2><div id="detail-body"></div><button id="return-detail">RETURN TO JOURNEY</button></dialog>
+<noscript><p class="no-script">JavaScript is required for this interactive graybox. The journey includes boarding, a heart portal, six artifacts, Saturn, Moon, and Funemployed.</p></noscript>
+</body></html>

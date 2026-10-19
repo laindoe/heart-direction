@@ -1,0 +1,88 @@
+const $=s=>document.querySelector(s);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let state='exterior',model=null,version=0,lockedScroll=0,opener=null;
+let modelReady=false,journeyStarted=false;
+const rings=[];
+for(let i=0;i<7;i++){
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('viewBox','0 0 100 100');
+ svg.innerHTML='<path d="M50 88 C37 75 4 54 8 30 C12 7 39 7 50 27 C61 7 88 7 92 30 C96 54 63 75 50 88Z"/>';
+ $('#hearts').append(svg);rings.push(svg);
+}
+function heartDepth(progress=0){rings.forEach((ring,i)=>{
+ const scale=state==='exterior'||state==='boarding'||state==='orientation'?Math.pow(.76,i):Math.pow(.72,i)* (1+(progress%1)*2.3);
+ ring.style.setProperty('--scale',scale);ring.style.setProperty('--alpha',String(Math.max(.1,1-i*.12)));
+});}
+function setState(value){state=value;document.body.dataset.state=value;$('#state-label').textContent=value.toUpperCase().replaceAll('-',' ');}
+function animate(duration,step){return new Promise(resolve=>{
+ const token=version,start=performance.now();
+ function tick(now){if(token!==version)return resolve(false);const p=reduced.matches?1:Math.min(1,(now-start)/duration);step(p*p*(3-2*p));if(p<1)requestAnimationFrame(tick);else resolve(true);}
+ requestAnimationFrame(tick);
+});}
+$('#get-in').addEventListener('click',async()=>{
+ if(state!=='exterior')return;
+ setState('boarding');$('#get-in').disabled=true;$('#load-status').textContent='Boarding…';
+ const done=await animate(2600,p=>{
+  model?.frame(p);
+  if(!model){$('#ship-fallback').style.transform=`translateY(${-80*p}px) scale(${1+p})`;$('#ship-fallback').style.opacity=String(1-p);}
+ });if(!done)return;
+ $('#exterior').hidden=true;$('#dashboard').hidden=false;model?.dashboard();setState('orientation');$('#takeoff').focus();
+});
+$('#takeoff').addEventListener('click',async()=>{
+ if(state!=='orientation')return;
+ setState('portal-approach');$('#takeoff').disabled=true;
+ const done=await animate(2200,p=>{heartDepth(p*.95);document.documentElement.style.setProperty('--darkness',String(p));});if(!done)return;
+ $('#orientation').hidden=true;$('#travel-controls').hidden=false;$('#journey').hidden=false;
+ document.body.classList.add('travelling');journeyStarted=true;setState('inner-world');
+ window.scrollTo(0,0);$('#arrival').focus({preventScroll:true});updateTravel();
+});
+const stops=[...document.querySelectorAll('.stop')];
+function currentStop(){let best=0,distance=Infinity;stops.forEach((el,i)=>{const d=Math.abs(el.getBoundingClientRect().top-80);if(d<distance){best=i;distance=d;}});return best;}
+function updateTravel(){
+ if(!journeyStarted||$('#detail').open)return;
+ const i=currentStop();setState(i===0?'inner-world':i<=6?'artifact-trail':i===7?'destinations':'end');
+ $('#travel-status').textContent=i===0?'Scroll to travel · select an artifact':i<=6?`ARTIFACT ${i} / 6 · SELECT TO EXPLORE`:i===7?'DESTINATIONS · EXPLORE OR CONTINUE':'END OF GRAYBOX · RESTART BELOW';
+ $('#previous').disabled=i===0;$('#next').disabled=i===stops.length-1;
+ heartDepth(reduced.matches?0:scrollY/innerHeight*.35);
+}
+let pending=false;
+addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;updateTravel();});}},{passive:true});
+function travelBy(delta){const index=Math.max(0,Math.min(stops.length-1,currentStop()+delta));stops[index].scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});}
+$('#next').addEventListener('click',()=>travelBy(1));$('#previous').addEventListener('click',()=>travelBy(-1));
+function reset(){
+ version++;journeyStarted=false;$('#detail').open&&$('#detail').close();document.body.classList.remove('travelling');
+ $('#journey').hidden=true;$('#dashboard').hidden=true;$('#exterior').hidden=false;
+ $('#orientation').hidden=false;$('#travel-controls').hidden=true;$('#get-in').disabled=false;$('#takeoff').disabled=false;
+ $('#ship-fallback').style.cssText='';$('#load-status').textContent=modelReady?'Prototype spaceship ready':'3D unavailable · journey available';
+ window.scrollTo(0,0);document.documentElement.style.setProperty('--darkness','0');setState('exterior');model?.reset();heartDepth();$('#get-in').focus();
+}
+document.querySelectorAll('.restart').forEach(b=>b.addEventListener('click',reset));
+const contents={
+ Saturn:'<p>Body of work · destination placeholder.</p><div class="media-placeholder">PROJECT COLLECTION PLACEHOLDER</div>',
+ Moon:'<p>Philosophy and About archive · destination placeholder.</p><ul><li>Earth — About</li><li>Air — Spirit into matter</li><li>Fire — Archetype</li><li>Water — Heart Direction</li></ul>',
+ Store:'<p>Store destination placeholder. Commerce is not connected.</p><ul><li>Dream</li><li>Build</li><li>Sustain</li></ul>',
+ Socials:'<p>Social destinations placeholder.</p><ul><li>Substack — link pending</li><li>Threads — link pending</li></ul>',
+ Funemployed:'<div class="media-placeholder">FUNEMPLOYED THRESHOLD PLACEHOLDER</div><p>Teaser content pending. Return to continue along the main trail.</p>',
+ 'Audio / CD':'<div class="media-placeholder">CD / AUDIO PLAYER PLACEHOLDER</div><p>No audio has been supplied. Playback is not connected.</p>',
+ 'Video / TV':'<div class="media-placeholder">TV / VIDEO PLAYER PLACEHOLDER</div><p>No video has been supplied. Playback is not connected.</p>'
+};
+document.querySelectorAll('[data-content]').forEach(button=>button.addEventListener('click',()=>{
+ opener=button;lockedScroll=scrollY;const name=button.dataset.content;
+ $('#detail-title').textContent=name;$('#detail-body').innerHTML=contents[name]||'<div class="media-placeholder">WRITING CONTENT PLACEHOLDER</div><p>Final writing will be supplied by Lain Doe Love. This panel tests reading, closing, and returning to the same place on the trail.</p>';
+ document.body.style.position='fixed';document.body.style.top=`-${lockedScroll}px`;document.body.style.width='100%';
+ $('#detail').showModal();$('#close-detail').focus();
+}));
+function close(){ $('#detail').close(); }
+$('#close-detail').addEventListener('click',close);$('#return-detail').addEventListener('click',close);
+$('#detail').addEventListener('close',()=>{document.body.style.position='';document.body.style.top='';document.body.style.width='';window.scrollTo(0,lockedScroll);opener?.focus({preventScroll:true});});
+heartDepth();
+// Dynamic import keeps every HTML control working when WebGL/model loading fails.
+const timeout=setTimeout(()=>{$('#load-status').textContent='Spaceship still loading · GET IN remains available';},10000);
+import('./js/graybox-ship.js').then(m=>m.createShip()).then(ship=>{
+ clearTimeout(timeout);model=ship;modelReady=true;$('#load-status').textContent='Prototype spaceship ready';
+ // A late model must never reappear over a journey already in progress.
+ if(state!=='exterior'){model.frame(1);model.dashboard();}
+}).catch(error=>{
+ clearTimeout(timeout);console.warn('Graybox 3D fallback:',error);$('#ship-fallback').hidden=false;
+ $('#load-status').textContent='3D unavailable · journey available';
+});

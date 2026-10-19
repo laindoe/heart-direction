@@ -1,156 +1,70 @@
-# Heart Direction — Experience Flow
+# Heart Direction — launch experience flow
 
-## State 1: exterior invitation
+Approved scope: 2026-10-19. See STATUS.md for implementation status.
 
-The visitor arrives at the lavender daytime dreamscape. The chrome heart
-tunnel, marquee, cherubs, palm promenade, water, and one-seat spaceship are
-fully visible.
+## Exterior
 
-Ambient activity draws attention without forcing action:
+Show the finished homepage composition with the approved cyan sky, heart portal
+and marquee, and spaceship. Keep GET IN as the semantic entry control. Final
+surrounding scenery is subject to composition review, not an automatic expansion
+of the asset list.
 
-- soft water ripples;
-- GET IN reflection or glow;
-- restrained ship glow;
-- cherub hover;
-- subtle illuminated signage.
+## Boarding
 
-Primary action: select the spaceship.
+Retain the existing canopy opening and camera movement into the cockpit. Refine
+timing and continuity after visual review. Reduced motion enters directly; slow
+or failed 3D loading must not block dashboard access.
 
-## State 2: boarding transition
+## Dashboard
 
-Selecting the ship triggers a forward zoom that feels like entering the
-vehicle. The cockpit replaces the exterior view.
+The dashboard is the launch destination. Retain the approved chrome/heart design
+and four primary controls: SATURN, MOON, STORE, SOCIALS. Replace instructions and
+controls that currently lead to the artifact trail with dashboard-appropriate
+content; new copy beyond coming-soon labels needs review.
 
-The dashboard powers on with a short Heart Direction loading treatment before
-presenting orientation. Exact loading animation remains to be designed.
+- SATURN: show Coming soon within the dashboard experience.
+- MOON: show Coming soon within the dashboard experience.
+- STORE: show the first digital product's preview, description, price and Buy
+  control inside Heart Direction. Payhip handles checkout with Square processing
+  and automatically emails the download link. Validate actual embedded/linked
+  checkout behavior before claiming checkout never leaves the site.
+- SOCIALS: offer Substack, Instagram and Threads links using supplied URLs.
+- Dashboard heart (Back to Homepage): restore the exterior and a usable GET IN control.
 
-## State 3: welcome
+Panels must close predictably, restore focus, and work with touch and keyboard.
+Keep purchase failures/cancellations recoverable without restarting boarding.
 
-The central dashboard screen introduces the experience.
+## Deferred
 
-Copy:
+Takeoff, tunnel/glitch travel, void arrival, artifact library/trail, Funemployed,
+functional Saturn portfolio, Moon chapters, and full storefront/cart are outside
+this launch. Preserve earlier work without exposing unfinished routes.
 
-> Journey through Lain Doe Love's heart, mind, and body of work.
+## Artwork dashboard update — 2026-10-19
 
-Control:
+The website now renders the original exported v013 dashboard, including the
+Blender heart, housing, screen bezel and four physical buttons. Removed the
+covering HTML dashboard, replacement SVG heart and destination modals. HTML text
+is perspective-aligned inside the model's black display using projected geometry;
+accessible 44px minimum targets track the real heart and button caps on resize.
+Saturn/Moon show Coming soon on that display. Store and Socials replace the same
+screen content; longer content scrolls within the display. The original heart,
+labeled Home, restores the exterior and GET IN focus. A plain control fallback
+remains available if WebGL/model loading fails. No Blender source or GLB changed.
 
-> Prepare for Takeoff
+In-app browser checks passed at 390×844 and 1440×900, plus narrow 320×700
+screen fit/touch targets and 844×390 Home navigation. Destination changes,
+repeat boarding, keyboard Home activation and focus restoration were verified;
+no browser console warnings/errors were captured. Physical iPhone Safari,
+reduced-motion and model-failure behavior were not newly browser-tested.
+Exact next task: review the dashboard material/camera appearance against the
+Blender reference, then continue portal/exterior integration as a separate milestone.
 
-No sound control appears in the launch version.
+## Physical cockpit correction — 2026-10-19
 
-## State 4: orientation
-
-Orientation explains only what the visitor needs:
-
-- scroll forward to travel deeper;
-- pause when something catches the eye;
-- select an artifact to reveal it;
-- portals may be entered or skipped;
-- Saturn, Moon, Store, and Socials remain available from the dashboard.
-
-The map is not shown before the visitor enters the cockpit. Exact orientation
-screen count and final wording should remain concise and be confirmed before
-implementation.
-
-Final control:
-
-> Take Off
-
-## State 5: tunnel entry
-
-The ship advances across the water into the heart tunnel. The viewpoint looks
-forward, so the daytime exterior does not remain visible inside the tunnel.
-The world becomes dark and cosmic while chrome ribs and the water route guide
-the visitor inward.
-
-At the threshold, a short glitch/pull-through transition occurs. No additional
-message appears during this transition.
-
-## State 6: void arrival
-
-The visitor emerges facing an illuminated arch:
-
-> Welcome to Lain Doe Love's Heart
-
-Cherubs hover above it. The dashboard repeats the core instruction to scroll
-forward and select an artifact. Saturn and the Moon are visible far away as
-stable landmarks.
-
-## State 7: artifact trail
-
-The ship remains on the water path. User scrolling controls forward movement.
-Artifacts appear in widely spaced groups, generally 2–3 per arch.
-
-Selecting an artifact pauses or visually settles the journey and opens the
-appropriate presentation:
-
-- writing: readable paper or reading modal;
-- image/artwork: focused lightbox;
-- audio: player associated with the physical object;
-- video: controlled viewer styled for the artifact;
-- world preview: threshold or portal presentation.
-
-Exact modal templates will be defined per media type before implementation.
-
-## State 8: world portal encounter
-
-A portal or doorway occupies the center of the route. The dashboard asks
-whether to enter or remain on the main path.
-
-- Enter: transition into the world's threshold experience.
-- Continue: camera travels through or past the doorway and resumes the trail.
-
-Only the Funemployed threshold teaser opens at launch.
-
-## Persistent detours
-
-### Saturn
-
-The Saturn dashboard control leaves the main trail and places the visitor on a
-simple Saturn surface. The same forward-scrolling interaction continues under
-one visually continuous ring.
-
-Projects face the viewer. Selecting a project makes that project dominant while
-others fade. A lightbox/slideshow presents the work. The dashboard holds concise
-project information and a fullscreen control. A clear return control restores
-the exact previous position on the heart trail.
-
-### Moon
-
-The Moon control moves the visitor to the philosophy temple. Four forward-facing
-panels—Earth, Air, Fire, and Water—remain visible in the viewport. Selecting a
-panel opens a borderless pearl-chrome fullscreen reading modal. Closing it
-returns to the temple without changing the persistent dashboard.
-
-### Store
-
-The Store control opens a familiar product grid. The dashboard provides store
-categories and a persistent cart control. Selecting a product opens a fullscreen
-product view with imagery, description, price, quantity, add-to-cart, and
-checkout options. Final Square behavior remains unresolved.
-
-### Socials
-
-The Socials control opens the available platforms in a controlled dashboard
-state or overlay. Substack and Threads are currently planned. Final destinations
-must be supplied before launch.
-
-## State 9: present end of the trail
-
-The forward path reaches its current end and cannot continue. The dashboard
-acknowledges that this is the present edge of Heart Direction and that more is
-coming. It offers a newsletter or follow action.
-
-This ending is not an interrupted transmission unless that direction is
-explicitly re-approved; the later correction replaced it with a clear current
-endpoint.
-
-## Navigation-state requirements
-
-- Detours return to the visitor's previous main-trail position.
-- Artifact modals preserve trail position.
-- Background movement pauses while an overlay requires reading or action.
-- Browser back behavior and explicit UI controls must not produce duplicate or
-  lost navigation states.
-- Reduced-motion mode preserves all content and choices with shorter or direct
-  transitions.
+Supersedes prior dashboard-clone/ship-hide behavior: the whole ship now remains
+visible from the pilot view. Dashboard text and controls project directly onto
+the original ship geometry in a single renderer. The closed exterior dome is
+visible, opens during boarding and stays out of the forward view inside. Home
+restores the closed dome. See COCKPIT_PRESENCE_REVIEW.md for implementation,
+mobile/desktop checks and material limitations. Source models remain untouched.

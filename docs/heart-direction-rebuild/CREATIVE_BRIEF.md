@@ -1,5 +1,7 @@
 # Heart Direction — Creative Brief
 
+> Scope update — 2026-10-19: The approved launch is homepage → spaceship boarding → dashboard, with Saturn/Moon coming soon, one Payhip/Square digital product, and Substack/Instagram/Threads links. The larger launch/content/store sections below describe the deferred universe, not current delivery requirements. See [STATUS.md](STATUS.md) for current authority.
+
 ## Purpose
 
 Heart Direction is an immersive library of Lain Doe Love's heart, mind,

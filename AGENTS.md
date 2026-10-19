@@ -40,9 +40,12 @@ newer rebuild document resolves it.
 
 ## Current milestone
 
-The first milestone is the responsive lavender-cloud background and framing
-system. Do not implement the portal, spaceship, water, dashboard, artifact
-trail, or 3D runtime until the milestone in `STATUS.md` advances.
+The current launch is the homepage exterior, existing spaceship boarding, and
+dashboard. Saturn/Moon are coming soon; Store uses Payhip with Square and
+automatic digital-download emails; Socials includes Substack, Instagram and
+Threads. See STATUS.md for the next implementation milestone. The artifact
+trail and larger worlds are deferred. Scope approval does not itself authorize
+implementation during a documentation-only task.
 
 ## Change boundaries
 
@@ -106,9 +109,9 @@ Creative direction and references
 Tripo output is a source mesh, not a final web asset. Inspect and repair every
 mesh in Blender before it enters the website.
 
-Codex may generate Blender Python scripts using `bpy`. A `.blend` file can only
-be generated and verified in an environment where Blender is installed and
-available to the command line.
+Codex may generate Blender Python scripts using `bpy`. Generate and verify `.blend` files in desktop Blender. Background-mode
+Blender crashes on this Mac and must not be used; prepare Text Editor scripts
+when direct desktop operation is unavailable.
 
 Do not commit large `.blend` files, raw renders, or high-resolution source
 textures to this web repository until a storage strategy or Git LFS plan is

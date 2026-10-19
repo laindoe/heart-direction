@@ -1,5 +1,7 @@
 # Heart Direction — Visual System
 
+> Scope update — 2026-10-19: Keep the romantic chrome/red-magenta visual language. The approved cyan exterior supersedes earlier lavender-sky requirements. Launch ends at the dashboard; tunnel/void, artifacts and destination-environment sections below apply only to deferred work. Additional exterior scenery is subject to composition review. See [STATUS.md](STATUS.md) for current authority.
+
 ## Dominant visual language
 
 The world combines romantic ornament, retro-futurist chrome, cosmic darkness,
@@ -161,3 +163,14 @@ readability.
 Approved images must be copied into a repository or production reference
 folder with meaningful filenames before an implementation depends on them.
 Conversation attachments and generation IDs are not durable source files.
+
+## Reference-fit composition — 2026-10-19
+
+The user-supplied IMG_7483.PNG is the current placement/proportion target. A copy
+is stored in production/references/homepage/homepage-composition-reference-v001.png.
+Implemented larger cherubs, rebalanced portal/ship, receding palm/mountain rows,
+grid banks, decorative glowing heart depth, and water-side GET IN/arrow. Cyan sky,
+source artwork proportions and dashboard navigation are preserved. See
+REFERENCE_FIT_REVIEW.md for exact settings, screen checks, screenshots and limits.
+The next milestone is composition review followed by lighting/material/water
+matching; no Blender geometry was changed or final appearance approved.
