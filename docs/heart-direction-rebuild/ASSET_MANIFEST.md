@@ -327,3 +327,162 @@ variation-v001/tunnel-depth-{mobile,desktop}.png. No original GLB/Blender edit,
 Blender launch, dependency install or deployment. Added runtime geometry requires
 a later mobile GPU budget check; physical Safari not tested. Next: user review
 of corridor depth, then floor/water and light polish.
+
+
+## Solid rolling-hill shape study — 2026-10-19
+
+User requested smoother rounded hills, full desktop coverage, and no hill grid
+while reviewing shape. Supersedes the repeated Tripo mountain-bank presentation
+for this shape study. Existing mountain GLBs remain preserved and unmodified.
+
+New js/rolling-hills.js builds one continuous smooth-normal height field per
+bank, using broad Gaussian rises with staggered centers and wider valleys.
+Terrain begins at X ±.82 outside the coping and extends to X ±24, Z -9 to 76;
+the smooth inner toe meets the raised bank without crossing the water channel.
+Solid matte turquoise material and gentle height shading reveal slopes without
+wireframe, grid textures, normal maps, metallic glare or repeated tile seams.
+Removed the ground-deck grid for the study; pool-wall tiles and palm artwork
+remain unchanged. This is editable runtime geometry, not a Blender source edit
+or an approved final landscape. No dependency or external artwork was added.
+
+Two meshes total 86,016 triangles, with shared material. The mountain GLB is no
+longer requested by this preview. js/exterior-assembly.js installs the hills;
+index.html, script.js and graybox-ship.js refresh module caches. Existing tunnel,
+desktop palm rows, boarding, dashboard and pending commerce/social fields remain.
+No commit, push, merge, deployment, live-domain change or Blender launch.
+Next: review hill height, width, spacing and coverage in the solid study before
+restoring any grid or beginning another material treatment.
+
+Validation: final Chromium checks passed at 1440×900, 1920×1080 and resized
+390×844: scenery ready, no page errors or horizontal overflow, boarding,
+in-screen Moon Coming soon, keyboard Home and GET IN focus restoration. Module
+syntax and git diff --check passed. Screenshots reviewed in
+/workspace/heart-direction-hill-review/{desktop,wide-desktop,mobile}.png.
+Physical iPhone Safari and measured mobile GPU/thermal performance remain
+unverified. These are local review images; the live site has not changed.
+
+
+## More pronounced hill relief — 2026-10-19
+
+User requested more peaks and valleys in the solid hill study. Raised and
+narrowed the rounded crests, increased longitudinal mound rows from 13 to 17,
+and reduced spacing from 7.1 to 5.4 units. Neighboring mounds use their maximum
+height rather than an additive sum so overlap no longer fills the low saddles.
+The continuous mesh and smooth vertex normals remain. Subtle slope shading,
+aligned with the existing directional light, helps reveal form under the bright
+ambient lighting. Terrain coverage and mesh resolution are unchanged; hills
+remain solid with no grid. No source model, palm, pool border, tunnel, dependency,
+Blender file or live deployment changed. Next: review crest height and valleys.
+
+Validation: 1440×900 and 1920×1080 desktop, resize to 390×844, boarding, Moon
+Coming soon, keyboard Home and focus restoration passed without page errors.
+Syntax and diff whitespace checks passed. Desktop screenshots reviewed; local
+review images are in /workspace/heart-direction-hill-relief-review/.
+Physical-device Safari and GPU performance remain unverified. No deployment.
+
+
+## Hill height relative to palms — 2026-10-19
+
+User requested lower hills reaching roughly half to three-quarters of palm
+height. Hill crest amplitudes now derive from the existing fitted palm height
+(1.12 scene units): 0.56–0.84 units above the shared raised bank. The smooth
+inner toe and intervening valleys remain lower. This replaces the preceding
+0.85–1.60 crest range. Peak placement, rounded profiles, valley spacing, solid
+material and full scene coverage remain. Height-shading normalization follows
+the new maximum; no grid restored. Changes: rolling-hills.js, its integration
+and module cache versions. Existing source models, palms, pool, tunnel and
+navigation preserved; no dependency, Blender, commit or deployment. Next: review
+these hill/palm proportions against the supplied reference.
+
+Validation: Chromium checks passed at 1440×900 and 1920×1080, resize to
+390×844, boarding, Moon Coming soon, keyboard Home and focus restoration;
+no page errors. Syntax and diff whitespace checks passed. Desktop proportions
+reviewed in /workspace/heart-direction-hill-height-review/desktop.png.
+Preview server restarted on port 8000 after a stale process stopped responding.
+Physical iPhone Safari and device GPU profiling remain outstanding. No deployment.
+
+
+## Varied low and tall hills — 2026-10-19
+
+User requested more height contrast to match the supplied reference: much shorter
+hills among occasional taller pieces. Replaced the narrow 50–75% crest range
+with a stable mixed low/medium/tall sequence (~15–75% of palm height). Tallest
+crests remain capped at 75%; low crests are mostly 15–30%. Heights coordinate
+across each depth row, with slight variation and different left/right offsets,
+so rear hills are less likely to mask every valley. Low mounds are narrower;
+tall ones have broader rounded shoulders. Terrain footprint, smooth normals,
+solid turquoise material and no-grid state remain unchanged. Original sources,
+palms, pool border, tunnel and navigation remain intact. No dependency, Blender,
+commit, deployment or live-domain change. Next: review height variation against
+the reference before another landscape treatment.
+
+Validation: final Chromium checks passed at 1440×900 and 1920×1080, resize to
+390×844, boarding, Moon Coming soon, keyboard Home and focus restoration; no
+page errors. Syntax and git diff --check passed. Local screenshots:
+/workspace/heart-direction-hill-variation-review/. Desktop views visually reviewed.
+Physical iPhone Safari and device GPU profiling remain unverified. No deployment.
+
+
+## Distinct layered rounded hills — 2026-10-19
+
+User approved the reference-led proposal: narrower bases, varied sizes/spacing,
+separate near/back layers and stronger slope shading, while keeping the grid off
+and tall crests at <=75% palm height. Replaced the blended height field with
+compact round mounds whose height and first slope reach zero at their footprints.
+A continuous solid bank still covers X ±.82–24 and Z -9–76. Five staggered lanes
+per side create overlapping foreground/background forms; outer layers stay lower
+and receive restrained atmospheric color separation. Low/medium/tall variation,
+rounded shoulders, stronger directional shape shading and flat matching-color
+toes distinguish the forms without detached-looking disk bases.
+
+Each lane merges its mound geometry: 10 hill meshes plus 2 ground meshes,
+242,884 triangles total. Numeric geometry check found finite coordinates,
+terrain outside the pool and highest crest 0.8405 units against 1.12-unit palms
+(the extra .0005 is the ground separation offset). This costs more geometry than
+the preceding 86,016-triangle study and still needs a measured device GPU budget.
+Source GLBs, palm models/placements, sky assets, pool border, tunnel, boarding and
+dashboard are preserved. Updated rolling-hills.js and module cache versions; no
+new dependency, Blender launch, commit, push, deployment or domain change.
+Next: user review of distinct hill forms and layering before adding any grid.
+
+Validation: Chromium checks passed at 1440×900 and 1920×1080, resize to
+390×844, boarding, Moon Coming soon, keyboard Home and focus restoration; no
+page errors. Final desktop/mobile images reviewed after separating the ground
+1mm above the old bank to remove coplanar flicker; no page errors on that final
+pass. Module syntax and git diff --check passed. Review images are local at
+/workspace/heart-direction-hill-layers-review/{desktop,mobile}.png.
+Physical iPhone Safari and measured GPU/memory/thermal costs remain unverified.
+The original source assets and live website have not changed.
+
+
+## Joined hills and firmer crests — 2026-10-20
+
+User requested filling every gap/flat space and slightly sharper hilltops, using
+the marked screenshot and existing reference. Supersedes the separate compact
+mounds and exposed ground of the preceding pass. rolling-hills.js now builds
+one connected surface on each bank. Closer overlapping hill shoulders and low
+rolling saddle relief fill the ground between peaks and beside the coping.
+The firmer crown profile retains softened tops instead of the earlier broad
+domes. Mixed heights, solid turquoise shading and the 75%-of-palm height cap
+remain; no hill grid restored. Original assets, palm rows, pool border, tunnel,
+boarding and dashboard preserved. Cache URLs updated; no dependency, Blender,
+commit, push, deployment or domain change.
+
+Geometry validation: 2 meshes, 221,184 triangles, finite coordinates, no terrain
+inside the pool; relief spans .0511–.8329 units above the terrain base against
+1.12-unit palms. Physical Safari and measured device GPU costs remain unverified.
+Next: user review of joined valleys, coverage and firmer crests.
+
+
+The pool-side terrain edges are also closed down behind the coping with narrow
+skirts: 4 meshes and 222,720 triangles including those seams. This prevents an
+open raised lip from revealing the older bank underneath. Terrain coverage,
+75%-palm crest cap, no-grid state and original assets remain unchanged.
+
+Validation: fresh Chromium checks at 1440×900 and 390×844 passed asset loading,
+no horizontal overflow, boarding, Moon Coming soon, keyboard Home and GET IN
+focus restoration, with no page errors. Final sealed-edge screenshots passed
+again without page errors and were reviewed at
+/workspace/heart-direction-continuous-hills-review/{desktop,mobile}.png.
+Module syntax and git diff --check passed. Development server runs on port 8000;
+no deployment or live-site change. Physical Safari/device GPU tests remain open.

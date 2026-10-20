@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import { createExteriorAssembly } from './exterior-assembly.js?v=tunnel-depth-3';
+import { createExteriorAssembly } from './exterior-assembly.js?v=hill-continuous-11';
 import { screenTransform } from './screen-projection.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 

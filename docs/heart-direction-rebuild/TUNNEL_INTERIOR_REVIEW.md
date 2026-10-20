@@ -58,3 +58,45 @@ variation-v001/tunnel-depth-{mobile,desktop}.png. No original GLB/Blender edit,
 Blender launch, dependency install or deployment. Added runtime geometry requires
 a later mobile GPU budget check; physical Safari not tested. Next: user review
 of corridor depth, then floor/water and light polish.
+
+
+## Reference-led tunnel refinement — 2026-10-19 cloud review
+
+The user explicitly authorized a tunnel-only visual pass using the re-uploaded
+reference: seal the frame opening and suggest an enterable passage extending
+straight backward. This supersedes the older instruction to review the previous
+corridor as-is. It does not approve the tunnel as final or authorize traversal.
+
+Expanded the dark seam overlap beneath the original chrome rim. Retained the
+traced aperture and connected corridor, but moved convergence toward the lower
+water horizon. Replaced closed heart ribs with open arches meeting the water,
+softened pink neon with a shared glow shader, and replaced transverse floor/grid
+lines with a continuous turquoise surface and stylized broken pink reflections.
+Arches are equal-size geometry spaced along one straight axis; perspective
+supplies recession. Static shader patterns add no animation loop. Shared arch
+materials/geometries and fewer tube segments reduce arch geometry from the prior
+217,600 triangles to 143,616 triangles despite retaining 34 arches.
+
+Only web runtime geometry/materials and module cache versions changed. Original
+PNG/GLBs, cyan sky, ship, landscape, boarding, dashboard, pending commerce and
+social configuration are preserved. No Blender, new dependency, commit, push,
+merge, deployment or live-domain change. The supplied image remains visible in
+the conversation; its durable production reference copy is not in this checkout.
+
+The original frame's pointed lower threshold remains: this is a visual corridor,
+not a physically continuous navigable waterway. Reflections are procedural color
+patterns, not scene reflections. Physical iPhone Safari, dynamic browser chrome,
+and measured device GPU/memory/thermal performance still require verification.
+Exact next task: user review of this tunnel on mobile and desktop, especially
+frame seams, depth and waterline, before another visual milestone.
+
+Validation: final Chromium checks passed at 390×844 and 1440×900, plus
+320×700 reduced motion with the spaceship GLB deliberately blocked. GET IN,
+direct ship entry, all four destinations, keyboard Home and GET IN focus
+restoration passed. An earlier iteration also passed repeat boarding cycles.
+No uncaught application errors or shader compile errors. Missing favicon and
+software-renderer ReadPixels performance warnings remain; deliberate model failure
+reports the expected fallback warning. JavaScript syntax and git diff --check
+pass. Final cloud review screenshots and results are outside the web repository
+in /workspace/heart-direction-tunnel-review/. They are local review artifacts,
+not a deployed preview or production-storage reference replacement.
