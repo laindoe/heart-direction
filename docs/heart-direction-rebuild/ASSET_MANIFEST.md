@@ -486,3 +486,393 @@ again without page errors and were reviewed at
 /workspace/heart-direction-continuous-hills-review/{desktop,mobile}.png.
 Module syntax and git diff --check passed. Development server runs on port 8000;
 no deployment or live-site change. Physical Safari/device GPU tests remain open.
+
+## Portal v003 web preparation — 2026-10-20
+
+User authorized desktop inspection, separate progressive export copies and later
+GLB integration in place of the portal PNG. Source:
+`heart-direction-production/blender/homepage-exterior/working/heart-direction-homepage-exterior-v003.blend`.
+Status: **awaiting desktop inspection; no export or final approval**.
+Read-only Text Editor script: `tools/portal/inspect-portal-v003.py`; run instructions
+and provisional mobile targets: `tools/portal/README.md`. Timestamped inventory
+records visibility, object hierarchy/transforms/bounds, base/evaluated triangles,
+materials, texture dimensions and source hash. Exact frame/inset/jewel selection
+and exclusion of backups/failed depth studies remain unresolved until that report
+is reviewed. No guessed export set is authorized by older assembly scripts.
+
+Export settings, counts, texture dimensions, compression and GLB bytes are pending,
+not measured. Proposed review targets: <=50k triangles, <=2 MiB, textures <=1024px
+where appearance permits; source materials/alignment and detailed jewel/lights
+must survive visual comparison. Existing PNG, tunnel passage, boarding, scenery
+and dashboard are preserved. No runtime changes, source save, Blender launch,
+dependency installation or deployment occurred. Physical Safari and whole-scene
+GPU/memory costs remain open. Next: run the desktop inspection and resolve exact
+objects before preparing the isolated export script.
+
+### Desktop inventory and resolved export set — 2026-10-20
+
+Desktop Blender 4.5.12 LTS reports the visible frame
+`HD_PORTAL_WORKING_v001` (1,888,396 triangles), inset
+`HD_Frame_Inset_Under_Lip` (764 evaluated triangles), and jewel
+`HD_Ruby_Edge_Cleanup` (1,945,823 evaluated triangles, including its smoothing
+modifier). Combined: 3,834,983 triangles. Packed input textures are 4096×4096.
+Disk source is 1,058,276,718 bytes, SHA-256
+`e8182ffad0ff285a269986efc957ffc4e555f045225b50780513b6d3f75c0ca1`.
+User explicitly confirmed using the current open assembly, including unsaved
+edits. Exclude hidden `HD_Frame_Inset_Fill`, raw Tripo backups and low-profile
+study; do not restore their visibility.
+
+Desktop export script: `tools/portal/export-portal-v003.py`. Independent review
+copies target frame/jewel triangles 60k/40k, 30k/20k and 18k/12k; full-detail inset
+retained. Copies retain evaluated artwork, materials and world transforms; only
+independent texture copies resize to <=1024px. Standard GLB, Y-up conversion,
+AUTO image format/JPEG quality 85 where supported, no cameras/lights/animation,
+no Draco or new dependency. Source .blend is never saved. Temporary review scenes
+remain in memory; original scene restored. Script writes actual counts, texture
+dimensions, file sizes, bounds and source-preservation hashes per timestamped run.
+
+Status: script syntax checked; desktop execution, exported appearance, compression
+assessment, integration and browser/device tests pending. Decimation may change
+facets, bulbs, lettering and silhouette; candidate targets do not establish visual
+acceptability or mobile performance. Existing PNG/runtime remain unchanged until
+exports can be inspected. Next: run the export script in desktop Blender, then
+inspect candidates before choosing and integrating a review GLB.
+
+### Portal v003 integrated review candidate — 2026-10-20
+
+Desktop export completed; balanced GLB now replaces the frame PNG on successful
+load. Served asset: `assets/models/heart-direction-rebuild/portal/heart-direction-portal-v003-balanced-review.glb`.
+50,764 triangles (frame 30k, jewel 20k, inset 764), 3,989,388 bytes, six 1024×1024
+embedded textures. Independent detail/lean candidates remain available. Existing
+offline WebP conversion increased payload and was rejected. No new dependency.
+GLB/Y-up, evaluated modifiers, no cameras/lights/animation/Draco; original
+alignment/materials retained, whole assembly uniformly fitted at runtime.
+Original PNG retained for loading/failure; separate passage entrance refits to
+mesh opening, boarding/scenery/dashboard preserved. Source before/after hashes
+and transforms match. Full export settings, hashes, counts, texture memory,
+validation and remaining limits: [PORTAL_V003_WEB_REVIEW.md](PORTAL_V003_WEB_REVIEW.md).
+Desktop/mobile/navigation, failure and delayed-load checks passed; application
+reduced-motion path simulated. Physical Safari and measured device performance
+remain unverified. Above provisional payload budget; **not final**. Next: user
+appearance review against Blender before selecting further optimization work.
+
+### Portal waterline placement — 2026-10-20
+
+Runtime root Y now waterLevel+.68 (down .58); whole-model height unchanged at
+1.755, bottom about .1975 below water. Existing water provides occlusion, with
+no destructive mesh cut. Frame/passage remain grouped; cherubs retain shoulder
+placement. Distant passage alignment clamps its target to waterLevel+.90 to
+prevent water-plane holes after lowering. GLB bytes/triangles/textures/source
+unchanged. Reference: references/homepage/portal-waterline-reference-v001.jpg.
+Clouds deferred per user; stylized water/reflection and entrance remain unfinished.
+
+### Portal distance / horizontal water correction — 2026-10-20
+
+User approved moving portal farther back: Z4.2 (was 2.2), root Y waterLevel+.60,
+height1.755 unchanged. Inner opening now crosses water; frame bottom about .2775
+underwater. Supersedes .68 root and camera-driven convergence clamp above.
+Passage uses fixed translation, with water at world waterLevel+.002 at every Z;
+no camera shear or triangular tilted threshold. PNG fallback gets the same plane
+calculation. No asset bytes, source mesh/materials, texture dimensions or loading
+budget changed. Water shaders remain stylized; pointed opening is narrow at the
+waterline. Clouds remain deferred. See STATUS.md for checks and next review.
+
+### Enlarged opening / continuous exterior pool — 2026-10-20
+
+User requested bigger tunnel and exterior water/two walls carried inside. Runtime
+portal size4.3, uniform model height3.87, root waterLevel+.35/Z6.2; source GLB,
+textures, proportions and materials unchanged. Waterline now crosses a broad part
+of the submerged opening; both wall/coping outer edges clear the frame.
+Single existing exterior water plane provides the whole passage floor; removed
+separate stylized tunnel floor and guides. Walls/tile lines/coping/bank decks
+extend continuously from Z-5 to50.2. No water texture or new dependency added.
+Cherubs retain .68 width, repositioned at enlarged shoulders. Clouds deferred.
+See STATUS.md for clearance values and validation. Review-only, not final art.
+
+### Three-quarter heart / exterior-only palms — 2026-10-20
+
+Supersedes preceding fit: runtime portal size9 (uniform GLB height8.1), root
+waterLevel+1.98/Z16.2. ~74.44% above water; lower point still clears unchanged
+pool/coping width. Palms filter to centers <=portalZ-1.2; mobile last row14,
+desktop extras last12. No palms inside tunnel.34 existing arches now span84
+units; continuous water/walls/coping reachZ100.2. Main water extends to125,
+camera far140. Source GLB count/bytes/materials unchanged; no new image or
+runtime dependency. Two supplied reference screenshots saved under
+references/homepage/. Clouds deferred; visual polish and device performance
+remain unapproved. See STATUS.md for checks and exact next task.
+
+### Mountain cutoff at tunnel — 2026-10-20
+
+Runtime rolling hills end at Z15 before tunnel entrance16.2. Last1.8 units soften
+to bank level; rear edge sealed. Shortened mesh retains approximate sample spacing:
+4 meshes,63,796 triangles, all finite and none past15. Original mountain GLBs
+and Blender files unchanged. Water and pool walls still continue inside. No new
+asset request/dependency; clouds deferred. See STATUS.md for validation/review.
+
+### Palm frame-edge alignment — 2026-10-20
+
+User requested clearer heart opening: all palm-row X positions now±1.14 (was±.86).
+Depth, cutoff before tunnel, height1.12 and model materials/proportions retained.
+Placement only; no source/export/texture or triangle-count change. Desktop/mobile
+views reviewed; see STATUS.md. Next: user alignment review, clouds still deferred.
+
+### Signage headroom / restored palms — 2026-10-20
+
+User restored palm X±.86 and requested a slightly smaller frame. Runtime portal
+size8, height7.2, root waterLevel+1.65, depth/position unchanged. Full pool/coping
+clearance verified. More headroom reserved for Tunnel of Love sign and two alien
+cherubs; no new sign asset generated/integrated. Source exports/materials intact.
+Desktop/mobile fit reviewed; see STATUS.md. Next: composition review with signage.
+
+### Standalone marquee review / loading-heart removal — 2026-10-20
+
+User requested sign above current frame and larger cherubs. New review asset:
+`assets/models/heart-direction-rebuild/portal/tunnel-of-love-marquee-v001-review.glb`.
+Source production `blender/homepage-exterior/assets/tripo-raw/tunnel-marquee-raw.glb`
+(previous desktop assembly input). Source unchanged; web derivative17,998 triangles,
+1,602,356 bytes,three1024×1024 textures. Existing offline tools: dedup/weld,
+attribute-aware simplification target18k/error.002, prune, textures max1024/quality85;
+no geometry decoder/new dependency. Source transforms/materials retained. Runtime
+yawPI, uniform width92% frame width, bottom frame top−.22. SHA-256:
+40d382b8ae41e28ea9142d8e5c56596cd9932c046a966287b36ab1ea2328a9ec.
+Script/report in tools/portal/. Source mesh cleanup and final lettering/material
+fidelity still need review; not final. Additional decoded texture memory ~16MiB
+with mipmaps; combined frame+sign payload5,591,744 bytes.
+
+Cherubs uniformly enlarged from.68 to1.44 width with shoulder repositioning.
+Removed old PNG heart from HTML/loading plane and old-aperture preload per user;
+PNG retained as inactive disk backup only. Failure no longer reveals obsolete
+artwork. Current portal passage created only after valid GLB. Navigation retained.
+
+### Regal cherub placement review — 2026-10-20
+
+Per markup, marquee uniformly reduced from92% to80% frame width. Cherub width
+increased1.44→2.24, centers±2.16, bottom frame top+.08, depth portalZ-.35.
+No mesh/material/texture/count changes. Original letters retained; cleanup deferred
+until placement review. Desktop/mobile screenshots and checks in STATUS.md.
+Source/exports preserved; no deployment. Next: user placement review.
+
+### Cherub shoulder adjustment — 2026-10-20
+
+Per user direction, cherubs shifted outward.16 per side (X±2.32), down.28
+(bottom frame top−.20); width2.24/depth/poses unchanged. Sign lettering and all
+source assets preserved. Mobile/desktop fit reviewed; STATUS.md records checks.
+Next: placement review before lettering cleanup.
+
+### Approved marquee inscription / cleanup intake — 2026-10-20
+
+User confirmed three lines: **TUNNEL OF / LAIN DOE / LOVE**. Cleanup includes
+letters and diamonds; existing housing and website placement preserved. Desktop
+intake script tools/portal/inspect-marquee-cleanup.py imports source into a new
+scene and records mesh/material/texture/font data without saving a master. Pending
+execution; no typeface, old-letter removal or diamond geometry changes yet.
+
+### Editable cleanup candidate prepared — 2026-10-20
+
+Desktop report confirms fused marquee. Reversible candidate script:
+`tools/portal/build-marquee-cleanup-review.py`. New face panel covers generated
+lettering, approved text stays editable,46 separate faceted diamond objects share
+one32-triangle mesh. Installed Times New Roman Bold is provisional review font,
+not approved final typography. Source unchanged; website placement preserved.
+Front/angled desktop renders pending script run; no final cleanup/export claim.
+
+### Cleanup candidate revision3 reviewed — 2026-10-20
+
+Desktop front/angled renders now show readable approved lines with no overlaps;
+actual evaluated ink bounds pass spacing checks. Candidate remains reversible
+ruby panel/plain pearl serif text/faceted diamond overlay, preserving source
+housing underneath. Requires visual approval before web export; website unchanged.
+Review: renders/marquee-cleanup-review/20261020T201555819649Z/{front,angled}.png.
+
+### Owner regenerated/cleaned marquee intake — 2026-10-20
+
+New source in production working folder: heart-direction-homepage-tunnel-marquee.blend.
+User wants asset-only replacement at existing website placement. Do not use the
+rejected face-overlay cleanup candidates. Desktop export script:
+tools/portal/export-cleaned-marquee.py. Preflight/inventory, independent40k/24k/18k
+copies, texture max1024, source-preservation checks; desktop execution pending.
+No new asset served yet. Appearance/performance approval still required.
+
+
+### Owner-cleaned marquee integrated for review — 2026-10-20
+
+Supersedes pending intake above. Desktop export report:
+`exports/cleaned-marquee-review/20261020T220852093721Z/export-report.json`.
+Source: `/Users/shalainderamus/Desktop/grand-play/repos/heart-direction-production/blender/homepage-exterior/working/heart-direction-homepage-tunnel-marquee.blend`.
+Source disk SHA256 `a09b8dc0ae3ea9615f526b6afb0ec1100ce77ee89b8858349d34a01cf4e4bc0b`;
+197,846,430 bytes; evaluated current unsaved state exported. Source file and
+identity object transform unchanged; metric scale1. One visible mesh,
+1,991,972 source triangles. Independent copies preserve materials and alignment;
+no source save, background Blender, installation or new decoder.
+
+| Candidate | Triangles | GLB bytes | Textures |
+| --- | ---: | ---: | --- |
+| detail | 40,000 | 2,913,668 | 3 × 1024² |
+| balanced (served for review) | 24,000 | 2,421,860 | 3 × 1024² |
+| lean | 18,000 | 2,235,260 | 3 × 1024² |
+
+Served asset: `assets/models/heart-direction-rebuild/portal/tunnel-of-love-marquee-cleaned-v002-balanced-review.glb`.
+SHA256 `4bd78f0b7897aa7e32ff0de559354c1a980c7c4dcfe0946d53a5b9dc1295f924`.
+Blender4.5.12LTS; progressive independent decimation targets; copied basecolor,
+roughness/metallic and normal images reduced4096→1024; AUTO/JPEG quality85;
+GLB Y-up, animations/cameras/lights/Draco disabled. Mounting unchanged: yawPI,
+width portalSize*.90*.883*.80; bottom frame top−.22; depth portalZ−.04.
+Cherubs, frame, water, passage and navigation preserved. Previous marquee GLB
+retained. Rejected face-panel experiments unused.
+
+Balanced adds819,504 bytes versus previous sign. Frame+sign total6,411,248 bytes;
+texture GPU residency roughly48MiB including mipmaps (implementation dependent).
+No mobile frame-time or actual iPhoneSafari profile yet. Not final: owner appearance
+review and device performance approval remain required. Mesh counts, finite
+positions, index ranges and1024² textures independently checked for all candidates.
+
+
+### Cherubs lowered to marquee/frame junction — 2026-10-20
+
+User requested covering the corner gap between marquee and heart frame.
+Both cherub bases lowered0.65 world units: frame top−.20 → frame top−.85.
+Width2.24, X±2.32, depth portalZ−.35, orientation and source assets unchanged.
+Marquee mounting, frame, scenery and navigation unchanged. Cache tag:
+cherub-junction-13. Desktop1440×900 and mobile390×844 screenshots show cherubs
+bridging both outer sign/frame corners; no mobile horizontal overflow, marquee
+ready. Module syntax and diff whitespace pass. Screenshots:
+`renders/portal-v003-review/cherub-junction-desktop.png` and
+`renders/portal-v003-review/cherub-junction-mobile.png`.
+Placement-only change adds no payload; physical iPhoneSafari/performance review
+remains pending. Navigation/reduced-motion/failure logic unchanged, not rerun.
+Branch production/homepage-rebuild; no deployment/merge. Next: owner reviews
+this lower corner placement before further adjustment.
+
+
+### Cherub bow alignment widened — 2026-10-20
+
+User requested a little more outward spacing so bows meet marquee outer edges.
+Centers X±2.32→±2.56 (portalSize*.32); base remains frame top−.85,
+width2.24 and orientation/depth unchanged. Only placement and cache tags changed
+(cherub-edges-14); no asset payload changes. Desktop1440×900 and mobile390×844
+visually checked; no horizontal page overflow. On narrow portrait the outermost
+cherub extremities approach/cross viewport edges; owner review remains pending.
+Screenshots renders/portal-v003-review/cherub-edges-{desktop,mobile}.png.
+Module syntax/diff checks pass; navigation/motion/failure paths unchanged and not
+rerun. Sources, sign/frame and other scenery preserved. No merge/deploy.
+Branch production/homepage-rebuild. Next: owner review of bow/edge alignment.
+
+
+### Cherubs moved beside marquee ends — 2026-10-20
+
+Per owner's annotated reference, X centers widened±2.56→±3.04
+(portalSize*.38), revealing inward-facing bows alongside sign ends. Height,
+width, yaw and mirror preserved, as requested; arrows retain inward direction.
+Cache tag cherub-clearance-15. Desktop1440×900 visually checked. Narrow390×844
+review exposes a remaining limitation: outer wings/legs crop at viewport edges;
+responsive composition fit is needed before placement can be final. Screenshots:
+renders/portal-v003-review/cherub-clearance-{desktop,mobile}.png.
+Syntax/diff checks pass. Source assets, marquee/frame, boarding and other scenery
+unchanged. No new payload, merge or deploy; branch production/homepage-rebuild.
+Next: review desktop placement, then fit complete marquee/cherub group on mobile.
+
+
+### Cherub presence adjustment — 2026-10-20
+
+Owner requested lower and slightly larger cherubs. Width2.24→2.48 (+10.7%);
+base frame top−.85→frame top−1.20 (down.35). X±3.04, orientation/depth unchanged.
+Placement only; source assets/sign/frame/boarding preserved, no added payload.
+Cache tag cherub-presence-16. Desktop1440×900 and mobile390×844 inspected;
+narrow mobile still crops outer extremities, requiring responsive composition
+review. Syntax and whitespace checks pass; unchanged interaction/motion/failure
+paths not rerun. Screenshots renders/portal-v003-review/cherub-presence-{desktop,mobile}.png.
+Branch production/homepage-rebuild; no merge/deploy. Next: owner placement review,
+then fit full group within portrait framing before final approval.
+
+
+### Consistent palm trunk and coping grids — 2026-10-20
+
+Owner requested regular square palm-trunk neon cells and grids on tops of both
+pool walls. Runtime derivative keeps original frond artwork/row transforms,
+removes central lower trunk triangles (within radius .057*sourceHeight, below
+.82*height) and adds a straight cylinder radius .035*height, height .82*height.
+Six columns ×22 rows produce near-square surface cells; anti-aliased shader
+uses cylindrical UVs rather than irregular baked lines. Source GLB unchanged.
+Crown retains15,736 triangles (original18,622); new shared trunk96 triangles,
+total15,832 per palm. Adds one shared-material mesh draw per visible palm;
+no extra downloaded texture/model or dependency. Original crown textures remain.
+
+Both coping tops now use dark tile backing and pink square grids: width .145,
+three cells across (cell side .048333), full poolStart−5 to poolEnd100.2.
+Each top adds2,181 line segments in one draw. Existing inside-wall grid retained.
+Marquee/cherubs/portal/water/navigation and source artwork files preserved.
+Changed exterior-assembly.js and cache references in graybox-ship.js, script.js,
+index.html (palm-square-grid-17). No merge/deploy; production/homepage-rebuild.
+
+Validation: module syntax/diff whitespace pass; desktop1440×900 and390×844
+screenshots inspected, no mobile page overflow or captured console warnings/errors.
+Mobile GET IN reaches dashboard; Home returns exterior with GET IN focus. Screenshots
+renders/portal-v003-review/palm-square-grid-{desktop,mobile}.png.
+Actual iPhoneSafari/dynamic chrome, frame-time profiling, reduced-motion and
+slow/missing-media cases not rerun here; code paths unchanged. Fine distant coping
+lines may alias on physical devices. Prior mobile cherub cropping remains open.
+Next: owner review of square-cell spacing and brightness before further changes.
+
+
+### Original palms restored — 2026-10-20
+
+Owner rejected procedural palm trunk grid. Removed runtime crown filtering,
+replacement cylinders and trunk shader; original neon-palm-v001.glb now displays
+whole with original materials/textures, scale and rows. New coping-top grid retained
+because request specifically reverts palms. Cache tag palm-original-18. Source
+files unchanged; original18,622 triangles per palm restored, extra trunk draws removed.
+Branch production/homepage-rebuild; no merge/deploy. Syntax/whitespace checked.
+Next: owner reviews original palms alongside retained coping-top grid.
+
+
+### Heart-flower placeholders and coping bulbs — 2026-10-20
+
+Owner requested placeholder custom heart flowers between palms and lighting along
+both pool-wall tops, following supplied reference. Added10 mirrored clusters,
+three flowers each, depths1.05/3.175/5.9/8.5/12, X±(.91/.935/.96), heights
+.24/.37/.29 above bank. Flat pink heart heads, slim stems and teal leaves are
+explicit temporary placeholders, independently named/replacable. Flowers stop
+before tunnel; original palm meshes/materials/rows preserved.
+
+Added176 warm-white bulbs, radius .023, centered at X±.76/Y water+.199, Z−4.65
+through poolEnd100.2 every1.2. Shared instanced sphere geometry100triangles per bulb
+(17,600 instanced triangles), shared64×64 procedural radial glow texture and one
+Points draw. Three flower instance batches plus lamp/glow =5 extra draw calls.
+No dynamic point lights, downloaded assets or dependencies. Bulbs provide visible
+emissive/glow markers; they do not cast real light or water reflections. No new
+ambient animation; compatible with unchanged reduced-motion handling.
+
+Updated exterior-assembly.js, module cache references in graybox-ship.js/script.js/
+index.html (flowers-pool-lights-19), manifest and status. Sources, marquee/cherubs,
+water, tunnel, dashboard preserved. Branch production/homepage-rebuild; no deployment.
+Desktop1440×900/mobile390×844 screenshots inspected; no horizontal page overflow,
+no initial console warnings/errors; syntax/diff checks pass. Review screenshots:
+renders/portal-v003-review/flowers-pool-lights-{desktop,mobile}.png.
+Physical iPhoneSafari/GPU performance and slow/missing media remain unverified for
+this addition; instancing limits draw calls, far glows can still overdraw. Existing
+mobile cherub cropping remains. Next: owner review of flower placement/light spacing,
+then owner supplies final flower artwork for a separately approved replacement.
+
+
+### Mountain summit sampling fix and branch push — 2026-10-20
+
+Owner authorized fixing flattened tips and pushing production branch. Added exact
+in-bounds crest X/Z coordinates to existing terrain grid, instead of globally
+subdividing everything. Height function, mountain positions, color/material,
+shoreline sealing and Z15 tunnel stop preserved. Four terrain/seam meshes now
+110,328 triangles,2,735,592 geometry-buffer bytes (previous63,796 triangles).
+No textures/downloaded terrain asset added. Physical mobile performance remains
+unprofiled. Cache references refreshed (hill-crest-fix-20 / hill-crest-samples-7).
+
+Validation: constructed actual geometry using existing Three module in Node;
+all attributes finite, all indices in range, terrain bounds stop at Z15. Module
+syntax/diff checks pass. Desktop1440×900/mobile390×844 screenshots inspected;
+environmentReady true, no mobile overflow or captured browser warnings/errors.
+Screenshots renders/portal-v003-review/mountain-crest-fix-{desktop,mobile}.png.
+Unchanged navigation/reduced-motion/failure paths not rerun for this sampling fix.
+
+Push scope includes current authorized artwork integration/runtime dependencies,
+optimized served GLBs, scripts and measured export reports. Blender masters,
+raw references/renders and unused export variants stay local. Branch
+production/homepage-rebuild; no merge, deployment or domain change authorized.
+Next: owner reviews peaks; profile physical mobile performance before final approval.

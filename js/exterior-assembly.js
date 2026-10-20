@@ -1,5 +1,5 @@
-import { createRollingHills } from './rolling-hills.js?v=hill-continuous-11';
-import { portalAperture } from './portal-aperture.js';
+import { createRollingHills } from './rolling-hills.js?v=hill-crest-samples-7';
+import { portalV003Aperture } from './portal-v003-aperture.js';
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 
@@ -8,18 +8,20 @@ export function createExteriorAssembly(scene, waterLevel) {
   const assembly = new THREE.Group(); assembly.name = 'EXTERIOR_TRIPO_ASSEMBLY';
   scene.add(assembly);
   const settings = {
-    portalSize: 1.95, portalY: waterLevel + 1.26, portalZ: 2.2,
+    // About three quarters above water; lower point clears the unchanged pool width.
+    portalSize: 8, portalY: waterLevel + 1.65, portalZ: 16.2, tunnelDepth: 84,
     palmRows: [.55,1.55,4.8,7,10,14,19,25].map(z=>[.86,z,1.12]),
   };
   // Extra foreground and intermediate rows fill the wide desktop promenade.
   // Keep the approved portrait arrangement unchanged, including after resize.
   const desktopPalms=new THREE.Group();desktopPalms.name='DESKTOP_PALM_ROWS';
   desktopPalms.visible=false;assembly.add(desktopPalms);
-  const portal = new THREE.Group(); portal.name = 'PORTAL_V002_PLATE';
+  const portal = new THREE.Group(); portal.name = 'PORTAL_V003_REVIEW';
   portal.position.set(0,settings.portalY,settings.portalZ);assembly.add(portal);
+  function createPassage(aperture){
   // Match the actual alpha aperture instead of approximating it with a generic heart.
-  const apertureCenter=new THREE.Vector3(...portalAperture.center.map(v=>v*settings.portalSize),0);
-  const outline=portalAperture.points.map(([x,y])=>new THREE.Vector2(x*settings.portalSize,y*settings.portalSize));
+  const apertureCenter=new THREE.Vector3(...aperture.center.map(v=>v*settings.portalSize),0);
+  const outline=aperture.points.map(([x,y])=>new THREE.Vector2(x*settings.portalSize,y*settings.portalSize));
   const heart=new THREE.Shape(outline);
   const seal=new THREE.Shape(outline.map(v=>v.clone().multiplyScalar(1.075)));
   seal.holes.push(new THREE.Path(outline.map(v=>v.clone().multiplyScalar(.985)).reverse()));
@@ -28,7 +30,7 @@ export function createExteriorAssembly(scene, waterLevel) {
   portal.add(backing);
   const tunnel=new THREE.Group();tunnel.name='APERTURE_MATCHED_DEPTH_TUNNEL';
   tunnel.matrixAutoUpdate=false;portal.add(tunnel);
-  const depth=44,segments=16,wallPositions=[],wallColors=[];
+  const depth=settings.tunnelDepth,segments=16,wallPositions=[],wallColors=[];
   for(let j=0;j<segments;j++)for(let i=0;i<outline.length;i++){
     const a=outline[i],b=outline[(i+1)%outline.length];
     const z0=j*depth/segments,z1=(j+1)*depth/segments;
@@ -46,7 +48,8 @@ export function createExteriorAssembly(scene, waterLevel) {
   const cap=new THREE.Mesh(new THREE.ShapeGeometry(heart),new THREE.MeshBasicMaterial({color:0x07020c,side:THREE.DoubleSide}));
   cap.position.z=depth;tunnel.add(cap);
   // Open arches meet the water rather than closing into a stack of little hearts.
-  const floorY=-settings.portalSize*.185;
+  // World-horizontal water, just above the exterior surface to avoid z-fighting.
+  const floorY=waterLevel+.002-settings.portalY-apertureCenter.y;
   const waterline=[];
   outline.forEach((a,i)=>{
     const b=outline[(i+1)%outline.length];
@@ -76,34 +79,12 @@ export function createExteriorAssembly(scene, waterLevel) {
   });
   // Equal-size arches in one straight corridor; perspective supplies their recession.
   for(let i=0;i<34;i++){
-    const rib=new THREE.Group();rib.name='DEPTH_TUNNEL_RIB_'+i;rib.position.z=.025+i*1.3;
+    const rib=new THREE.Group();rib.name='DEPTH_TUNNEL_RIB_'+i;rib.position.z=.025+i*depth/34;
     rib.add(new THREE.Mesh(coreGeometry,coreMaterial),new THREE.Mesh(glowGeometry,glowMaterial));
     tunnel.add(rib);
   }
-  // A single unbroken water surface replaces the stair-like transverse deck lines.
-  // Its front triangle follows the pointed opening without changing the source plate.
-  const entranceY=Math.min(...outline.map(p=>p.y))+.006;
-  const deckVertices=[-floorHalfWidth,floorY,0,floorHalfWidth,floorY,0,-floorHalfWidth,floorY,depth,
-    floorHalfWidth,floorY,0,floorHalfWidth,floorY,depth,-floorHalfWidth,floorY,depth,
-    -.008,entranceY,.018,-floorHalfWidth,floorY,.018,floorHalfWidth,floorY,.018];
-  const deckGeometry=new THREE.BufferGeometry();deckGeometry.setAttribute('position',new THREE.Float32BufferAttribute(deckVertices,3));
-  const waterMaterial=new THREE.ShaderMaterial({side:THREE.DoubleSide,
-    uniforms:{halfWidth:{value:floorHalfWidth}},
-    vertexShader:`varying vec3 surface; void main(){surface=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-    fragmentShader:`varying vec3 surface; uniform float halfWidth;
-      void main(){float x=surface.x/halfWidth;float z=surface.z;
-        float ripple=sin(z*118.+sin(x*47.)*2.7)+sin(z*233.-x*63.);
-        float center=exp(-abs(x)*7.);
-        float edges=pow(abs(x),10.);
-        float broken=pow(max(0.,sin(z*89.+sin(x*37.)*3.)),9.);
-        vec3 water=mix(vec3(.006,.065,.085),vec3(.018,.25,.29),.5+.18*ripple);
-        vec3 reflection=vec3(1.,.04,.39)*(center*.8+edges*.48)*(.25+broken*.9);
-        gl_FragColor=vec4(water+reflection,1.);}`
-  });
-  const floor=new THREE.Mesh(deckGeometry,waterMaterial);floor.name='CONTINUOUS_TUNNEL_WATER';tunnel.add(floor);
-  const guides=[];
-  for(const side of [-1,1])guides.push(new THREE.Vector3(side*floorHalfWidth,floorY+.002,0),new THREE.Vector3(side*floorHalfWidth,floorY+.002,depth));
-  tunnel.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(guides),new THREE.LineBasicMaterial({color:0xff459e,transparent:true,opacity:.65,toneMapped:false})));
+  // The existing exterior water plane continues through this corridor.
+  // No second floor/shader or narrowing guides: one level surface between walls.
   // Sparse stars live in the corridor volume, not on a flat plane over the opening.
   const stars=[];
   for(let i=0;i<280;i++){
@@ -114,50 +95,146 @@ export function createExteriorAssembly(scene, waterLevel) {
   tunnel.add(new THREE.Points(starGeometry,new THREE.PointsMaterial({color:0xc58ba9,size:.008,transparent:true,opacity:.6,depthWrite:false,toneMapped:false})));
   function updateView(camera){
     desktopPalms.visible=innerWidth>=900 && camera.aspect>1;
-    // Straight axis through the aperture center, aligned to the entry sightline.
-    // Shear leaves the traced front cross-section flush against the artwork.
-    const world=portal.position.clone().add(apertureCenter);
-    // Aim down the passage toward the water horizon, as in the supplied reference.
-    world.y+=floorY+.18;
-    const dz=world.z-camera.position.z;
-    const sx=(world.x-camera.position.x)/dz,sy=(world.y-camera.position.y)/dz;
-    tunnel.matrix.set(1,0,sx,apertureCenter.x,0,1,sy,apertureCenter.y,0,0,1,.014,0,0,0,1);
+    // Fixed straight corridor: camera perspective supplies the vanishing point.
+    // No camera-driven vertical shear; the water stays horizontal during boarding.
+    tunnel.matrix.makeTranslation(apertureCenter.x,apertureCenter.y,.014);
     tunnel.matrixWorldNeedsUpdate=true;
   }
+    return updateView;
+  }
+  let updatePassage=camera=>{desktopPalms.visible=innerWidth>=900 && camera.aspect>1;};
+  function updateView(camera){updatePassage(camera);}
   // Raised promenade edges make every row converge to one water-level horizon.
+  const poolStart=-5,poolEnd=settings.portalZ+settings.tunnelDepth,poolLength=poolEnd-poolStart,poolCenter=(poolStart+poolEnd)/2;
   const bankMaterial=new THREE.MeshStandardMaterial({color:0x185d70,metalness:.3,roughness:.45});
   for(const side of [-1,1]) {
-    const bank=new THREE.Mesh(new THREE.BoxGeometry(4,.22,40),bankMaterial);
-    bank.position.set(side*2.8,waterLevel+.03,15);assembly.add(bank);
+    const bank=new THREE.Mesh(new THREE.BoxGeometry(4,.22,poolLength),bankMaterial);
+    bank.position.set(side*2.8,waterLevel+.03,poolCenter);assembly.add(bank);
     // Pool wall: solid inner face, tiled grid, and a continuous illuminated coping.
-    const wall=new THREE.Mesh(new THREE.BoxGeometry(.12,.22,40),new THREE.MeshStandardMaterial({color:0x24162d,metalness:.45,roughness:.3}));
-    wall.name='POOL_WALL_'+side;wall.position.set(side*.76,waterLevel+.05,15);assembly.add(wall);
+    const wall=new THREE.Mesh(new THREE.BoxGeometry(.12,.22,poolLength),new THREE.MeshStandardMaterial({color:0x24162d,metalness:.45,roughness:.3}));
+    wall.name='POOL_WALL_'+side;wall.position.set(side*.76,waterLevel+.05,poolCenter);assembly.add(wall);
     const faceX=side*.699,faceLines=[];
-    for(let y=-.05;y<=.161;y+=.05)faceLines.push(new THREE.Vector3(faceX,waterLevel+y,-5),new THREE.Vector3(faceX,waterLevel+y,35));
-    for(let z=-5;z<=35;z+=.25)faceLines.push(new THREE.Vector3(faceX,waterLevel-.06,z),new THREE.Vector3(faceX,waterLevel+.16,z));
+    for(let y=-.05;y<=.161;y+=.05)faceLines.push(new THREE.Vector3(faceX,waterLevel+y,poolStart),new THREE.Vector3(faceX,waterLevel+y,poolEnd));
+    for(let z=poolStart;z<=poolEnd;z+=.25)faceLines.push(new THREE.Vector3(faceX,waterLevel-.06,z),new THREE.Vector3(faceX,waterLevel+.16,z));
     const tiles=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(faceLines),new THREE.LineBasicMaterial({color:0xff56c7,toneMapped:false}));
     tiles.name='POOL_WALL_TILE_GRID_'+side;assembly.add(tiles);
-    const cap=new THREE.Mesh(new THREE.BoxGeometry(.145,.014,40),new THREE.MeshStandardMaterial({color:0xffb0e2,emissive:0xff309d,emissiveIntensity:1.8,metalness:.35,roughness:.25}));
-    cap.name='POOL_WALL_COPING_'+side;cap.position.set(side*.76,waterLevel+.167,15);assembly.add(cap);
+    const cap=new THREE.Mesh(new THREE.BoxGeometry(.145,.014,poolLength),new THREE.MeshStandardMaterial({color:0x24162d,metalness:.45,roughness:.3}));
+    cap.name='POOL_WALL_COPING_'+side;cap.position.set(side*.76,waterLevel+.167,poolCenter);assembly.add(cap);
+    // Square cells measured in world units across both horizontal coping surfaces.
+    const topLines=[],topY=waterLevel+.175,topMin=side*.76-.0725,topMax=side*.76+.0725;
+    const tileSize=.145/3;
+    for(let i=0;i<=3;i++){
+      const x=topMin+i*tileSize;
+      topLines.push(new THREE.Vector3(x,topY,poolStart),new THREE.Vector3(x,topY,poolEnd));
+    }
+    for(let i=0;i*tileSize<=poolLength;i++){
+      const z=poolStart+i*tileSize;
+      topLines.push(new THREE.Vector3(topMin,topY,z),new THREE.Vector3(topMax,topY,z));
+    }
+    const topGrid=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(topLines),tiles.material);
+    topGrid.name='POOL_WALL_TOP_GRID_'+side;assembly.add(topGrid);
 
   }
-  // The camera views the -Z side. Flip the plate horizontally so lettering reads.
-  const loader = new THREE.TextureLoader();
-  loader.load('assets/images/heart-direction-rebuild/exterior/portal-v002-cutout.png',texture=>{
-    texture.colorSpace=THREE.SRGBColorSpace;
-    const material=new THREE.MeshBasicMaterial({map:texture,transparent:true,alphaTest:.025,side:THREE.DoubleSide,depthWrite:false,toneMapped:false});
-    const plate=new THREE.Mesh(new THREE.PlaneGeometry(settings.portalSize,settings.portalSize),material);
-    plate.rotation.y=Math.PI;plate.position.z=-.005;plate.renderOrder=2;portal.add(plate);
-    window.dispatchEvent(new Event('exterior-asset-ready'));
-  },undefined,()=>{
-    document.querySelector('#exterior-assets-status').textContent='Portal preview unavailable';
-  });
+  // Temporary planting markers; replace these independently with owner-made artwork.
+  const flowerShape=new THREE.Shape();
+  flowerShape.moveTo(0,.018);
+  flowerShape.bezierCurveTo(-.018,.052,-.058,.035,-.047,.004);
+  flowerShape.bezierCurveTo(-.04,-.015,-.012,-.033,0,-.047);
+  flowerShape.bezierCurveTo(.012,-.033,.04,-.015,.047,.004);
+  flowerShape.bezierCurveTo(.058,.035,.018,.052,0,.018);
+  const flowerHeads=[],flowerStems=[],flowerLeaves=[];
+  const transform=new THREE.Object3D();
+  for(const side of [-1,1])for(const z of [1.05,3.175,5.9,8.5,12]){
+    for(let i=0;i<3;i++){
+      const height=[.24,.37,.29][i],x=side*(.91+i*.025),depth=z+(i-1)*.14;
+      flowerHeads.push([x,waterLevel+.14+height,depth]);
+      flowerStems.push([x,waterLevel+.14+height/2,depth,height]);
+      for(const leafSide of [-1,1])flowerLeaves.push([x+leafSide*.025,waterLevel+.14+height*.48,depth,leafSide]);
+    }
+  }
+  function instances(name,geometry,material,items,position){
+    const mesh=new THREE.InstancedMesh(geometry,material,items.length);mesh.name=name;
+    items.forEach((item,i)=>{transform.position.set(0,0,0);transform.rotation.set(0,0,0);transform.scale.set(1,1,1);
+      position(transform,item);transform.updateMatrix();mesh.setMatrixAt(i,transform.matrix);});
+    mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();assembly.add(mesh);return mesh;
+  }
+  const heartGeometry=new THREE.ShapeGeometry(flowerShape,8);
+  instances('PLACEHOLDER_HEART_FLOWER_HEADS',heartGeometry,
+    new THREE.MeshStandardMaterial({color:0xff65b9,emissive:0xb80d69,emissiveIntensity:.35,metalness:.3,roughness:.3,side:THREE.DoubleSide}),
+    flowerHeads,(object,[x,y,z])=>{object.position.set(x,y,z);});
+  instances('PLACEHOLDER_HEART_FLOWER_STEMS',new THREE.CylinderGeometry(.004,.005,1,5),
+    new THREE.MeshBasicMaterial({color:0xc44fa9}),flowerStems,
+    (object,[x,y,z,height])=>{object.position.set(x,y,z);object.scale.y=height;});
+  instances('PLACEHOLDER_HEART_FLOWER_LEAVES',heartGeometry,
+    new THREE.MeshStandardMaterial({color:0x258fae,metalness:.3,roughness:.4,side:THREE.DoubleSide}),flowerLeaves,
+    (object,[x,y,z,side])=>{object.position.set(x,y,z);object.scale.setScalar(.5);object.rotation.z=side*.85;});
+  // Instanced lamps and one shared glow map avoid hundreds of dynamic lights.
+  const bulbs=[];
+  for(const side of [-1,1])for(let z=poolStart+.35;z<poolEnd;z+=1.2)bulbs.push([side*.76,waterLevel+.199,z]);
+  instances('POOL_COPING_LIGHT_BULBS',new THREE.SphereGeometry(.023,10,6),
+    new THREE.MeshBasicMaterial({color:0xffe8cb,toneMapped:false}),bulbs,
+    (object,[x,y,z])=>{object.position.set(x,y,z);});
+  const glowCanvas=document.createElement('canvas');glowCanvas.width=glowCanvas.height=64;
+  const glowContext=glowCanvas.getContext('2d');
+  const gradient=glowContext.createRadialGradient(32,32,0,32,32,32);
+  gradient.addColorStop(0,'rgba(255,245,220,1)');gradient.addColorStop(.2,'rgba(255,150,205,.8)');
+  gradient.addColorStop(.5,'rgba(255,45,160,.25)');gradient.addColorStop(1,'rgba(255,30,145,0)');
+  glowContext.fillStyle=gradient;glowContext.fillRect(0,0,64,64);
+  const glowMap=new THREE.CanvasTexture(glowCanvas);
+  const lampGlow=new THREE.Points(new THREE.BufferGeometry().setFromPoints(bulbs.map(p=>new THREE.Vector3(...p))),
+    new THREE.PointsMaterial({map:glowMap,color:0xffffff,size:.15,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false}));
+  lampGlow.name='POOL_COPING_LIGHT_GLOWS';assembly.add(lampGlow);
   const status=document.querySelector('#exterior-assets-status');
   const canvas=document.querySelector('#ship-view');
-  createRollingHills(assembly,waterLevel,settings.palmRows[0][2]);
+  createRollingHills(assembly,waterLevel,settings.palmRows[0][2],settings.portalZ-1.2);
   canvas.dataset.hillStyle='solid-rounded-continuous';
   status.textContent='Loading scenery…';
   const modelLoader=new GLTFLoader();
+  // No legacy portal plate during loading; entry remains available without it.
+  canvas.dataset.portalReady='loading';
+  modelLoader.loadAsync('assets/models/heart-direction-rebuild/portal/heart-direction-portal-v003-balanced-review.glb').then(({scene:model})=>{
+    const meshes=[];model.traverse(o=>{if(o.isMesh)meshes.push(o);});
+    if(meshes.length!==3)throw new Error('Unexpected portal assembly');
+    const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3());
+    if(![size.x,size.y,size.z].every(Number.isFinite)||size.y<=0)throw new Error('Invalid portal bounds');
+    // Preserve all internal transforms. Fit the whole assembly uniformly.
+    // glTF source front is +Z; website camera views the -Z side.
+    model.rotation.y=Math.PI;
+    model.scale.setScalar(settings.portalSize*.90/size.y);
+    const fitted=new THREE.Box3().setFromObject(model),center=fitted.getCenter(new THREE.Vector3());
+    model.position.set(-center.x,-center.y,-center.z-.005);
+    model.name='PORTAL_V003_BALANCED_REVIEW';
+    // Refit only the passage entrance to the new artwork; preserve its design.
+    const geometries=new Set(),materials=new Set();
+    for(const child of [...portal.children]){
+      child.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material)materials.add(o.material);});
+      portal.remove(child);
+    }
+    geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());
+    updatePassage=createPassage(portalV003Aperture);portal.add(model);
+
+    canvas.dataset.portalReady='true';
+    window.dispatchEvent(new Event('exterior-asset-ready'));
+  }).catch(error=>{
+    canvas.dataset.portalReady='false';console.warn('Portal GLB unavailable',error);
+    status.textContent='Portal unavailable';
+    window.dispatchEvent(new Event('exterior-asset-ready'));
+  });
+
+  canvas.dataset.marqueeReady='loading';
+  modelLoader.loadAsync('assets/models/heart-direction-rebuild/portal/tunnel-of-love-marquee-cleaned-v002-balanced-review.glb').then(({scene:sign})=>{
+    sign.rotation.y=Math.PI;
+    let box=new THREE.Box3().setFromObject(sign);
+    sign.scale.setScalar(settings.portalSize*.90*.883*.80/box.getSize(new THREE.Vector3()).x);
+    box=new THREE.Box3().setFromObject(sign);
+    const center=box.getCenter(new THREE.Vector3());
+    sign.position.set(-center.x,settings.portalY+settings.portalSize*.45-.22-box.min.y,settings.portalZ-.04-center.z);
+    sign.name='TUNNEL_OF_LOVE_MARQUEE_REVIEW';assembly.add(sign);
+    canvas.dataset.marqueeReady='true';window.dispatchEvent(new Event('exterior-asset-ready'));
+  }).catch(error=>{
+    canvas.dataset.marqueeReady='false';console.warn('Marquee unavailable',error);
+    window.dispatchEvent(new Event('exterior-asset-ready'));
+  });
   let complete=0;
   function place(model,name,dimension,size,position,yaw=0,mirrorX=false) {
     const copy=model.clone(true);copy.name=name;copy.rotation.y=yaw;
@@ -174,17 +251,17 @@ export function createExteriorAssembly(scene, waterLevel) {
   }
   const models=[
     ['palm','neon-palm-v001.glb',model=>{
-      settings.palmRows.forEach(([x,z,height],row)=>{
+      settings.palmRows.filter(([,z])=>z<=settings.portalZ-1.2).forEach(([x,z,height],row)=>{
         for(const side of [-1,1])place(model,`TRIPO_PALM_${row}_${side}`,1,height,[side*x,waterLevel+.14,z],side*.12);
       });
       const extraRows=[-1.5,-.8,-.1,2.8,3.8,6,8.5,12,16,22,29,34];
-      extraRows.forEach((z,row)=>{
+      extraRows.filter(z=>z<=settings.portalZ-1.2).forEach((z,row)=>{
         for(const side of [-1,1])desktopPalms.add(place(model,`DESKTOP_PALM_${row}_${side}`,1,1.12,[side*.86,waterLevel+.14,z],side*.12));
       });
     }],
     ['cherub','silver-cherub-v001.glb',model=>{
       // Camera faces +Z, so negative world X is the right side of the screen.
-      for(const side of [-1,1])place(model,`TRIPO_CHERUB_${side}`,0,.68,[side*.70,settings.portalY+.40,settings.portalZ-.04],Math.PI+side*.2,side===-1);
+      for(const side of [-1,1])place(model,`TRIPO_CHERUB_${side}`,0,settings.portalSize*.31,[side*settings.portalSize*.38,settings.portalY+settings.portalSize*.45-1.20,settings.portalZ-.35],Math.PI+side*.2,side===-1);
     }],
   ];
   // Load each model once, then share geometry/textures across its placements.

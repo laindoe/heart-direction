@@ -214,8 +214,7 @@ header>span {
 }
 
 /* Composition pass: real portal render + spaceship, procedural scenery stand-ins. */
-#portal-fallback { position:absolute;left:50%;top:8%;transform:translateX(-50%);width:min(88vw,65vh);height:auto; }
-.scene-ready #portal-fallback,.scene-ready .water { display:none; }
+.scene-ready .water { display:none; }
 .water { background:repeating-linear-gradient(0deg,#d2f5ef55 0 1px,transparent 1px 35px),linear-gradient(#74dcd5aa,#148eac); }
 .invitation { z-index:2;bottom:max(22px,env(safe-area-inset-bottom)); }
 .invitation button { border-radius:30px;border:1px solid #ffe5ef;background:linear-gradient(#fff4fa,#e0d0df);color:#421a39;font-weight:bold;letter-spacing:.16em;box-shadow:0 3px 24px #6b26535c; }

@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import { createExteriorAssembly } from './exterior-assembly.js?v=hill-continuous-11';
+import { createExteriorAssembly } from './exterior-assembly.js?v=hill-crest-fix-20';
 import { screenTransform } from './screen-projection.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 
@@ -9,7 +9,7 @@ export async function createShip() {
  renderer.localClippingEnabled = true;
  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
  const scene = new THREE.Scene();
- const camera = new THREE.PerspectiveCamera(43,1,.005,80);
+ const camera = new THREE.PerspectiveCamera(43,1,.005,140);
  const light = new THREE.DirectionalLight(0xffffff,4);light.position.set(2,4,-3);
  scene.add(light,new THREE.HemisphereLight(0xf2dcff,0x827694,3));
  const gltf = await new GLTFLoader().loadAsync('assets/models/heart-direction-rebuild/spaceship-blockout-v01.glb');
@@ -18,10 +18,10 @@ export async function createShip() {
  const hull = ship.children.find(o=>o.name.startsWith('SHIP_HULL_COCKPIT_CLEARED'));
  const waterLevel = new THREE.Box3().setFromObject(hull || ship).min.y + .003;
  const water = new THREE.Mesh(
-  new THREE.PlaneGeometry(40,80),
+  new THREE.PlaneGeometry(40,140),
   new THREE.MeshPhysicalMaterial({color:0x31b9be,metalness:.45,roughness:.25,clearcoat:.8,side:THREE.DoubleSide})
  );
- water.rotation.x=-Math.PI/2;water.position.set(0,waterLevel,25);
+ water.rotation.x=-Math.PI/2;water.position.set(0,waterLevel,55);
  scene.add(water);
  // Simple waterline marks communicate the horizontal surface without asset refinement.
  const marks=new THREE.Group();
