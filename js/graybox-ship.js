@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import { createExteriorAssembly } from './exterior-assembly.js?v=tunnel-distant-glow-26';
+import { createExteriorAssembly } from './exterior-assembly.js?v=water-ripple-review-29';
 import { screenTransform } from './screen-projection.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 
@@ -18,22 +18,40 @@ export async function createShip() {
  // Keep the hull on a shared 3D water plane instead of floating over a CSS backdrop.
  const hull = ship.children.find(o=>o.name.startsWith('SHIP_HULL_COCKPIT_CLEARED'));
  const waterLevel = new THREE.Box3().setFromObject(hull || ship).min.y + .003;
- const water = new THREE.Mesh(
-  new THREE.PlaneGeometry(40,140),
-  new THREE.MeshPhysicalMaterial({color:0x31b9be,metalness:.45,roughness:.25,clearcoat:.8,side:THREE.DoubleSide})
- );
- water.rotation.x=-Math.PI/2;water.position.set(0,waterLevel,55);
- scene.add(water);
- // Simple waterline marks communicate the horizontal surface without asset refinement.
- const marks=new THREE.Group();
- for(let z=-3;z<35;z+=.4){
-  const line=new THREE.Line(
-   new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.8,waterLevel+.001,z),new THREE.Vector3(.8,waterLevel+.001,z)]),
-   new THREE.LineBasicMaterial({color:0xd4c5e8,transparent:true,opacity:.35})
-  );
-  marks.add(line);
- }
- scene.add(marks);
+ const waterTime={value:0};
+ const waterMaterial=new THREE.ShaderMaterial({
+  uniforms:{waterTime},side:THREE.DoubleSide,toneMapped:false,
+  vertexShader:`varying vec3 waterWorld;
+   void main(){vec4 world=modelMatrix*vec4(position,1.);waterWorld=world.xyz;
+    gl_Position=projectionMatrix*viewMatrix*world;}`,
+  fragmentShader:`uniform float waterTime; varying vec3 waterWorld;
+   void main(){vec2 p=waterWorld.xz;float t=waterTime;
+    float a=p.y*39.+sin(p.x*18.+t*.65)*1.4+sin(p.x*31.+p.y*7.+t*.5)*.65-t*1.5;
+    float b=p.x*25.+p.y*27.+sin(p.y*8.-t*.4)-t*.9;
+    float broad=.5*sin(p.x*5.2+p.y*3.6+t*.32)+.3*sin(p.y*6.1-p.x*2.8-t*.24)+.2*sin(p.y*2.+p.x*3.1);
+    float wave=sin(a)*.58+sin(b)*.27+broad*.15;
+    float aa=max(fwidth(a),.01);
+    float ridge=(1.-smoothstep(.035,.11+aa,abs(sin(a))))*.5;
+    ridge*=smoothstep(-.6,.6,sin(p.x*21.-p.y*6.+t*.38)+sin(p.x*37.+p.y*4.-t*.27)*.45);
+    float detail=1.-smoothstep(.35,2.,max(fwidth(a),fwidth(b)));
+    wave*=detail;ridge*=detail;
+    vec3 deep=vec3(.005,.19,.27),turquoise=vec3(.025,.65,.70);
+    vec3 color=mix(deep,turquoise,.48+.25*wave+.16*broad);
+    vec3 eye=normalize(cameraPosition-waterWorld);
+    vec3 normal=normalize(vec3(-cos(b)*.18,1.,-cos(a)*.22));
+    vec3 halfLight=normalize(eye+normalize(vec3(-.35,.8,-.3)));
+    float sparkle=pow(max(dot(normal,halfLight),0.),72.);
+    float fresnel=pow(1.-max(dot(eye,normal),0.),3.);
+    color+=vec3(.27,.7,.75)*ridge+vec3(.6,.85,.86)*sparkle*.45;
+    color=mix(color,vec3(.16,.66,.72),fresnel*.28);
+    gl_FragColor=vec4(color,1.);
+   }`,
+ });
+ const water=new THREE.Mesh(new THREE.PlaneGeometry(40,140),waterMaterial);
+ water.name='CONTINUOUS_RIPPLE_WATER';
+ water.rotation.x=-Math.PI/2;water.position.set(0,waterLevel,55);scene.add(water);
+ // The old horizontal placeholder strokes are replaced by the surface shader.
+ const marks=new THREE.Group();scene.add(marks);
  const exteriorAssembly=createExteriorAssembly(scene,waterLevel);
  const canopy = ship.children.find(o=>o.name.startsWith('CANOPY_SLEEK_REFINED'));
  if(!canopy) throw new Error('Required canopy node missing');
@@ -143,7 +161,15 @@ export async function createShip() {
     shipTarget.style.height=Math.max(44,Math.min(h,Math.max(...corners.map(p=>p.y)))-top)+'px';
   }
   exteriorAssembly.updateView(camera);
-  if(w/h<.8 && interiorProgress>0){
+  renderView();
+  canvas.dataset.canopy=canopy.visible?(t?'opening':'closed'):'hidden';
+  canvas.dataset.camera=t===1?'cockpit':t?'boarding':'exterior';
+  canvas.dataset.shipVisible=String(ship.visible);
+  if(t===1)dashboard();
+ }
+ function renderView(){
+  const interiorProgress=Math.max(0,(current-.55)/.45);
+  if(camera.aspect<.8 && interiorProgress>0){
     // A narrower windshield view fills portrait without stretching the artwork.
     // Render the same scenery once, then the physical cockpit at its own fit.
     sceneryCamera.copy(camera);sceneryCamera.fov=THREE.MathUtils.lerp(43,65,interiorProgress);
@@ -154,16 +180,35 @@ export async function createShip() {
     renderer.render(scene,camera);
     exteriorAssembly.group.visible=true;water.visible=true;marks.visible=true;renderer.autoClear=true;
   }else renderer.render(scene,camera);
-  canvas.dataset.canopy=canopy.visible?(t?'opening':'closed'):'hidden';
-  canvas.dataset.camera=t===1?'cockpit':t?'boarding':'exterior';
-  canvas.dataset.shipVisible=String(ship.visible);
-  if(t===1)dashboard();
  }
+ // Ambient surface motion is separate from boarding progress and DOM projection.
+ const waterReduced=matchMedia('(prefers-reduced-motion: reduce)');
+ let waterRequest=0,previousWaterFrame=0,waterContextLost=false;
+ function waterTick(now){
+  waterRequest=0;
+  if(document.hidden || waterReduced.matches || waterContextLost)return;
+  if(!previousWaterFrame)previousWaterFrame=now;
+  const elapsed=now-previousWaterFrame;
+  if(elapsed>=1000/30){
+   waterTime.value+=Math.min(elapsed,100)/1000;previousWaterFrame=now;renderView();
+  }
+  waterRequest=requestAnimationFrame(waterTick);
+ }
+ function syncWaterMotion(){
+  cancelAnimationFrame(waterRequest);waterRequest=0;previousWaterFrame=0;
+  const paused=document.hidden || waterContextLost;
+  canvas.dataset.waterMotion=paused?'paused':waterReduced.matches?'still':'running';
+  if(!paused){renderView();if(!waterReduced.matches)waterRequest=requestAnimationFrame(waterTick);}
+ }
+ waterReduced.addEventListener('change',syncWaterMotion);
+ document.addEventListener('visibilitychange',syncWaterMotion);
+ canvas.addEventListener('webglcontextlost',()=>{waterContextLost=true;syncWaterMotion();});
+ canvas.addEventListener('webglcontextrestored',()=>{waterContextLost=false;syncWaterMotion();});
  function resize(){frame(current);}
  window.addEventListener('exterior-asset-ready',()=>frame(current));
  window.addEventListener('resize',resize);
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();document.querySelector('#ship-fallback').hidden=false;document.querySelector('#dashboard').classList.remove('art-ready');});
  document.body.classList.add('scene-ready');
- frame(0);
+ frame(0);syncWaterMotion();
  return {frame,dashboard,reset(){frame(0);},get position(){return camera.position.toArray();}};
 }

@@ -1060,3 +1060,53 @@ Screenshots renders/portal-v003-review/tunnel-distant-glow-{desktop,mobile}.png.
 Physical Safari/performance and slow/failure cases remain unverified; reduced
 motion logic unchanged, added effects static. Next: owner reviews arch spacing,
 star visibility and distant glow strength.
+
+
+### Procedural water ripple/color review — 2026-10-20
+
+Owner approved first water pass: moving ripple texture and turquoise color.
+Replaced flat MeshPhysicalMaterial with procedural world-XZ ShaderMaterial on
+same40×140,2-triangle plane, centerZ55, original waterline. Two overlapping wave
+phases, slow broad color variation, broken cyan ridge highlights and restrained
+view-dependent sparkle; derivative fading reduces distant high-frequency pattern.
+Removed80+ separate straight placeholder line draws. No downloaded texture,
+geometry increase, dependency or source-art changes. Continuous surface remains
+through tunnel. Pink lamp/frame reflections and hull-contact ripples deferred
+until this base water is reviewed; this is not an accurate reflection simulation.
+
+Ambient water clock separate from boarding progress; renders at <=30fps target,
+without repeating resize/DOM dashboard projection on ambient ticks. Existing
+mobile two-pass scenery/cockpit view preserved. Page hidden/context lost cancels
+RAF; resume avoids elapsed-time jump. Reduced motion renders still textured water
+and cancels ambient RAF. Exposes data-water-motion for verification. Media and
+visibility event handlers keep preference changes responsive.
+
+Changed graybox-ship.js, script.js/index.html cache refs (water-ripple-review-29),
+manifest/status. Branch production/homepage-rebuild; no commit/push/deploy/merge.
+Validation: syntax/diff checks pass; temporary Node VM executes actual controller
+and verifies hidden/reduced/resume/context-loss lifecycle. Existing localhost8001
+reduced-motion harness reports waterMotion=still and boards immediately to dashboard.
+Normal mobile boarding completes; keyboard Home restores GET IN focus. Final
+1440×900/390×844 views inspected; motion=running, no mobile page overflow or
+captured shader/browser warnings/errors. Screenshots:
+renders/portal-v003-review/water-ripple-{desktop,mobile}.png.
+
+Physical iPhoneSafari, thermal/battery impact and actual frame times remain
+unprofiled. Continuous rendering costs more than prior idle static scene despite
+removed placeholder draws and30fps cap. Animation rate is a target, not measured
+performance. Slow/missing model cases not rerun. Next: owner reviews water hue,
+ripple size/speed before pink reflections and ship contact detailing.
+
+
+## Owner-authorized live publication — 2026-10-20
+
+Owner requested publishing all today's website changes and stopping work.
+Verified GitHub Pages API: existing source production/homepage-rebuild at root,
+legacy build, live URL https://love.tengrand.co/. Therefore pushes to this branch
+publish automatically; earlier notes claiming branch pushes did not deploy were
+incorrect. No GitHub main merge or Pages/domain setting change needed to update
+the existing live site. Publish remaining water ripple/color update on that source
+branch; retain local raw sources/unused candidates/references outside commits.
+User publication approval does not establish final visual/mobile performance
+approval. Physical Safari/performance limitations above remain. Next: resume
+owner visual review when requested; do not start further artwork automatically.
