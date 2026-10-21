@@ -1,4 +1,4 @@
-import { createRollingHills } from './rolling-hills.js?v=hill-crest-samples-7';
+import { createRollingHills } from './rolling-hills.js?v=hill-flush-coping-8';
 import { portalV003Aperture } from './portal-v003-aperture.js';
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
@@ -16,8 +16,14 @@ export function createExteriorAssembly(scene, waterLevel) {
   // Keep the approved portrait arrangement unchanged, including after resize.
   const desktopPalms=new THREE.Group();desktopPalms.name='DESKTOP_PALM_ROWS';
   desktopPalms.visible=false;assembly.add(desktopPalms);
+  // One waterline pivot preserves the approved sign/frame/cherub arrangement.
+  const portalArtwork=new THREE.Group();portalArtwork.name='RESPONSIVE_PORTAL_ARTWORK';
+  portalArtwork.position.set(0,waterLevel,settings.portalZ);assembly.add(portalArtwork);
+  function addPortalArtwork(object){
+    portalArtwork.add(object);object.position.sub(portalArtwork.position);
+  }
   const portal = new THREE.Group(); portal.name = 'PORTAL_V003_REVIEW';
-  portal.position.set(0,settings.portalY,settings.portalZ);assembly.add(portal);
+  portal.position.set(0,settings.portalY,settings.portalZ);addPortalArtwork(portal);
   function createPassage(aperture){
   // Match the actual alpha aperture instead of approximating it with a generic heart.
   const apertureCenter=new THREE.Vector3(...aperture.center.map(v=>v*settings.portalSize),0);
@@ -78,21 +84,52 @@ export function createExteriorAssembly(scene, waterLevel) {
       gl_FragColor=vec4(tint,light*.55);}`
   });
   // Equal-size arches in one straight corridor; perspective supplies their recession.
-  for(let i=0;i<34;i++){
-    const rib=new THREE.Group();rib.name='DEPTH_TUNNEL_RIB_'+i;rib.position.z=.025+i*depth/34;
+  const ribCount=24;
+  for(let i=0;i<ribCount;i++){
+    const rib=new THREE.Group();rib.name='DEPTH_TUNNEL_RIB_'+i;rib.position.z=.025+i*depth/ribCount;
     rib.add(new THREE.Mesh(coreGeometry,coreMaterial),new THREE.Mesh(glowGeometry,glowMaterial));
     tunnel.add(rib);
   }
   // The existing exterior water plane continues through this corridor.
   // No second floor/shader or narrowing guides: one level surface between walls.
-  // Sparse stars live in the corridor volume, not on a flat plane over the opening.
-  const stars=[];
-  for(let i=0;i<280;i++){
+  // Stars occupy the aperture volume between ribs, keeping the water path clear.
+  const stars=[],bounds=new THREE.Box2().setFromPoints(outline);
+  const insideHeart=(x,y)=>{
+    let inside=false;
+    for(let i=0,j=outline.length-1;i<outline.length;j=i++){
+      const a=outline[i],b=outline[j];
+      if((a.y>y)!==(b.y>y) && x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside;
+    }
+    return inside;
+  };
+  for(let i=0;i<2400 && stars.length<320*3;i++){
     const n=s=>{const v=Math.sin(i*127.1+s*74.7)*43758.5453;return v-Math.floor(v);};
-    stars.push((n(1)-.5)*.65,(n(2)-.5)*.42+.1,.5+n(3)*depth);
+    const x=THREE.MathUtils.lerp(bounds.min.x,bounds.max.x,n(1))*.94;
+    const y=THREE.MathUtils.lerp(Math.max(floorY+.15,bounds.min.y),bounds.max.y*.94,n(2));
+    if(!insideHeart(x,y))continue;
+    const band=stars.length/3%ribCount;
+    stars.push(x,y,(band+.25+n(3)*.5)*depth/ribCount);
   }
+  const starCanvas=document.createElement('canvas');starCanvas.width=starCanvas.height=32;
+  const starContext=starCanvas.getContext('2d');
+  const starGradient=starContext.createRadialGradient(16,16,0,16,16,16);
+  starGradient.addColorStop(0,'rgba(255,255,255,1)');starGradient.addColorStop(.2,'rgba(255,215,240,.9)');
+  starGradient.addColorStop(1,'rgba(255,150,220,0)');starContext.fillStyle=starGradient;starContext.fillRect(0,0,32,32);
   const starGeometry=new THREE.BufferGeometry();starGeometry.setAttribute('position',new THREE.Float32BufferAttribute(stars,3));
-  tunnel.add(new THREE.Points(starGeometry,new THREE.PointsMaterial({color:0xc58ba9,size:.008,transparent:true,opacity:.6,depthWrite:false,toneMapped:false})));
+  const starField=new THREE.Points(starGeometry,new THREE.PointsMaterial({map:new THREE.CanvasTexture(starCanvas),color:0xffd6ec,size:.065,transparent:true,opacity:.8,depthWrite:false,toneMapped:false}));
+  starField.name='TUNNEL_INTERARCH_STARS';tunnel.add(starField);
+  const distantGlow=new THREE.Mesh(new THREE.PlaneGeometry(9,9),new THREE.ShaderMaterial({
+    transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,
+    vertexShader:`varying vec2 glowUv; void main(){glowUv=uv-.5;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`varying vec2 glowUv; void main(){float r=length(glowUv);
+      float halo=exp(-r*r*22.)*.55;float core=exp(-r*r*850.);
+      float edge=1.-smoothstep(.35,.5,r);
+      gl_FragColor=vec4(mix(vec3(1.,.12,.48),vec3(1.,.78,.92),core),min(.9,halo+core*.7)*edge);}`,
+    toneMapped:false,
+  }));
+  distantGlow.name='TUNNEL_DISTANT_PINK_GLOW';
+  distantGlow.position.set(0,floorY+1.2,depth-.15);tunnel.add(distantGlow);
   function updateView(camera){
     desktopPalms.visible=innerWidth>=900 && camera.aspect>1;
     // Fixed straight corridor: camera perspective supplies the vanishing point.
@@ -103,7 +140,12 @@ export function createExteriorAssembly(scene, waterLevel) {
     return updateView;
   }
   let updatePassage=camera=>{desktopPalms.visible=innerWidth>=900 && camera.aspect>1;};
-  function updateView(camera){updatePassage(camera);}
+  function updateView(camera){
+    // Portrait-only reduction, eased back to the desktop composition near square.
+    const portrait=THREE.MathUtils.smoothstep(camera.aspect,.8,1);
+    portalArtwork.scale.setScalar(innerWidth<900?THREE.MathUtils.lerp(.84,1,portrait):1);
+    updatePassage(camera);
+  }
   // Raised promenade edges make every row converge to one water-level horizon.
   const poolStart=-5,poolEnd=settings.portalZ+settings.tunnelDepth,poolLength=poolEnd-poolStart,poolCenter=(poolStart+poolEnd)/2;
   const bankMaterial=new THREE.MeshStandardMaterial({color:0x185d70,metalness:.3,roughness:.45});
@@ -229,7 +271,7 @@ export function createExteriorAssembly(scene, waterLevel) {
     box=new THREE.Box3().setFromObject(sign);
     const center=box.getCenter(new THREE.Vector3());
     sign.position.set(-center.x,settings.portalY+settings.portalSize*.45-.22-box.min.y,settings.portalZ-.04-center.z);
-    sign.name='TUNNEL_OF_LOVE_MARQUEE_REVIEW';assembly.add(sign);
+    sign.name='TUNNEL_OF_LOVE_MARQUEE_REVIEW';addPortalArtwork(sign);
     canvas.dataset.marqueeReady='true';window.dispatchEvent(new Event('exterior-asset-ready'));
   }).catch(error=>{
     canvas.dataset.marqueeReady='false';console.warn('Marquee unavailable',error);
@@ -261,7 +303,7 @@ export function createExteriorAssembly(scene, waterLevel) {
     }],
     ['cherub','silver-cherub-v001.glb',model=>{
       // Camera faces +Z, so negative world X is the right side of the screen.
-      for(const side of [-1,1])place(model,`TRIPO_CHERUB_${side}`,0,settings.portalSize*.31,[side*settings.portalSize*.38,settings.portalY+settings.portalSize*.45-1.20,settings.portalZ-.35],Math.PI+side*.2,side===-1);
+      for(const side of [-1,1])addPortalArtwork(place(model,`TRIPO_CHERUB_${side}`,0,settings.portalSize*.31,[side*settings.portalSize*.38,settings.portalY+settings.portalSize*.45-1.20,settings.portalZ-.35],Math.PI+side*.2,side===-1));
     }],
   ];
   // Load each model once, then share geometry/textures across its placements.

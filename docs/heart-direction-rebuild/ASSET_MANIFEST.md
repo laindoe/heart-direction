@@ -876,3 +876,105 @@ optimized served GLBs, scripts and measured export reports. Blender masters,
 raw references/renders and unused export variants stay local. Branch
 production/homepage-rebuild; no merge, deployment or domain change authorized.
 Next: owner reviews peaks; profile physical mobile performance before final approval.
+
+
+### Proportional mobile portal artwork fit — 2026-10-20
+
+Owner requested smaller frame/marquee/cherubs together on mobile, preserving their
+relative proportions and placement. Added shared RESPONSIVE_PORTAL_ARTWORK group
+pivoted at waterline, Z16.2. All three assets retain their existing local fits,
+yaw, mirror and relative transforms; portrait group scale .84 (16% reduction),
+smoothly approaches1 as aspect .8→1, width>=900 always1. No independent cherub,
+sign or frame repositioning. Waterline pivot lowers the top naturally as group
+shrinks. Matching tunnel backing/arches remain with portal to avoid aperture
+misalignment. Pool water/walls, palms, flowers, hills, ship and dashboard unchanged.
+No added geometry/material/download; source GLBs/.blend preserved.
+
+Changed exterior-assembly.js and cache references graybox-ship.js/script.js/index.html
+(mobile-portal-fit-21). Branch production/homepage-rebuild. No deployment/merge.
+Screenshots renders/portal-v003-review/mobile-portal-fit-{390,320}.png.
+390×844 and320×694 inspected: cherub heads/wings/bows fit, only outer extremities
+near edges; no narrow page overflow. Syntax/diff checks pass. Physical iPhoneSafari,
+dynamic chrome and performance approval remain pending. Reduced motion/media
+failure paths unchanged; not rerun. Next: owner review of proportional mobile fit.
+
+
+### Flush mountain/coping contact — 2026-10-20
+
+Owner requested removing dark raised lip between terrain and pool edge. Terrain
+inner boundary now X±.8325, exactly coping outer edge (.76+.145/2), Y water+.174,
+matching coping top (.167+.014/2). Entire relief (including saddle) fades to zero
+at boundary with zero-slope toe, preventing elevated terrain seam above coping.
+Previous innerX.82/Y water+.141 plus nonzero saddle/toe exposed a vertical skirt
+and recessed dark bank strip. Existing edge seal remains below contact surface.
+No new geometry/material/asset payload; crest sampling and tunnel stop preserved.
+Palms, lights, flowers, portal/mobile fit, ship and navigation preserved.
+
+Changed rolling-hills.js, import/cache tags in exterior-assembly.js, graybox-ship.js,
+script.js and index.html (hill-flush-coping-22 / hill-flush-coping-8), plus docs.
+Desktop1440×900/mobile390×844 screenshots show flush contact and no dark strip;
+no captured console warnings/errors; module syntax and diff whitespace pass.
+Screenshots renders/portal-v003-review/hills-flush-{desktop,mobile}.png.
+Physical Safari/performance and unchanged interaction/failure/motion paths not
+retested here. Branch production/homepage-rebuild; no push/merge/deploy.
+Next: owner reviews flush mountain-to-pool transition.
+
+
+### Mobile cockpit fills portrait — 2026-10-20
+
+Owner requested larger mobile dashboard, less empty sky, scenery filling page,
+and destination labels at bottom. Portrait cockpit FOV110→85 and view offset
+−22%→−4%; desktop65/−4% unchanged. Windshield scenery uses a second camera on
+same position with FOV43→65 interpolated by existing boarding progress; ship is
+hidden in scenery pass, scenery/water/marks hidden in cockpit pass after depth
+clear. No duplicate scenery rendering, added asset, geometry, texture or dependency.
+This preserves artwork proportions while enlarging the view and console without
+stretching pixels or changing source meshes. Original states/boarding timing remain.
+
+Portrait semantic destination controls are a bottom safe-area-aware row with48px
+hit height, 23% width each; labels remain fully visible despite physical console
+edges cropping. Home stays projected on jewel, dashboard screen stays projected
+on physical console. Portrait title18px/body16px improve readability. Existing
+copy and destination behavior preserved. Exterior composition unaffected.
+
+Changed graybox-ship.js, styles.css and module/style cache references
+index.html/script.js (mobile-cockpit-fill-24), plus status/manifest. Branch
+production/homepage-rebuild; no commit/push/deploy/merge for this iteration.
+Validation:390×844 and320×694 inspected, no horizontal overflow; four bottom hit
+areas measured~86×48px at390 width. Boarding reaches dashboard, Moon/Store and
+keyboard Socials selection work; keyboard Home restores GET IN focus. Desktop
+1440×900 inspected, original desktop control positions preserved. No captured
+console warnings/errors; module syntax/diff whitespace checks pass.
+Screenshots renders/portal-v003-review/mobile-cockpit-fill-{390,320,desktop}.png.
+Reduced-motion/slow/missing-media paths unchanged and not rerun here; physical
+Safari/dynamic chrome/GPU profile pending. Two render passes add CPU overhead
+though each object set renders once; scene performance not approved final.
+Next: owner reviews full portrait cockpit composition and bottom navigation.
+
+
+### Tunnel stars, wider ribs and distant pink glow — 2026-10-20
+
+Owner requested small stars between neon lines, slightly wider line spacing and
+soft pink destination glow per reference. Reduced equal-size arch pairs34→24 over
+same84-unit depth: spacing2.47→3.5 (+41.7%). Preserved heart aperture, orientation,
+water/walls and independent boarding/dashboard. Removed10 core/glow pairs
+(42,240 instanced tube triangles /20 draws), added one2-triangle glow plane.
+
+Replaced tiny central star volume with320 deterministic points distributed inside
+actual heart polygon above floor, between rib depth bands. Shared32×32 generated
+radial point texture, .065 world size, .8opacity. Distant static additive pink halo
+with pale center at Zdepth−.15, Yfloor+1.2,9×9 plane, softly zero at outer edge;
+water/walls depth-test occlusion preserved. No new animation/flashing, dynamic
+lights, downloads/dependencies or source-asset changes. Glow is a visual cue,
+not a new destination/interaction. One extra draw versus previous stars/ribs net
+19 fewer draws. Transparent glow fill still needs physical GPU profiling.
+
+Changed exterior-assembly.js, cache references index.html/script.js/graybox-ship.js
+(tunnel-distant-glow-26), status/manifest. Branch production/homepage-rebuild;
+not committed/pushed/merged/deployed for this iteration. Desktop1440×900/mobile
+390×844 inspected; mobile boarding completes and keyboard Home returns focus to
+GET IN. No captured console warnings/errors; module syntax and diff checks pass.
+Screenshots renders/portal-v003-review/tunnel-distant-glow-{desktop,mobile}.png.
+Physical Safari/performance and slow/failure cases remain unverified; reduced
+motion logic unchanged, added effects static. Next: owner reviews arch spacing,
+star visibility and distant glow strength.

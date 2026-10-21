@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import { createExteriorAssembly } from './exterior-assembly.js?v=hill-crest-fix-20';
+import { createExteriorAssembly } from './exterior-assembly.js?v=tunnel-distant-glow-26';
 import { screenTransform } from './screen-projection.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 
@@ -10,6 +10,7 @@ export async function createShip() {
  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
  const scene = new THREE.Scene();
  const camera = new THREE.PerspectiveCamera(43,1,.005,140);
+ const sceneryCamera=camera.clone();
  const light = new THREE.DirectionalLight(0xffffff,4);light.position.set(2,4,-3);
  scene.add(light,new THREE.HemisphereLight(0xf2dcff,0x827694,3));
  const gltf = await new GLTFLoader().loadAsync('assets/models/heart-direction-rebuild/spaceship-blockout-v01.glb');
@@ -109,12 +110,12 @@ export async function createShip() {
   ship.visible=true;
   const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;
   const interiorProgress=Math.max(0,(t-.55)/.45);
-  const cockpitFov=w/h<.8?110:65;
+  const cockpitFov=w/h<.8?85:65;
   camera.fov=THREE.MathUtils.lerp(43,cockpitFov,interiorProgress);
   camera.clearViewOffset();
   // Shift the pilot's view upward, preserving the original ship rim and controls
   // in the lower frame while leaving the forward view open.
-  camera.setViewOffset(w,h,0,-h*(w/h<.8?.22:.04)*interiorProgress,w,h);
+  camera.setViewOffset(w,h,0,-h*(.04)*interiorProgress,w,h);
   camera.updateProjectionMatrix();
   // Rear is glTF -Z. Center the view on the forward +Z tunnel axis.
   const exteriorDistance=Math.max(2.3,.56/(Math.tan(THREE.MathUtils.degToRad(43/2))*(w/h)));
@@ -142,7 +143,17 @@ export async function createShip() {
     shipTarget.style.height=Math.max(44,Math.min(h,Math.max(...corners.map(p=>p.y)))-top)+'px';
   }
   exteriorAssembly.updateView(camera);
-  renderer.render(scene,camera);
+  if(w/h<.8 && interiorProgress>0){
+    // A narrower windshield view fills portrait without stretching the artwork.
+    // Render the same scenery once, then the physical cockpit at its own fit.
+    sceneryCamera.copy(camera);sceneryCamera.fov=THREE.MathUtils.lerp(43,65,interiorProgress);
+    sceneryCamera.updateProjectionMatrix();
+    ship.visible=false;renderer.render(scene,sceneryCamera);
+    renderer.clearDepth();renderer.autoClear=false;
+    exteriorAssembly.group.visible=false;water.visible=false;marks.visible=false;ship.visible=true;
+    renderer.render(scene,camera);
+    exteriorAssembly.group.visible=true;water.visible=true;marks.visible=true;renderer.autoClear=true;
+  }else renderer.render(scene,camera);
   canvas.dataset.canopy=canopy.visible?(t?'opening':'closed'):'hidden';
   canvas.dataset.camera=t===1?'cockpit':t?'boarding':'exterior';
   canvas.dataset.shipVisible=String(ship.visible);

@@ -127,7 +127,7 @@ document.querySelectorAll('[data-content]').forEach(button => {
 const timeout = setTimeout(() => {
   if (state === 'exterior') $('#load-status').textContent = 'Spaceship still loading · GET IN remains available';
 }, 10000);
-import('./js/graybox-ship.js?v=hill-crest-fix-20').then(module => module.createShip()).then(ship => {
+import('./js/graybox-ship.js?v=tunnel-distant-glow-26').then(module => module.createShip()).then(ship => {
   clearTimeout(timeout); model = ship; modelReady = true;
   if (state === 'dashboard') { model.frame(1); model.dashboard(); }
   else if (state === 'exterior') $('#load-status').textContent = 'Ready to board';

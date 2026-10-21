@@ -3,10 +3,10 @@ import * as THREE from './vendor/three.module.js';
 // Joined terrain fills the saddles between firmer crests. Source GLBs are untouched.
 export function createRollingHills(parent, waterLevel, palmHeight = 1.12, far = 76) {
   const material=new THREE.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:.78,metalness:0});
-  const bankY=waterLevel+.141,lightDirection=new THREE.Vector3(2,4,-3).normalize();
+  const bankY=waterLevel+.174,lightDirection=new THREE.Vector3(2,4,-3).normalize();
   const heights=[.72,.22,.44,.16,.75,.31,.55,.20,.38];
   const lanes=[{x:1.62,radius:.76},{x:3.05,radius:1.05},{x:5.25,radius:1.5},{x:9,radius:2.5},{x:17,radius:5.5}];
-  const baseAcross=144,inner=.82,outer=24,near=-9;
+  const baseAcross=144,inner=.8325,outer=24,near=-9;
   const baseAlong=Math.max(1,Math.ceil((far-near)*384/85));
   for(const side of [-1,1]) {
     const hills=[];
@@ -46,10 +46,10 @@ export function createRollingHills(parent, waterLevel, palmHeight = 1.12, far = 
       }
       // Rolling relief replaces all exposed flat ground, including beside the coping.
       const saddle=palmHeight*(.045+.028*(.5+.5*Math.sin(x*2.7+Math.sin(z*.8))*Math.cos(z*1.1)));
-      const toe=.18+.82*(1-Math.exp(-Math.pow((x-inner)/.35,2)));
+      const toe=1-Math.exp(-Math.pow((x-inner)/.35,2));
       const endProgress=THREE.MathUtils.clamp((far-z)/1.8,0,1);
       const endFade=endProgress*endProgress*(3-2*endProgress);
-      const height=(saddle+(palmHeight*.75-saddle)*Math.pow(crest/(palmHeight*.75),1.08)*toe)*endFade;
+      const height=(saddle+(palmHeight*.75-saddle)*Math.pow(crest/(palmHeight*.75),1.08))*toe*endFade;
       positions.push(side*x,bankY+height,z);
       const tint=low.clone().lerp(high,height/(palmHeight*.75));colors.push(tint.r,tint.g,tint.b);
       if(row<along && column<across){

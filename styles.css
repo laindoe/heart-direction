@@ -271,3 +271,20 @@ body[data-state="boarding"] #board-ship { display:none; }
 #dashboard.art-ready #dashboard-screen,#dashboard.art-ready .art-control { pointer-events:auto; }
 #dashboard:not(.art-ready) .art-control { left:auto!important;top:auto!important;width:auto!important;height:auto!important;transform:none!important; }
 #dashboard:not(.art-ready) #dashboard-screen { width:min(88vw,520px)!important;height:auto!important;transform:none!important; }
+
+/* Portrait cockpit labels remain reachable even as the physical console fills width. */
+@media (max-aspect-ratio: 4/5) {
+  #dashboard.art-ready #dashboard-title { font-size:18px; }
+  #dashboard.art-ready #screen-content p { font-size:16px; }
+  #dashboard.art-ready nav {
+    position:absolute;left:0;right:0;bottom:max(12px,env(safe-area-inset-bottom));
+    display:flex;justify-content:space-evenly;gap:4px;padding:0 8px;pointer-events:auto;
+  }
+  #dashboard.art-ready nav .art-control {
+    position:relative;left:auto!important;top:auto!important;width:23%!important;
+    height:48px!important;transform:none;border-radius:10px;
+  }
+  #dashboard.art-ready nav .art-control span {
+    position:static;transform:none;font-size:12px;padding:5px 6px;
+  }
+}
