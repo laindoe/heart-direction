@@ -1,0 +1,471 @@
+:root {
+  font-family:Arial,sans-serif;
+  color:#fff;
+  background:#100d19;
+  color-scheme:dark;
+  --dash-height:234px
+}
+* {
+  box-sizing:border-box
+}
+html {
+  scroll-behavior:auto
+}
+body {
+  margin:0
+}
+body:not(.travelling) {
+  overflow:hidden
+}
+button,a {
+  touch-action:manipulation
+}
+button {
+  font:inherit;
+  font-size:12px;
+  letter-spacing:.04em;
+  min-height:44px;
+  padding:10px 16px;
+  background:#e1dce7;
+  color:#1b1725;
+  border:1px solid #fff;
+  border-radius:4px;
+  cursor:pointer
+}
+button:hover {
+  background:#fff
+}
+button:disabled {
+  opacity:.5;
+  cursor:wait
+}
+button:focus-visible,a:focus-visible {
+  outline:3px solid #fdaaff;
+  outline-offset:5px
+}
+a {
+  color:inherit;
+  padding:12px
+}
+h1,h2,p {
+  margin:0
+}
+h2 {
+  font-size:clamp(20px,3vw,36px);
+  line-height:1.15
+}
+p {
+  line-height:1.5
+}
+small {
+  font-size:10px
+}
+header {
+  position:fixed;
+  z-index:8;
+  top:0;
+  left:0;
+  right:0;
+  padding:18px 20px;
+  pointer-events:none;
+  text-shadow:0 1px 5px #33243e
+}
+header h1 {
+  font-size:14px;
+  letter-spacing:.13em
+}
+header>span {
+  display:block;
+  font-size:9px;
+  letter-spacing:.08em;
+  margin-top:7px
+}
+#environment {
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:#19b3da;
+  pointer-events:none
+}
+.sky,.void {
+  position:absolute;
+  inset:0
+}
+.sky img {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 50%
+}
+.void {
+  background:#100d19;
+  opacity:var(--darkness,0)
+}
+.sky {
+  pointer-events:none;
+  user-select:none
+}
+.water {
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:43%;
+  bottom:-5%;
+  clip-path:polygon(48% 0,52% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(0deg,#beb2d455 0 2px,transparent 2px 40px),linear-gradient(#80739480,#bb8ffc55);
+  border-bottom:8px solid #ceadff
+}
+.travelling .water {
+  background:repeating-linear-gradient(0deg,#dcb5ff55 0 2px,transparent 2px 60px),linear-gradient(#8b5edc22,#b560d777)
+}
+#hearts {
+  position:absolute;
+  inset:0
+}
+#hearts svg {
+  position:absolute;
+  width:64vmin;
+  height:64vmin;
+  left:50%;
+  top:36%;
+  overflow:visible;
+  transform:translate(-50%,-50%) scale(var(--scale,1));
+  opacity:var(--alpha,1);
+  fill:none;
+  stroke:#e6dcec;
+  stroke-width:1.5px
+}
+.landmarks {
+  position:absolute;
+  top:22%;
+  left:15%;
+  right:13%;
+  display:flex;
+  justify-content:space-between;
+  opacity:var(--darkness,0)
+}
+.sphere {
+  display:block;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#e7deec,#787182 65%,#32293b)
+}
+.saturn:after {
+  content:'';
+  display:block;
+  border:4px solid #c3b9cf;
+  border-radius:50%;
+  width:80px;
+  height:20px;
+  transform:translate(-18px,12px) rotate(-25deg)
+}
+.moon {
+  width:28px;
+  height:28px
+}
+#exterior {
+  position:fixed;
+  inset:0
+}
+#ship-view {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none
+}
+.portal-label {
+  position:absolute;
+  top:19%;
+  width:100%;
+  text-align:center;
+  font-size:10px;
+  color:#30243e
+}
+.invitation {
+  position:absolute;
+  bottom:8%;
+  width:100%;
+  text-align:center
+}
+.invitation p {
+  font-size:10px;
+  color:#30243e;
+  margin:10px 0
+}
+.invitation button {
+  min-width:150px
+}
+#ship-fallback {
+  position:absolute;
+  left:20%;
+  right:20%;
+  top:47%;
+  padding:35px 15px;
+  background:#686475;
+  border:2px solid #d9cde9;
+  border-radius:50%;
+  text-align:center;
+  font-size:12px
+}
+#ship-fallback small {
+  display:block;
+  margin-top:10px
+}
+#dashboard {
+  position:fixed;
+  z-index:10;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(100%,850px);
+  height:var(--dash-height);
+  padding:27px 16px max(10px,env(safe-area-inset-bottom));
+  background:linear-gradient(160deg,#95919d,#34313b);
+  border:2px solid #aaa4b1;
+  border-bottom:0;
+  border-radius:45px 45px 0 0;
+  box-shadow:0 -10px 35px #0004
+}
+#dashboard-view {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:.65
+}
+.screen,nav {
+  position:relative;
+  z-index:1
+}
+.screen {
+  margin:0 auto 9px;
+  padding:10px 12px;
+  max-width:520px;
+  background:#14101beF;
+  border:1px solid #92859e;
+  border-radius:8px;
+  min-height:127px
+}
+.screen h2 {
+  font-size:13px;
+  letter-spacing:.04em
+}
+.screen p {
+  font-size:12px;
+  margin:6px 0
+}
+.screen button {
+  min-height:38px;
+  font-size:10px;
+  padding:8px 10px
+}
+#orientation {
+  text-align:center
+}
+nav {
+  display:flex;
+  gap:6px;
+  max-width:520px;
+  margin:auto
+}
+nav button {
+  flex:1;
+  padding:8px 2px;
+  font-size:10px
+}
+.step-controls {
+  display:flex;
+  gap:8px;
+  justify-content:center
+}
+#travel-controls {
+  text-align:center;
+  padding-top:10px
+}
+#travel-status {
+  min-height:35px
+}
+#journey {
+  position:relative;
+  z-index:2;
+  padding-top:80px
+}
+.stop {
+  min-height:85svh;
+  padding:12vh 24px calc(var(--dash-height) + 35px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:22px;
+  text-align:center;
+  scroll-margin-top:50px
+}
+.stop p {
+  max-width:440px;
+  font-size:13px;
+  color:#c9bfd2
+}
+.stop h2 {
+  max-width:600px
+}
+.artifact {
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+  width:min(76vw,320px);
+  min-height:215px;
+  padding:24px;
+  text-align:left;
+  background:#d6d2d9;
+  color:#27222d;
+  border-radius:2px;
+  box-shadow:12px 14px 0 #0004
+}
+.artifact strong {
+  font-size:24px;
+  letter-spacing:0
+}
+.artifact span {
+  font-size:11px
+}
+.stop:nth-child(odd) .artifact {
+  transform:rotate(-3deg)
+}
+.stop:nth-child(even) .artifact {
+  transform:rotate(3deg)
+}
+.disc i {
+  width:70px;
+  height:70px;
+  border:25px solid #a8a1ae;
+  outline:1px solid #5d5666;
+  border-radius:50%;
+  align-self:center
+}
+.television {
+  border:12px solid #6f6879;
+  border-bottom-width:30px;
+  background:#23202a;
+  color:#fff
+}
+.destinations .world-portal {
+  border:5px double #a49bad;
+  background:#201a2b;
+  color:#fff;
+  padding:32px;
+  min-height:150px
+}
+.destination-buttons {
+  display:flex;
+  gap:20px
+}
+dialog {
+  position:fixed;
+  max-width:550px;
+  width:calc(100% - 32px);
+  max-height:80dvh;
+  overflow:auto;
+  color:#eee8f3;
+  background:#27212f;
+  border:1px solid #b5a8c4;
+  border-radius:8px;
+  padding:24px
+}
+dialog::backdrop {
+  background:#09060edb
+}
+dialog h2 {
+  margin:28px 0 20px
+}
+dialog p {
+  margin:16px 0;
+  font-size:14px
+}
+#close-detail {
+  float:right
+}
+#detail-body {
+  clear:both;
+  margin:24px 0
+}
+#detail-body ul {
+  padding-left:20px;
+  line-height:2
+}
+.media-placeholder {
+  padding:30px;
+  border:1px dashed #9c8ba9;
+  text-align:center
+}
+#return-detail {
+  width:100%
+}
+.no-script {
+  position:fixed;
+  z-index:20;
+  background:#21162e;
+  padding:20px;
+  top:30%
+}
+[hidden] {
+  display:none!important
+}
+@media(min-width:900px) {
+  :root {
+    --dash-height:218px
+  }
+  .screen {
+    min-height:110px
+  }
+  .stop {
+    min-height:90vh
+  }
+  .portal-label {
+    top:16%
+  }
+  .invitation {
+    bottom:9%
+  }
+  .artifact {
+    width:340px
+  }
+  .landmarks {
+    left:25%;
+    right:25%
+  }
+}
+@media(max-height:600px) {
+  :root {
+    --dash-height:194px
+  }
+  #dashboard {
+    padding-top:12px
+  }
+  .screen {
+    min-height:110px
+  }
+  .screen p {
+    font-size:10px
+  }
+  header {
+    padding:10px
+  }
+  .invitation {
+    bottom:2%
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    scroll-behavior:auto!important;
+    animation:none!important;
+    transition:none!important
+  }
+  .artifact {
+    transform:none!important
+  }
+}

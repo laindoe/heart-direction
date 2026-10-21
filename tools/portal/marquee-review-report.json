@@ -1,0 +1,33 @@
+{
+  "source": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction-production/blender/homepage-exterior/assets/tripo-raw/tunnel-marquee-raw.glb",
+  "sourceBytes": 71251744,
+  "sourceTriangles": 1915908,
+  "bytes": 1602356,
+  "triangles": 17998,
+  "textures": [
+    {
+      "name": "heart-portal-raw_basecolor.jpg",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "heart-portal-raw_rm.jpg",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "heart-portal-raw_normal.png",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ],
+  "sourceUnchanged": true,
+  "sha256": "40d382b8ae41e28ea9142d8e5c56596cd9932c046a966287b36ab1ea2328a9ec",
+  "note": "Existing standalone marquee source used in earlier desktop Blender assembly; optimized review copy, not final cleanup/appearance approval."
+}

@@ -1,0 +1,222 @@
+{
+  "source": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction-production/blender/homepage-exterior/working/heart-direction-homepage-tunnel-marquee.blend",
+  "source_bytes": 197846430,
+  "source_sha256": "a09b8dc0ae3ea9615f526b6afb0ec1100ce77ee89b8858349d34a01cf4e4bc0b",
+  "uses_current_unsaved_state": true,
+  "blender": "4.5.12 LTS",
+  "status": "exported_for_review_not_final",
+  "inventory": [
+    {
+      "name": "Light",
+      "type": "LIGHT",
+      "visible": true,
+      "hide_render": false,
+      "materials": []
+    },
+    {
+      "name": "Camera",
+      "type": "CAMERA",
+      "visible": true,
+      "hide_render": false,
+      "materials": []
+    },
+    {
+      "name": "tripo_node_e935be63-b40c-4aea-a4cf-d4a79c6a0541",
+      "type": "MESH",
+      "visible": true,
+      "hide_render": false,
+      "materials": [
+        "tripo_material_e935be63-b40c-4aea-a4cf-d4a79c6a0541"
+      ]
+    }
+  ],
+  "settings": {
+    "format": "GLB",
+    "texture_max": 1024,
+    "image_format": "AUTO",
+    "jpeg_quality": 85,
+    "animations": false,
+    "cameras": false,
+    "lights": false,
+    "draco": false,
+    "y_up": true
+  },
+  "candidates": [
+    {
+      "label": "detail",
+      "scene": "CLEANED_MARQUEE_WEB_detail_20261020T220852093721Z",
+      "filepath": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction/exports/cleaned-marquee-review/20261020T220852093721Z/tunnel-of-love-marquee-cleaned-v002-detail-review.glb",
+      "target_triangles": 40000,
+      "triangles": 40000,
+      "textures": [
+        {
+          "source": "tunnel-marquee_basecolor.jpg",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "sRGB"
+        },
+        {
+          "source": "tunnel-marquee_rm.jpg",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "Non-Color"
+        },
+        {
+          "source": "tunnel-marquee_normal.png",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "Non-Color"
+        }
+      ],
+      "bytes": 2913668,
+      "sha256": "09981e746ffd1771df9fce2d14fd89e961956c9532e5b011effb75b33783f62c"
+    },
+    {
+      "label": "balanced",
+      "scene": "CLEANED_MARQUEE_WEB_balanced_20261020T220852093721Z",
+      "filepath": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction/exports/cleaned-marquee-review/20261020T220852093721Z/tunnel-of-love-marquee-cleaned-v002-balanced-review.glb",
+      "target_triangles": 24000,
+      "triangles": 24000,
+      "textures": [
+        {
+          "source": "tunnel-marquee_basecolor.jpg",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "sRGB"
+        },
+        {
+          "source": "tunnel-marquee_rm.jpg",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "Non-Color"
+        },
+        {
+          "source": "tunnel-marquee_normal.png",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "Non-Color"
+        }
+      ],
+      "bytes": 2421860,
+      "sha256": "4bd78f0b7897aa7e32ff0de559354c1a980c7c4dcfe0946d53a5b9dc1295f924"
+    },
+    {
+      "label": "lean",
+      "scene": "CLEANED_MARQUEE_WEB_lean_20261020T220852093721Z",
+      "filepath": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction/exports/cleaned-marquee-review/20261020T220852093721Z/tunnel-of-love-marquee-cleaned-v002-lean-review.glb",
+      "target_triangles": 18000,
+      "triangles": 18000,
+      "textures": [
+        {
+          "source": "tunnel-marquee_basecolor.jpg",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "sRGB"
+        },
+        {
+          "source": "tunnel-marquee_rm.jpg",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "Non-Color"
+        },
+        {
+          "source": "tunnel-marquee_normal.png",
+          "original": [
+            4096,
+            4096
+          ],
+          "exported": [
+            1024,
+            1024
+          ],
+          "colorspace": "Non-Color"
+        }
+      ],
+      "bytes": 2235260,
+      "sha256": "5415abb7c1da5e5194c60c34347a81066844a61030706270e95b778684f6f4e4"
+    }
+  ],
+  "included": "tripo_node_e935be63-b40c-4aea-a4cf-d4a79c6a0541",
+  "source_matrix_world": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "units": {
+    "system": "METRIC",
+    "scale_length": 1.0
+  },
+  "source_triangles": 1991972,
+  "source_sha256_after": "a09b8dc0ae3ea9615f526b6afb0ec1100ce77ee89b8858349d34a01cf4e4bc0b",
+  "source_file_unchanged": true,
+  "source_transform_unchanged": true
+}

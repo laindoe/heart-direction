@@ -1,0 +1,221 @@
+[
+  {
+    "label": "detail",
+    "output": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction/exports/portal-v003-review/20261020T190742211675Z/heart-direction-portal-v003-detail-web-review.glb",
+    "sourceBytes": 5566284,
+    "bytes": 5618320,
+    "triangles": 100763,
+    "sha256": "be0c3215afdcee36a4376d3f21b7bd7392b36b9dfd6774bb99c58e5f7759b4d9",
+    "textures": [
+      {
+        "name": "heart-portal-raw_normal",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/png"
+      },
+      {
+        "name": "heart-portal-raw_basecolor",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "heart-portal-raw_rm",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_normal",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/png"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_basecolor",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_rm",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      }
+    ],
+    "materials": [
+      {
+        "name": "tripo_material_7005b8fb-4cff-40ba-8a8d-9c122aa6d070_WEB_detail",
+        "metallic": 1,
+        "roughness": 1
+      },
+      {
+        "name": "tripo_material_57e6a191-685b-471c-aa44-5991bf680dac_WEB_detail",
+        "metallic": 1,
+        "roughness": 1
+      }
+    ],
+    "extensions": [
+      "EXT_texture_webp"
+    ]
+  },
+  {
+    "label": "balanced",
+    "output": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction/exports/portal-v003-review/20261020T190742211675Z/heart-direction-portal-v003-balanced-web-review.glb",
+    "sourceBytes": 3989388,
+    "bytes": 4041424,
+    "triangles": 50764,
+    "sha256": "08203b753e82c3d6b237085b66bea88abae9554366f8f95dbb5e0c810f9e741e",
+    "textures": [
+      {
+        "name": "heart-portal-raw_normal",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/png"
+      },
+      {
+        "name": "heart-portal-raw_basecolor",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "heart-portal-raw_rm",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_normal",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/png"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_basecolor",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_rm",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      }
+    ],
+    "materials": [
+      {
+        "name": "tripo_material_7005b8fb-4cff-40ba-8a8d-9c122aa6d070_WEB_balance",
+        "metallic": 1,
+        "roughness": 1
+      },
+      {
+        "name": "tripo_material_57e6a191-685b-471c-aa44-5991bf680dac_WEB_balance",
+        "metallic": 1,
+        "roughness": 1
+      }
+    ],
+    "extensions": [
+      "EXT_texture_webp"
+    ]
+  },
+  {
+    "label": "lean",
+    "output": "/Users/shalainderamus/Desktop/grand-play/repos/heart-direction/exports/portal-v003-review/20261020T190742211675Z/heart-direction-portal-v003-lean-web-review.glb",
+    "sourceBytes": 3286172,
+    "bytes": 3338204,
+    "triangles": 30764,
+    "sha256": "70d112fa3b1af5b7cfb065721b04934d64c18394dd2490b7a3a07a0d692af8a7",
+    "textures": [
+      {
+        "name": "heart-portal-raw_normal",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/png"
+      },
+      {
+        "name": "heart-portal-raw_basecolor",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "heart-portal-raw_rm",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_normal",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/png"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_basecolor",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      },
+      {
+        "name": "red+heart+gemstone+3d+model_rm",
+        "size": [
+          1024,
+          1024
+        ],
+        "mime": "image/webp"
+      }
+    ],
+    "materials": [
+      {
+        "name": "tripo_material_7005b8fb-4cff-40ba-8a8d-9c122aa6d070_WEB_lean",
+        "metallic": 1,
+        "roughness": 1
+      },
+      {
+        "name": "tripo_material_57e6a191-685b-471c-aa44-5991bf680dac_WEB_lean",
+        "metallic": 1,
+        "roughness": 1
+      }
+    ],
+    "extensions": [
+      "EXT_texture_webp"
+    ]
+  }
+]
